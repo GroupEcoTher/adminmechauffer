@@ -1,3 +1,4 @@
+
 export const menu = [
   {
     id: 1,
@@ -28,15 +29,21 @@ export const menu = [
         icon: "user.svg",
       },
       {
+        id: 1,
+        title: "UsersHome",
+        url: "/UsersHome",
+        icon: "user.svg",
+      },
+      {
         id: 2,
         title: "Partenaires",
-        url: "/users",
+        url: "/Partenaires",
         icon: "user.svg",
       },
       {
         id: 3,
         title: "Parains",
-        url: "/users",
+        url: "/Parains",
         icon: "user.svg",
       },
       {
@@ -321,6 +328,7 @@ export const barChartBoxVisit = {
   ],
 };
 
+
 export const userRows = [
   {
     id: 1,
@@ -330,6 +338,9 @@ export const userRows = [
     email: "kewez@@gmail.com",
     phone: "123 456 789",
     createdAt: "01.02.2023",
+    'Pièce Identité': 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
+    'Avis D\'impôts': 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
+    identityDocumentUrl: 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
     verified: true,
   },
   {
@@ -340,7 +351,11 @@ export const userRows = [
     email: "comhuhmit@gmail.com",
     phone: "123 456 789",
     createdAt: "01.02.2023",
+    'Pièce Identité': 'https://images.pexels.com/photos/1181519/pexels-photo-1181519.jpeg?auto=compress&cs=tinysrgb&w=1600',
+    'Avis D\'impôts': 'https://images.pexels.com/photos/1181519/pexels-photo-1181519.jpeg?auto=compress&cs=tinysrgb&w=1600',
+    identityDocumentUrl: 'https://images.pexels.com/photos/1181519/pexels-photo-1181519.jpeg?auto=compress&cs=tinysrgb&w=1600',
     verified: true,
+
   },
   {
     id: 3,
@@ -350,6 +365,9 @@ export const userRows = [
     email: "ujudokon@hottmail.com",
     phone: "123 456 789",
     createdAt: "01.02.2023",
+    'Pièce Identité': 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
+    'Avis D\'impôts': 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
+    identityDocumentUrl: 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
     verified: true,
   },
   {
@@ -360,6 +378,9 @@ export const userRows = [
     email: "tinhavabe@gmail.com",
     phone: "123 456 789",
     createdAt: "01.02.2023",
+    'Pièce Identité': 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
+    'Avis D\'impôts': 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
+    identityDocumentUrl: 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
     verified: true,
   },
   {
@@ -370,6 +391,10 @@ export const userRows = [
     email: "gobtagbes@yahoo.com",
     phone: "123 456 789",
     createdAt: "01.02.2023",
+    'Pièce Identité': 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
+    'Avis D\'impôts': 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
+    identityDocumentUrl: 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
+    verified: true,
   },
   {
     id: 6,
@@ -379,6 +404,9 @@ export const userRows = [
     email: "vulca.eder@mail.com",
     phone: "123 456 789",
     createdAt: "01.02.2023",
+    'Pièce Identité': 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
+    'Avis D\'impôts': 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
+    identityDocumentUrl: 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
     verified: true,
   },
   {
@@ -389,6 +417,10 @@ export const userRows = [
     email: "reso.bilic@gmail.com",
     phone: "123 456 789",
     createdAt: "01.02.2023",
+    'Pièce Identité': 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
+    'Avis D\'impôts': 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
+    identityDocumentUrl: 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
+    verified: true,
   },
   {
     id: 8,
@@ -398,6 +430,9 @@ export const userRows = [
     email: "codaic@mail.com",
     phone: "123 456 789",
     createdAt: "01.02.2023",
+    'Pièce Identité': 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
+    'Avis D\'impôts': 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
+    identityDocumentUrl: 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
     verified: true,
   },
   {
@@ -408,6 +443,10 @@ export const userRows = [
     email: "uzozor@gmail.com",
     phone: "123 456 789",
     createdAt: "01.02.2023",
+    'Pièce Identité': 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
+    'Avis D\'impôts': 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
+    identityDocumentUrl: 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
+    verified: true,
   },
   {
     id: 10,
@@ -417,6 +456,9 @@ export const userRows = [
     email: "tuhkabapu@gmail.com",
     phone: "123 456 789",
     createdAt: "01.02.2023",
+    'Pièce Identité': 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
+    'Avis D\'impôts': 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
+    identityDocumentUrl: 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
     verified: true,
   },
   {
@@ -427,6 +469,9 @@ export const userRows = [
     email: "gibo@gmail.com",
     phone: "123 456 789",
     createdAt: "01.02.2023",
+    'Pièce Identité': 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
+    'Avis D\'impôts': 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
+    identityDocumentUrl: 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
     verified: true,
   },
   {
@@ -437,6 +482,10 @@ export const userRows = [
     email: "tic.harvey@hotmail.com",
     phone: "123 456 789",
     createdAt: "01.02.2023",
+    'Pièce Identité': 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
+    'Avis D\'impôts': 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
+    identityDocumentUrl: 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
+    verified: true,
   },
   {
     id: 13,
@@ -446,6 +495,10 @@ export const userRows = [
     email: "ceuc@gmail.com",
     phone: "123 456 789",
     createdAt: "01.02.2023",
+    'Pièce Identité': 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
+    'Avis D\'impôts': 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
+    identityDocumentUrl: 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
+    verified: true,
   },
   {
     id: 14,
@@ -455,6 +508,10 @@ export const userRows = [
     email: "bafuv@hotmail.com",
     phone: "123 456 789",
     createdAt: "01.02.2023",
+    'Pièce Identité': 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
+    'Avis D\'impôts': 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
+    identityDocumentUrl: 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
+    verified: true,
   },
   {
     id: 15,
@@ -464,6 +521,10 @@ export const userRows = [
     email: "ubi@gmail.com",
     phone: "123 456 789",
     createdAt: "01.02.2023",
+    'Pièce Identité': 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
+    'Avis D\'impôts': 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
+    identityDocumentUrl: 'https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load',
+    verified: true,
   },
 ];
 
@@ -476,7 +537,7 @@ export const products = [
     producer: "Sony",
     price: "$250.99",
     createdAt: "01.02.2023",
-    inStock: true,
+    verified: true,
   },
   {
     id: 2,

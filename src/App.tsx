@@ -1,6 +1,5 @@
 import Home from "./pages/home/Home";
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
-import Users from "./pages/users/Users";
 import Products from "./pages/products/Products";
 import Navbar from "./components/navbar/Navbar";
 import Footer from "./components/footer/Footer";
@@ -9,15 +8,28 @@ import Login from "./pages/login/Login";
 import "./styles/global.scss";
 import User from "./pages/user/User";
 
-import Partenaires from "./pages/Partenaires";
-import Parains from "./pages/Parains";
+//users
+import AideDoc from "./pages/users/AideDoc";
+import HistAction from "./pages/users/HistAction";
+import QuestDem from "./pages/users/QuestDem";
+import RecepMail from "./pages/users/RecepMail";
+import Users from "./pages/users/Users";
+import UsersHome from "./pages/users/UsersHome";
+
+
+
+//Partenaires
+import Partenaires from "./pages/Partenaires/Partenaires";
+import PartenairesFullLengthBox from "../../pages/Partenaires/PartenairesFullLengthBox";
+
+//Parains
+import Parains from "./pages/Parains/Parains";
 
 import Product from "./pages/product/Product";
 import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-
 
 const queryClient = new QueryClient();
 
@@ -48,40 +60,60 @@ function App() {
       children: [
         {
           path: "/",
-          element: <Home />,
+          element: <Home title="Accueil" />,
+        },
+        {
+          path: "/UsersHome",
+          element: <UsersHome title="Gestion des utilisateurs" />,
+        },
+        {
+          path: "/HistAction",
+          element: <HistAction title="Historique des actions" />,
+        },
+        {
+          path: "/QuestDem",
+          element: <QuestDem title="Questions, demandes et litiges" />,
+        },
+        {
+          path: "/RecepMail",
+          element: <RecepMail title="Réception des mails" />,
         },
         {
           path: "/users",
-          element: <Users />,
+          element: <Users title="Utilisateurs" />,
         },
         {
-          path: "/Partenaires/:id",
-          element: <Product />,
+          path: "/Partenaires",
+          element: <Partenaires title="Partenaires" />,
         },
         {
-          path: "/Parains/:id",
-          element: <Product />,
+          path: "/Parains",
+          element: <Parains title="Parrains" />,
         },
         {
           path: "/products",
-          element: <Products />,
+          element: <Products title="Produits" />,
         },
         {
           path: "/users/:id",
-          element: <User />,
+          element: <User title="Détails de l'utilisateur" />,
         },
         {
           path: "/products/:id",
-          element: <Product />,
+          element: <Product title="Détails du produit" />,
+        },
+        {
+          path: "/AideDoc",
+          element: <AideDoc title="Aide et documentation" />,
         },
       ],
     },
     {
       path: "/login",
-      element: <Login />,
+      element: <Login title="Connexion" />,
     },
   ]);
-
+  
   return <RouterProvider router={router} />;
 }
 

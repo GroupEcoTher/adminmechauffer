@@ -1,3 +1,6 @@
+import { useParams } from "react-router-dom";
+import { userRows } from "../../data";
+
 import {
   Legend,
   Line,
@@ -22,6 +25,9 @@ type Props = {
 };
 
 const Single = (props: Props) => {
+  const { id } = useParams<{ id: string }>();
+  const singleUser = userRows.find((user) => user.id === Number(id));
+
   return (
     <div className="single">
       <div className="view">

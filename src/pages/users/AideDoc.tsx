@@ -1,4 +1,5 @@
-// src/pages/Partenaires/Partenaires.tsx
+// src/pages/users/AideDoc.tsx
+
 import BarChartBox from "../../components/barChartBox/BarChartBox";
 import BigChartBox from "../../components/bigChartBox/BigChartBox";
 import ChartBox from "../../components/chartBox/ChartBox";
@@ -13,13 +14,13 @@ import {
   chartBoxUser,
 } from "../../data";
 import "../home/home.scss";
-import PartenairesFullLengthBox from "../../pages/Partenaires/PartenairesFullLengthBox";
+import FullLengthBox from "../../pages/users/FullLengthBox";
 
 
-const PartenairesHome = () => {
+const AideDoc = () => {
   return (
     <div className="home">
-      <PartenairesFullLengthBox />
+      <FullLengthBox />
       <div className="box box1">
         <TopBox />
       </div>
@@ -51,4 +52,4 @@ const PartenairesHome = () => {
   );
 };
 
-export default PartenairesHome;
+export default AideDoc;

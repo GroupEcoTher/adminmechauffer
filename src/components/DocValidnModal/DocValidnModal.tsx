@@ -1,45 +1,45 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 import Modal from 'react-modal';
 
-const DocValidnModal = () => {
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [documentUrl, setDocumentUrl] = useState('');
+interface DocValidnModalProps {
+  identityDocumentUrl: string;
+  taxNoticeUrl: string;
+  modalIsOpen: boolean;
+  setModalIsOpen: (isOpen: boolean) => void;
+  onValidate: (isVerified: boolean) => void;
+}
 
-  const openModal = (url) => {
-    setDocumentUrl(url);
-    setModalIsOpen(true);
-  };
+const DocValidnModal: React.FC<DocValidnModalProps> = ({ identityDocumentUrl, taxNoticeUrl, modalIsOpen, setModalIsOpen, onValidate }) => {
+  const [isVerified, setIsVerified] = useState(false);
 
-  const closeModal = () => {
+  const handleValidate = () => {
+    setIsVerified(true);
+    onValidate(true);
     setModalIsOpen(false);
   };
 
-  const validateDocument = () => {
-    // Logic to validate the document
-    closeModal();
-  };
-
-  const rejectDocument = () => {
-    // Logic to reject the document
-    closeModal();
+  const handleClose = () => {
+    setModalIsOpen(false);
   };
 
   return (
-    <div>
-      <button onClick={() => openModal('url_to_your_document')}>Voir</button>
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        contentLabel="Document Validation Modal"
-      >
-        <h2>Valider ou refuser le document</h2>
-        <div>
-          <iframe src={documentUrl} width="100%" height="100%"></iframe>
-          <button onClick={validateDocument}>Valider</button>
-          <button onClick={rejectDocument}>Refuser</button>
-        </div>
-      </Modal>
-    </div>
+    <Modal
+      isOpen={modalIsOpen}
+      onRequestClose={handleClose}
+      contentLabel="Document Validation Modal"
+    >
+      <h2>Document Validation</h2>
+      <div>
+        <h3>Identity Document</h3>
+        <img src={identityDocumentUrl} alt="Identity Document" />
+      </div>
+      <div>
+        <h3>Tax Notice</h3>
+        <img src={taxNoticeUrl} alt="Tax Notice" />
+      </div>
+      <button onClick={handleValidate}>Validate</button>
+      <button onClick={handleClose}>Close</button>
+    </Modal>
   );
 };
 

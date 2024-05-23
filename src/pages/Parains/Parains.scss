@@ -1,5 +1,9 @@
-.Partenaires{
-
+.users{
+  .users > div:not(.fullLengthBox) {
+    /* Remplacez ceci par vos propres styles */
+    background-color: red;
+    color: white;
+  }
   .info{
     display: flex;
     align-items: center;
@@ -12,3 +16,4 @@
     }
   }
 }
+

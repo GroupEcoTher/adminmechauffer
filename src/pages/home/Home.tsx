@@ -12,10 +12,16 @@ import {
   chartBoxUser,
 } from "../../data";
 import "./home.scss";
+import FullLengthBox from "../../pages/users/FullLengthBox";
 
-const Home = () => {
+const Home = ({ title }) => {
   return (
     <div className="home">
+      
+ 
+      <h1>{title}</h1>
+      <h1 className="home-title">{title}</h1>
+      
       <div className="box box1">
         <TopBox />
       </div>

@@ -1,14 +1,24 @@
 .users{
-
+  .users > div:not(.fullLengthBox) {
+    /* Remplacez ceci par vos propres styles */
+    background-color: red;
+    color: white;
+  }
   .info{
     display: flex;
     align-items: center;
     gap: 20px;
     margin-bottom: 20px;
 
+    .title {
+      font-size: 10px; /* Remplacez 24px par la taille que vous souhaitez */
+    }
+
     button{
       padding: 5px;
       cursor: pointer;
     }
   }
+  
 }
+

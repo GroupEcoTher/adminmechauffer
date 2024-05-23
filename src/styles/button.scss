@@ -1,0 +1,13 @@
+function Button() {
+  const [buttonState, setButtonState] = useState({
+    width: '100px',
+    height: '50px',
+    color: '#000',
+  });
+
+  return (
+    <button style={buttonState}>Mon Bouton</button>
+  );
+}
+
+export default Button;

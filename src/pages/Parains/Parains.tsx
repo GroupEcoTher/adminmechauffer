@@ -12,7 +12,7 @@ import {getData} from "../../config/firebase";
 import { getIncompleteUsers, getNCUsers, getAllUsers } from "../../config/firebase";
 import FullLengthBox from "../../pages/users/FullLengthBox";
 import "../home/home.scss";
-import "./Users.scss";
+import "./Parains.scss";
 
 
 

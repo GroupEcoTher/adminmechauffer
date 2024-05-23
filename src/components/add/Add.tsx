@@ -1,6 +1,5 @@
 import { GridColDef } from "@mui/x-data-grid";
 import "./add.scss";
-// import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 type Props = {
   slug: string;
@@ -8,44 +7,40 @@ type Props = {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
+// import firebase from 'firebase/app';
+// import 'firebase/database';
+
+// Initialize Firebase
+// TODO: Replace with your project's customized code snippet
+// var config = {
+//   apiKey: "<API_KEY>",
+//   authDomain: "<PROJECT_ID>.firebaseapp.com",
+//   databaseURL: "https://<DATABASE_NAME>.firebaseio.com",
+//   storageBucket: "<BUCKET>.appspot.com",
+//   messagingSenderId: "<SENDER_ID>",
+// };
+// firebase.initializeApp(config);
+
 const Add = (props: Props) => {
-
-  // TEST THE API
-
-  // const queryClient = useQueryClient();
-
-  // const mutation = useMutation({
-  //   mutationFn: () => {
-  //     return fetch(`http://localhost:8800/api/${props.slug}s`, {
-  //       method: "post",
-  //       headers: {
-  //         Accept: "application/json",
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         id: 111,
-  //         img: "",
-  //         lastName: "Hello",
-  //         firstName: "Test",
-  //         email: "testme@gmail.com",
-  //         phone: "123 456 789",
-  //         createdAt: "01.02.2023",
-  //         verified: true,
-  //       }),
-  //     });
-  //   },
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries([`all${props.slug}s`]);
-  //   },
-  // });
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     //add new item
-    // mutation.mutate();
+    // firebase.database().ref(`${props.slug}s/111`).set({
+    //   img: "",
+    //   lastName: "Hello",
+    //   firstName: "Test",
+    //   email: "testme@gmail.com",
+    //   phone: "123 456 789",
+    //   createdAt: "01.02.2023",
+    //   verified: true,
+    // });
+
     props.setOpen(false)
   };
+
+
+
   return (
     <div className="add">
       <div className="modal">
@@ -55,14 +50,14 @@ const Add = (props: Props) => {
         <h1>Add new {props.slug}</h1>
         <form onSubmit={handleSubmit}>
           {props.columns
-            .filter((item) => item.field !== "id" && item.field !== "img")
+            .filter((item) => item.field !== "id" && item.field !== "img" && item.field !== "action" && item.field !== "Vérifiée")
             .map((column) => (
               <div className="item">
                 <label>{column.headerName}</label>
-                <input type={column.type} placeholder={column.field} />
+                <input type={column.field === 'Pièce Identité' || column.field === 'Avis D\'impôts' ? 'file' : column.type} placeholder={column.field} />
               </div>
             ))}
-          <button>Send</button>
+          <button>Si vous êtes sûre de vouloir créer un Nouveau</button>
         </form>
       </div>
     </div>
