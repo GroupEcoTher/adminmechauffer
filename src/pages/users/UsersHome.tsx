@@ -1,4 +1,7 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
+
 import BarChartBox from "../../components/barChartBox/BarChartBox";
 import BigChartBox from "../../components/bigChartBox/BigChartBox";
 import ChartBox from "../../components/chartBox/ChartBox";
@@ -14,6 +17,7 @@ import {
 } from "../../data";
 import "../home/home.scss";
 import FullLengthBox from "../../pages/users/FullLengthBox";
+import UsersTraitements from './UsersTraitements';
 
 const chartBoxData = [chartBoxUser, chartBoxProduct, chartBoxConversion, chartBoxRevenue];
 const barChartBoxData = [barChartBoxVisit, barChartBoxRevenue];
@@ -23,9 +27,9 @@ const UsersHome = ({ title }) => {
     <>
 
       <div className="home">
+      <h1 className="page-title">{title}</h1>
         <FullLengthBox />
-        <h1>{title}</h1>
-        
+              
         <div className="box box1">
           <TopBox />
         </div>

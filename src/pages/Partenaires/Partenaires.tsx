@@ -1,4 +1,4 @@
-// src/pages/Partenaires/Partenaires.tsx
+import React from 'react';
 import BarChartBox from "../../components/barChartBox/BarChartBox";
 import BigChartBox from "../../components/bigChartBox/BigChartBox";
 import ChartBox from "../../components/chartBox/ChartBox";
@@ -15,39 +15,37 @@ import {
 import "../home/home.scss";
 import PartenairesFullLengthBox from "../../pages/Partenaires/PartenairesFullLengthBox";
 
+const chartBoxData = [chartBoxUser, chartBoxProduct, chartBoxConversion, chartBoxRevenue];
+const barChartBoxData = [barChartBoxVisit, barChartBoxRevenue];
 
-const PartenairesHome = () => {
+const PartenairesHome = ({ title }) => {
   return (
-    <div className="home">
-      <PartenairesFullLengthBox />
-      <div className="box box1">
-        <TopBox />
+    <>
+      <div className="home">
+        <h1 className="page-title">{title}</h1>
+        <PartenairesFullLengthBox /> {/* Utilisation du composant correctement nommé */}
+              
+        <div className="box box1">
+          <TopBox />
+        </div>
+        {chartBoxData.map((data, index) => (
+          <div className={`box box${index+2}`} key={index}>
+            <ChartBox {...data} />
+          </div>
+        ))}
+        <div className="box box4">
+          <PieChartBox />
+        </div>
+        <div className="box box7">
+          <BigChartBox />
+        </div>
+        {barChartBoxData.map((data, index) => (
+          <div className={`box box${index+8}`} key={index}>
+            <BarChartBox {...data} />
+          </div>
+        ))}
       </div>
-      <div className="box box2">
-        <ChartBox {...chartBoxUser} />
-      </div>
-      <div className="box box3">
-        <ChartBox {...chartBoxProduct} />
-      </div>
-      <div className="box box4">
-        <PieChartBox />
-      </div>
-      <div className="box box5">
-        <ChartBox {...chartBoxConversion} />
-      </div>
-      <div className="box box6">
-        <ChartBox {...chartBoxRevenue} />
-      </div>
-      <div className="box box7">
-        <BigChartBox />
-      </div>
-      <div className="box box8">
-        <BarChartBox {...barChartBoxVisit} />
-      </div>
-      <div className="box box9">
-        <BarChartBox {...barChartBoxRevenue} />
-      </div>
-    </div>
+    </>
   );
 };
 

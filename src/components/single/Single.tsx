@@ -1,15 +1,14 @@
-import { useParams } from "react-router-dom";
-import { userRows } from "../../data";
-
+import Modal from 'react-modal';
+import { useState } from 'react';
 import {
   Legend,
   Line,
   LineChart,
-  ResponsiveContainer,
+  ResponsiveContainer, // Assurez-vous que ResponsiveContainer est importé
   Tooltip,
   XAxis,
   YAxis,
-} from "recharts";
+} from "recharts"; // Importez ResponsiveContainer depuis recharts
 import "./single.scss";
 
 type Props = {
@@ -25,8 +24,15 @@ type Props = {
 };
 
 const Single = (props: Props) => {
-  const { id } = useParams<{ id: string }>();
-  const singleUser = userRows.find((user) => user.id === Number(id));
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
 
   return (
     <div className="single">
@@ -35,7 +41,7 @@ const Single = (props: Props) => {
           <div className="topInfo">
             {props.img && <img src={props.img} alt="" />}
             <h1>{props.title}</h1>
-            <button>Update</button>
+            <button onClick={openModal}>Update</button>
           </div>
           <div className="details">
             {Object.entries(props.info).map((item) => (
@@ -92,6 +98,13 @@ const Single = (props: Props) => {
           </ul>
         )}
       </div>
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        contentLabel="Example Modal"
+      >
+        {/*... le contenu de votre modal ...*/}
+      </Modal>
     </div>
   );
 };
