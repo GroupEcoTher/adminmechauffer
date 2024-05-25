@@ -1,6 +1,5 @@
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-
 import { GridColDef } from "@mui/x-data-grid";
 import Modal from 'react-modal';
 import DataTable from "../../components/dataTable/DataTable";
@@ -12,7 +11,11 @@ import { getData } from "../../config/firebase";
 import { getIncompleteUsers, getNCUsers, getAllUsers } from "../../config/firebase";
 import FullLengthBox from "./FullLengthBox";
 import "../home/home.scss";
+import Single from '../../components/single/Single';
+import moment from 'moment';
 
+// Initialiser react-modal
+Modal.setAppElement('#root');
 
 // Fonction dateCréation
 const dateCréation = (firebaseTimestamp) => {
@@ -22,15 +25,10 @@ const dateCréation = (firebaseTimestamp) => {
   return moment(date).format('DD MMMM YYYY');
 };
 
-
-
 const UsersTraitements = ({ title }) => {
-  
   const navigate = useNavigate();
-    
   const location = useLocation();
   const [open, setOpen] = useState(false);
-  const [modalIsOpen, setModalIsOpen] = useState(false);
   const [identityDocumentUrl, setIdentityDocumentUrl] = useState('');
   const [taxNoticeUrl, setTaxNoticeUrl] = useState('');
   const [documentVerified, setDocumentVerified] = useState(false);
@@ -39,11 +37,8 @@ const UsersTraitements = ({ title }) => {
   const [taxNoticeNC, setTaxNoticeNC] = useState(false);
   const [documentVerification, setDocumentVerification] = useState({});
   const [user, setUser] = useState(null);
-
-
-
-  
-  //////////////////////
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState(null);
   const [activeUserType, setActiveUserType] = useState('all');
 
   const handleIncompleteUsersClick = async () => {
@@ -51,40 +46,39 @@ const UsersTraitements = ({ title }) => {
     setUser(incompleteUsers);
     setActiveUserType('incomplete');
   };
-  
+
   const handleNCUsersClick = async () => {
     const ncUsers = await getNCUsers();
     setUser(ncUsers);
     setActiveUserType('nc');
   };
-  
+
   const handleAllUsersClick = async () => {
     const allUsers = await getAllUsers();
     setUser(allUsers);
     setActiveUserType('all');
   };
 
-
-  
   useEffect(() => {
     const userFetchFunction = async () => {
       const userFetch = await getData();
       setUser(userFetch);
-    }
+    };
     userFetchFunction();
   }, []);
-   //////////////////////////////////////////////////////////
-
-
 
   const columns: GridColDef[] = [
     { 
       field: "id", 
       headerName: "ID", 
       width: 40,
+      
       ////  ACTION   USERS   >  Route path="/users/:id"  >   user/User.tsx  >  <Single {...singleUser}/>
       renderCell: (params) => (
-        <div onClick={() => history.push(`/users/${params.value}`)}> 
+        <div onClick={() => {
+          setSelectedUserId(params.value);
+          setIsModalOpen(true);
+        }}> 
           {params.value}
         </div>
       ),
@@ -120,18 +114,14 @@ const UsersTraitements = ({ title }) => {
       width: 110,
       valueGetter: (params) => {
         if (params.row.dateCreation) {
-          // Si dateCreation est une chaîne de caractères, il faut la convertir en Date
           const date = new Date(params.row.dateCreation);
-          if (!isNaN(date)) { // Vérifie que la date est valide
+          if (!isNaN(date)) {
             return date;
           }
         }
         return null;
       },
-
-      
       valueFormatter: (params) => {
-        // Formatte la date en chaîne de caractères lisible
         if (params.value) {
           return params.value.toLocaleDateString();
         }
@@ -234,18 +224,26 @@ const UsersTraitements = ({ title }) => {
         <button className={activeUserType === 'incomplete' ? 'active' : ''} onClick={handleIncompleteUsersClick}>USERS Incomplets</button>
         <button className={activeUserType === 'nc' ? 'active' : ''} onClick={handleNCUsersClick}>USERS NC</button>
 
+       
         <button onClick={() => setOpen(true)}>Add New User</button>
         {/* les boutons  audessus du GridColDef */}
         
         {user && <DataTable slug="users" columns={columns} rows={user} />}
         {/* AUDESSUS LA GRID */}
         
-        
         {open && <Add slug="user" columns={columns} setOpen={setOpen} />}
+
+
+        <Modal isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)}>
+          <Single userId={selectedUserId} />
+          <button onClick={() => setIsModalOpen(false)}>Retour à la page du grid</button>
+        </Modal>
+
+
+        
+      
       
       </div>
-
-
     </div>
   );
 };

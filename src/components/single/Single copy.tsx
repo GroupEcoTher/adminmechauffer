@@ -12,7 +12,6 @@ import {
 import { getUserById } from '../../config/firebase';
 import moment from 'moment'; // Ajoutez moment.js pour formater les dates
 import "./single.scss";
-import UserDetails from '../../components/single/UserDetails';
 
 const formatFirebaseTimestamp = (firebaseTimestamp) => {
   if (firebaseTimestamp && firebaseTimestamp.seconds && firebaseTimestamp.nanoseconds) {
@@ -45,8 +44,10 @@ const Single = ({ userId, img, title, info = {}, chart, activities }: Props) => 
     const fetchUser = async () => {
       try {
         const userData = await getUserById(userId);
+        const openModal = () => {
+          setModalIsOpen(true);
+        };
         setUser(userData);
-        openModal();
       } catch (err) {
         setError(err.message);
       } finally {
@@ -59,9 +60,7 @@ const Single = ({ userId, img, title, info = {}, chart, activities }: Props) => 
     }
   }, [userId]);
 
-  const openModal = () => {
-    setModalIsOpen(true);
-  };
+
 
   const closeModal = () => {
     setModalIsOpen(false);
@@ -79,7 +78,7 @@ const Single = ({ userId, img, title, info = {}, chart, activities }: Props) => 
           <div className="topInfo">
             {img && <img src={img} alt="" />}
             <h1>{title}</h1>
-            {/* <button onClick={openModal}>Update</button> */}
+            <button onClick={openModal}>Update</button>
           </div>
           <div className="details">
             {Object.entries(formattedInfo).map((item) => (
@@ -144,10 +143,21 @@ const Single = ({ userId, img, title, info = {}, chart, activities }: Props) => 
       >
         {loading && <div>Loading...</div>}
         {error && <div>Error: {error}</div>}
-        {user && <UserDetails user={user} closeModal={closeModal} />}
+        {user && (
+          <div>
+            <h2>User Details</h2>
+            <p>ID: {user.id}</p>
+            <p>First Name: {user.firstName}</p>
+            <p>Last Name: {user.lastName}</p>
+            <p>Email: {user.email}</p>
+            <p>Phone: {user.phone}</p>
+            <p>Created At: {formatFirebaseTimestamp(user.dateCreation)}</p>
+            <button onClick={closeModal}>Close</button>
+          </div>
+        )}
       </Modal>
     </div>
   );
-}
+};
 
 export default Single;
