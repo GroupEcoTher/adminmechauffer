@@ -34,6 +34,9 @@ const DataTable = (props: Props) => {
     // mutation.mutate(id)
   };
 
+
+
+  
   const actionColumn: GridColDef = {
     field: "action",
     headerName: "Action",
@@ -44,15 +47,14 @@ const DataTable = (props: Props) => {
           <Link to={`/${props.slug}/${params.row.id}`}>
             <img src="/view.svg" alt="" />
           </Link>
-          <div className="delete" onClick={() => handleDelete(params.row.id)}>
+          {/* <div className="delete" onClick={() => handleDelete(params.row.id)}>
             <img src="/delete.svg" alt="" />
-          </div>
+          </div> */}
         </div>
       );
     },
   };
 
-  
 
   return (
     <div className="dataTable">

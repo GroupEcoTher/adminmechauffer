@@ -9,8 +9,8 @@ const PartenairesFullLengthBox = () => {
 
   return (
     <div className="fullLengthBox">
-      <button className={`hoverEffect ${isActive('/UsersHome')}`} onClick={() => navigate('/UsersHome')}>Home Users</button>
-      <button className={`hoverEffect ${isActive('/UsersTraitements')}`} onClick={() => navigate('/UsersTraitements')}>Gestion Users <br /> États traitements</button>
+      <button className={`hoverEffect ${isActive('/UsersHome')}`} onClick={() => navigate('/UsersHome')}>Home Partenaires</button>
+      <button className={`hoverEffect ${isActive('/UsersTraitements')}`} onClick={() => navigate('/UsersTraitements')}>Gestion Partenaires <br /> États traitements</button>
       <button className={`hoverEffect ${isActive('/RecepMail')}`} onClick={() => navigate('/RecepMail')}>Réception Mails</button>
       <button className={`hoverEffect ${isActive('/QuestDem')}`} onClick={() => navigate('/QuestDem')}>Questions Demandes via le Site</button>
       <button className={`hoverEffect ${isActive('/HistAction')}`} onClick={() => navigate('/HistAction')}>Historique des actions Résumé d’utilisation</button>

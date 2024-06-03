@@ -1,10 +1,11 @@
 import "./topBox.scss"
-import {topDealUsers} from "../../data.ts"
+import {topDealUsers} from "../../data"
+
 
 const TopBox = () => {
   return (
     <div className="topBox">
-      <h1>Top Partenaires</h1>
+      <h1>Top </h1>
       <div className="list">
         {topDealUsers.map(user=>(
           <div className="listItem" key={user.id}>

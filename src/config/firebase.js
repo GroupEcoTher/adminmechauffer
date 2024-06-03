@@ -1,8 +1,10 @@
 // Import the functions you need from the SDKs you need
+
+import { sendPasswordResetEmail } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
-import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
+import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 import {
-  getFirestore,
   collection,
   addDoc,
   doc,
@@ -39,10 +41,12 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const appSecond = initializeApp(firebaseConfig, 'Secondary');
+
 export const db = getFirestore(app);
 export const auth = getAuth(app);
 export const authSecond = getAuth(appSecond);
 export const storage = getStorage(app);
+
 
 export const getData = async () => {
   const querySnapshot = await getDocs(collection(db, "users"));
@@ -392,3 +396,5 @@ export const getAllUsers = async () => {
   });
   return users;
 };
+
+export default firebaseConfig;

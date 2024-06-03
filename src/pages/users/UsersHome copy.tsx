@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
-
 import BarChartBox from "../../components/barChartBox/BarChartBox";
 import BigChartBox from "../../components/bigChartBox/BigChartBox";
 import ChartBox from "../../components/chartBox/ChartBox";
 import PieChartBox from "../../components/pieCartBox/PieChartBox";
 import TopBox from "../../components/topBox/TopBox";
-
 import {
   barChartBoxRevenue,
   barChartBoxVisit,
@@ -13,12 +11,9 @@ import {
   chartBoxProduct,
   chartBoxRevenue,
   chartBoxUser,
-  barChartBoxValidated,
 } from "../../data";
-import "../users/Usershome.scss";
+import "../users/usersHome.scss";
 import FullLengthBox from "../../pages/users/FullLengthBox";
-
-
 
 const chartBoxData = [chartBoxUser, chartBoxProduct, chartBoxConversion, chartBoxRevenue];
 const barChartBoxData = [barChartBoxVisit, barChartBoxRevenue];
@@ -30,7 +25,8 @@ const UsersHome = ({ title }) => {
   useEffect(() => {
     const fetchData = async () => {
       const usersData = await getData();
-      const totalUsersCount = await getTotalUsers('user'); 
+      const totalUsersCount = await getTotalUsers('user'); // Remplacez 'user' par le rôle souhaité
+
       setUsers(usersData);
       setTotalUsers(totalUsersCount);
     };
@@ -39,50 +35,18 @@ const UsersHome = ({ title }) => {
   }, []);
 
   return (
-    <>
-      <div className="home">
-        <h1 className="page-title">{title}</h1>
-        <FullLengthBox />
-
-
-
-
-
-        {chartBoxData.map((data, index) => (
-          <div className={`box box${index+2}`} key={index}>
-            <ChartBox {...data} />
-          </div>
-        ))}
-        
-
-        {/*<div className="box box4"><PieChartBox /></div>{/*Leads by Source*/}
-        
-        {/*<div className="box box7"><BigChartBox /></div> {/*Analytics Global*/}
-
-
-        {/*<div className="box box1"><TopBox /></div> {/*Top*/}
-
-       
-
-
-
-
-
-        
-
-
-
-        {barChartBoxData.map((data, index) => (
-          <div className={`box box${index+2}`} key={index}>
-            <BarChartBox {...data} />
-          </div>
-        ))}
-
-
-
-
+    <div className="home">
+      <h1 className="page-title">{title}</h1>
+      <FullLengthBox />
+      <div className="box box10">
+        <h2>Total Users: {totalUsers}</h2>
+        <ul>
+          {users.map(user => (
+            <li key={user.id}>{user.name} - {user.email}</li> // Remplacez name et email par les champs appropriés de votre collection users
+          ))}
+        </ul>
       </div>
-    </>
+    </div>
   );
 };
 

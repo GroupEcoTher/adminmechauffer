@@ -1,5 +1,6 @@
 import { GridColDef } from "@mui/x-data-grid";
-import "./add.scss";
+import "./modal.scss";
+import { useParams } from "react-router-dom";
 
 type Props = {
   slug: string;
@@ -21,7 +22,8 @@ type Props = {
 // };
 // firebase.initializeApp(config);
 
-const Add = (props: Props) => {
+const modalUsers = (props: Props) => {
+    
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -48,6 +50,9 @@ const Add = (props: Props) => {
           X
         </span>
         <h1>Add new {props.slug}</h1>
+
+
+
         <form onSubmit={handleSubmit}>
           {props.columns
             .filter((item) => item.field !== "id" && item.field !== "img" && item.field !== "action" && item.field !== "Vérifiée")
@@ -57,7 +62,7 @@ const Add = (props: Props) => {
                 <input type={column.field === 'Pièce Identité' || column.field === 'Avis D\'impôts' ? 'file' : column.type} placeholder={column.field} />
               </div>
             ))}
-          <button>Si vous êtes sûre de vouloir créer un Nouveau</button>
+          <button>Fermer</button>
         </form>
 
 
@@ -67,4 +72,4 @@ const Add = (props: Props) => {
   );
 };
 
-export default Add;
+export default modalUsers;

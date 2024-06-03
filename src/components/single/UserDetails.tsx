@@ -1,11 +1,14 @@
 // src/components/single/UserDetails.tsx
 
-
 import React from 'react';
 import formatFirebaseTimestamp from '../../components/single/Single';
 
 
 function UserDetails({ user, closeModal }) {
+  if (!user) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div>
       <h2>User Details</h2>

@@ -40,7 +40,6 @@ export const menu = [
       {
         id: 4,
         title: "Profile...TEST",
-        url: "/users/1",
         icon: "user.svg",
       },
 
@@ -135,7 +134,6 @@ export const menu = [
   },
 
 ];
-
 export const topDealUsers = [
   {
     id: 1,
@@ -187,10 +185,9 @@ export const topDealUsers = [
     amount: "1.560",
   },
 ];
-
-export const chartBoxUser = {
-  color: "#8884d8",
-  icon: "/userIcon.svg",
+export const chartBoxUser = { // total Users
+  //color: "#8884d8",
+  //icon: "/userIcon.svg",
   title: "Total Users",
   number: "11.238",
   dataKey: "users",
@@ -206,10 +203,11 @@ export const chartBoxUser = {
   ],
 };
 
-export const chartBoxProduct = {
-  color: "skyblue",
-  icon: "/productIcon.svg",
-  title: "Total Products",
+
+export const chartBoxProduct = { //CONVERSION Visites > Inscrits
+  //color: "skyblue",
+  //icon: "/productIcon.svg",
+  title: "CONVERSION  Visites - Inscrits",
   number: "238",
   dataKey: "products",
   percentage: 21,
@@ -223,44 +221,28 @@ export const chartBoxProduct = {
     { name: "Sat", products: 450 },
   ],
 };
+
 export const chartBoxRevenue = {
-  color: "teal",
-  icon: "/revenueIcon.svg",
+  //color: "teal",
+  //icon: "/revenueIcon.svg",
   title: "Total Revenue",
   number: "$56.432",
   dataKey: "revenue",
   percentage: -12,
   chartData: [
-    { name: "Sun", revenue: 400 },
+    { name: "Sun", revenue: 800 },
     { name: "Mon", revenue: 600 },
     { name: "Tue", revenue: 500 },
-    { name: "Wed", revenue: 700 },
+    { name: "Wed", revenue: 200 },
     { name: "Thu", revenue: 400 },
     { name: "Fri", revenue: 500 },
     { name: "Sat", revenue: 450 },
   ],
 };
-export const chartBoxConversion = {
-  color: "gold",
-  icon: "/conversionIcon.svg",
-  title: "Total Ratio",
-  number: "2.6",
-  dataKey: "ratio",
-  percentage: 12,
-  chartData: [
-    { name: "Sun", ratio: 400 },
-    { name: "Mon", ratio: 600 },
-    { name: "Tue", ratio: 500 },
-    { name: "Wed", ratio: 700 },
-    { name: "Thu", ratio: 400 },
-    { name: "Fri", ratio: 500 },
-    { name: "Sat", ratio: 450 },
-  ],
-};
 
-export const barChartBoxRevenue = {
-  title: "Profit Earned",
-  color: "#8884d8",
+export const barChartBoxValidated = {// BOX USERS VALIDES à afficher
+  title: "Users Valides",
+  color: "Grey",
   dataKey: "profit",
   chartData: [
     {
@@ -294,26 +276,78 @@ export const barChartBoxRevenue = {
   ],
 };
 
-export const barChartBoxVisit = {
+export const chartBoxConversion = {//CONVERSION Inscrits > Validés
+  //color: "gold",
+  //icon: "/conversionIcon.svg",
+  title: "CONVERSION Inscrits - Validés",
+  number: "2.6",
+  dataKey: "ratio",
+  percentage: 12,
+  chartData: [
+    { name: "Sun", ratio: 400 },
+    { name: "Mon", ratio: 600 },
+    { name: "Tue", ratio: 500 },
+    { name: "Wed", ratio: 700 },
+    { name: "Thu", ratio: 400 },
+    { name: "Fri", ratio: 500 },
+    { name: "Sat", ratio: 450 },
+  ],
+};
+export const barChartBoxRevenue = {//Traveaux Users End
+  title: "Traveaux Users End",
+  color: "Grey",
+  dataKey: "profit",
+  chartData: [
+    {
+      name: "Sun",
+      profit: 4000,
+    },
+    {
+      name: "Mon",
+      profit: 3000,
+    },
+    {
+      name: "Tue",
+      profit: 2000,
+    },
+    {
+      name: "Wed",
+      profit: 2780,
+    },
+    {
+      name: "Thu",
+      profit: 1890,
+    },
+    {
+      name: "Fri",
+      profit: 2390,
+    },
+    {
+      name: "Sat",
+      profit: 3490,
+    },
+  ],
+};
+export const barChartBoxVisit = { // Total Visit Green
   title: "Total Visit",
-  color: "#FF8042",
+  color: "Grey",
   dataKey: "visit",
   chartData: [
     {
       name: "Sun",
-      visit: 4000,
+      visit: 1000,
     },
     {
       name: "Mon",
-      visit: 3000,
+      visit: 6000,
     },
     {
       name: "Tue",
-      visit: 2000,
+      visit: 4000,
     },
     {
       name: "Wed",
-      visit: 2780,
+      visit: 8780,
     },
     {
       name: "Thu",
@@ -321,15 +355,14 @@ export const barChartBoxVisit = {
     },
     {
       name: "Fri",
-      visit: 2390,
+      visit: 4390,
     },
     {
       name: "Sat",
-      visit: 3490,
+      visit: 7490,
     },
   ],
 };
-
 
 export const userRows = [
   {
@@ -630,86 +663,6 @@ export const products = [
   },
 ];
 
-export const singleUser = {
-  id: 1,
-  title: "John Doe",
-  img: "https://images.pexels.com/photos/17397364/pexels-photo-17397364.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
-  info: {
-    username: "Johndoe99",
-    fullname: "John Doe",
-    email: "johndoe@gmail.com",
-    phone: "123 456 789",
-    status: "verified",
-  },
-  chart: {
-    dataKeys: [
-      { name: "visits", color: "#82ca9d" },
-      { name: "clicks", color: "#8884d8" },
-    ],
-    data: [
-      {
-        name: "Sun",
-        visits: 4000,
-        clicks: 2400,
-      },
-      {
-        name: "Mon",
-        visits: 3000,
-        clicks: 1398,
-      },
-      {
-        name: "Tue",
-        visits: 2000,
-        clicks: 3800,
-      },
-      {
-        name: "Wed",
-        visits: 2780,
-        clicks: 3908,
-      },
-      {
-        name: "Thu",
-        visits: 1890,
-        clicks: 4800,
-      },
-      {
-        name: "Fri",
-        visits: 2390,
-        clicks: 3800,
-      },
-      {
-        name: "Sat",
-        visits: 3490,
-        clicks: 4300,
-      },
-    ],
-  },
-  activities: [
-    {
-      text: "Ici les dernières activités d'Elyes ou de Jarod",
-    },
-    {
-      text: "Ici les dernières activités d'Elyes ou de Jarod",
-      time: "1 week ago",
-    },
-    {
-      text: "Ici les dernières activités d'Elyes ou de Jarod",
-      time: "2 weeks ago",
-    },
-    {
-      text: "Ici les dernières activités d'Elyes ou de Jarod",
-      time: "1 month ago",
-    },
-    {
-      text: "Ici les dernières activités d'Elyes ou de Jarod",
-      time: "1 month ago",
-    },
-    {
-      text: "Ici les dernières activités d'Elyes ou de Jarod",
-      time: "2 months ago",
-    },
-  ],
-};
 export const singleProduct = {
   id: 1,
   title: "Playstation 5 Digital Edition",

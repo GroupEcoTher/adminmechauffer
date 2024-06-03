@@ -20,6 +20,11 @@ import Partenaires from "./pages/Partenaires/Partenaires";
 import Parains from "./pages/Parains/Parains";
 import Product from "./pages/product/Product";
 import "./styles/global.scss";
+import firebase from './config/firebase.js';
+
+//import { BrowserRouter as Router, Route } from 'react-router-dom';
+//import ModalUsers from './components/allModal/modalUsers.tsx';
+
 
 const queryClient = new QueryClient();
 
@@ -60,6 +65,7 @@ const router = createBrowserRouter([
       { path: "/users/:id", element: <User title="Détails de l'utilisateur" /> },
       { path: "/products/:id", element: <Product title="Détails du produit" /> },
       { path: "/AideDoc", element: <AideDoc title="Aide - Documentation" /> },
+      
     ],
   },
   { path: "/login", element: <Login title="Connexion" /> },

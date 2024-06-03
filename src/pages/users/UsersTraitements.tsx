@@ -1,3 +1,4 @@
+// usersTraitements.tsx
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { GridColDef } from "@mui/x-data-grid";
@@ -13,6 +14,7 @@ import FullLengthBox from "./FullLengthBox";
 import "../home/home.scss";
 import Single from '../../components/single/Single';
 import moment from 'moment';
+import modalUsers from '../../components/allModal/modalUsers';
 
 // Initialiser react-modal
 Modal.setAppElement('#root');
@@ -73,11 +75,13 @@ const UsersTraitements = ({ title }) => {
       headerName: "ID", 
       width: 40,
       
+      
       ////  ACTION   USERS   >  Route path="/users/:id"  >   user/User.tsx  >  <Single {...singleUser}/>
       renderCell: (params) => (
         <div onClick={() => {
-          setSelectedUserId(params.value);
-          setIsModalOpen(true);
+          //setSelectedUserId(params.value);
+          //setIsModalOpen(true);
+          navigate(`/modalUsers/${params.value}`);
         }}> 
           {params.value}
         </div>
@@ -113,13 +117,22 @@ const UsersTraitements = ({ title }) => {
       headerName: "Created At",
       width: 110,
       valueGetter: (params) => {
-        if (params.row.dateCreation) {
-          const date = new Date(params.row.dateCreation);
-          if (!isNaN(date)) {
-            return date;
-          }
+        const format = 'DD MMMM YYYY';
+        const firebaseTimestamp = params.row.dateCreation;
+
+        moment.locale('fr');
+
+        if(firebaseTimestamp?.seconds && firebaseTimestamp?.nanoseconds) {  
+        
+        const milliseconds = firebaseTimestamp?.seconds * 1000 + firebaseTimestamp?.nanoseconds / 1000000;
+        
+        const date = new Date(milliseconds);
+
+        console.log(date);
+        
+        return date;
         }
-        return null;
+        else return '';
       },
       valueFormatter: (params) => {
         if (params.value) {
@@ -214,23 +227,30 @@ const UsersTraitements = ({ title }) => {
 
   const isActive = (path) => location.pathname === path ? 'active' : '';
 
+
+
   return (
     <div className="home">
       <h1 className="page-title">{title}</h1>
-      <FullLengthBox />
 
+      {/* MENU */}
+      <FullLengthBox /> 
+
+
+      {/* SOUS MENU*/}
       <div className={`info ${isActive ? 'active' : ''}`}>
         <button className={activeUserType === 'all' ? 'active' : ''} onClick={handleAllUsersClick}>ALL USERS</button>
         <button className={activeUserType === 'incomplete' ? 'active' : ''} onClick={handleIncompleteUsersClick}>USERS Incomplets</button>
         <button className={activeUserType === 'nc' ? 'active' : ''} onClick={handleNCUsersClick}>USERS NC</button>
 
-       
+
+        {/* LE BOUTTON ADD du GridColDef */}
         <button onClick={() => setOpen(true)}>Add New User</button>
-        {/* les boutons  audessus du GridColDef */}
         
+        {/* LE GRID LA GRILLE*/}
         {user && <DataTable slug="users" columns={columns} rows={user} />}
-        {/* AUDESSUS LA GRID */}
         
+        {/* LIEN DU BOUTTON Add New User */}
         {open && <Add slug="user" columns={columns} setOpen={setOpen} />}
 
 
@@ -239,13 +259,13 @@ const UsersTraitements = ({ title }) => {
           <button onClick={() => setIsModalOpen(false)}>Retour à la page du grid</button>
         </Modal>
 
-
-        
-      
-      
+          
       </div>
     </div>
   );
 };
 
 export default UsersTraitements;
+
+
+//RAPPEL : UsersTraitements > datatable grid > bouton action > user.tsx >>  single.tsx ----<Single {...singleUser}/>
