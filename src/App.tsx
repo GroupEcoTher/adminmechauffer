@@ -1,5 +1,4 @@
-import React from "react";
-import { useNavigate } from 'react-router-dom';
+import './config/firebase.js';
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -14,17 +13,14 @@ import AideDoc from "./pages/users/AideDoc";
 import HistAction from "./pages/users/HistAction";
 import QuestDem from "./pages/users/QuestDem";
 import RecepMail from "./pages/users/RecepMail";
-import UsersTraitements from "./pages/users/UsersTraitements"; // Correction de l'importation
+import UsersTraitements from "./pages/users/UsersTraitements"; 
 import UsersHome from "./pages/users/UsersHome";
 import Partenaires from "./pages/Partenaires/Partenaires";
 import Parains from "./pages/Parains/Parains";
 import Product from "./pages/product/Product";
 import "./styles/global.scss";
-import firebase from './config/firebase.js';
-
-//import { BrowserRouter as Router, Route } from 'react-router-dom';
-//import ModalUsers from './components/allModal/modalUsers.tsx';
-
+import DataTable from './components/dataTable/DataTable';
+import ModalUsers from './components/allModal/ModalUsers';
 
 const queryClient = new QueryClient();
 
@@ -53,7 +49,6 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       { path: "/", element: <Home title="Homepage : les stats basic et messages internes" /> },
-      
       { path: "/UsersHome", element: <UsersHome title="Gestion - Users" /> },
       { path: "/UsersTraitements", element: <UsersTraitements title="Gestion Users - États & Traitements" /> },
       { path: "/Partenaires", element: <Partenaires title="Gestion - Partenaires" /> },
@@ -65,7 +60,11 @@ const router = createBrowserRouter([
       { path: "/users/:id", element: <User title="Détails de l'utilisateur" /> },
       { path: "/products/:id", element: <Product title="Détails du produit" /> },
       { path: "/AideDoc", element: <AideDoc title="Aide - Documentation" /> },
+      { path: "/datatable", element: <DataTable title= "table"/> },
+      { path: "/ModalUsers/:id", element: <ModalUsers title="Modal Users" /> },
+   
       
+    
     ],
   },
   { path: "/login", element: <Login title="Connexion" /> },

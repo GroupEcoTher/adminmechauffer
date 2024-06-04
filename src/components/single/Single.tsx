@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import "./single.scss";
-import UserDetails from './UserDetails'; // Assurez-vous que cette importation est correcte
 //import { getUserById } from '../../config/firebase'; // Import correct de getUserById
-import { getUserById } from '/src/config/firebase.js';
 
 const Single = () => {
   const { userId } = useParams();

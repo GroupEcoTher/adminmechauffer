@@ -1,75 +1,43 @@
-import { GridColDef } from "@mui/x-data-grid";
-import "./modal.scss";
-import { useParams } from "react-router-dom";
-
-type Props = {
-  slug: string;
-  columns: GridColDef[];
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-};
-
-// import firebase from 'firebase/app';
-// import 'firebase/database';
-
-// Initialize Firebase
-// TODO: Replace with your project's customized code snippet
-// var config = {
-//   apiKey: "<API_KEY>",
-//   authDomain: "<PROJECT_ID>.firebaseapp.com",
-//   databaseURL: "https://<DATABASE_NAME>.firebaseio.com",
-//   storageBucket: "<BUCKET>.appspot.com",
-//   messagingSenderId: "<SENDER_ID>",
-// };
-// firebase.initializeApp(config);
-
-const modalUsers = (props: Props) => {
-    
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    //add new item
-    // firebase.database().ref(`${props.slug}s/111`).set({
-    //   img: "",
-    //   lastName: "Hello",
-    //   firstName: "Test",
-    //   email: "testme@gmail.com",
-    //   phone: "123 456 789",
-    //   createdAt: "01.02.2023",
-    //   verified: true,
-    // });
-
-    props.setOpen(false)
-  };
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/database';
+import { useEffect, useState } from 'react';
+import '../../components/allModal/allmodal.scss';
 
 
+const ModalUsers = () => {
+
+
+  const [userData, setUserData] = useState(null);
+
+  // Récupérer les données de l'utilisateur depuis Firebase
+  const getUserData = async () => {
+    const userRef = firebase.database().ref('users/111');
+    const snapshot = await userRef.once('value');
+    const userData = snapshot.val();
+    setUserData(userData);
+  }
+
+  useEffect(() => {
+    getUserData();
+  }, []);
 
   return (
     <div className="add">
       <div className="modal">
-        <span className="close" onClick={() => props.setOpen(false)}>
-          X
-        </span>
-        <h1>Add new {props.slug}</h1>
-
-
-
-        <form onSubmit={handleSubmit}>
-          {props.columns
-            .filter((item) => item.field !== "id" && item.field !== "img" && item.field !== "action" && item.field !== "Vérifiée")
-            .map((column) => (
-              <div className="item">
-                <label>{column.headerName}</label>
-                <input type={column.field === 'Pièce Identité' || column.field === 'Avis D\'impôts' ? 'file' : column.type} placeholder={column.field} />
-              </div>
-            ))}
-          <button>Fermer</button>
-        </form>
-
-
-
+        {userData && (
+          <div>
+            <h1>Informations sur l'utilisateur</h1>
+            <p>Nom : {userData.lastName}</p>
+            <p>Prénom : {userData.firstName}</p>
+            <p>Email : {userData.email}</p>
+            <p>Téléphone : {userData.phone}</p>
+            <p>Date de création : {userData.createdAt}</p>
+            <p>Vérifié : {userData.verified ? 'Oui' : 'Non'}</p>
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
-export default modalUsers;
+export default ModalUsers;

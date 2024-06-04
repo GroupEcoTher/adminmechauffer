@@ -3,6 +3,7 @@
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
+import { getStorage } from 'firebase/storage';
 import { getFirestore } from 'firebase/firestore';
 import {
   collection,
@@ -22,7 +23,7 @@ import {
   orderBy,
   onSnapshot,
 } from 'firebase/firestore';
-import { getStorage } from 'firebase/storage';
+
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -36,7 +37,6 @@ const firebaseConfig = {
   messagingSenderId: '336346984646',
   appId: '1:336346984646:web:00b5f78bbf7aa4225c27c7',
 };
-
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -57,6 +57,31 @@ export const getData = async () => {
     console.log(user);
     return user;
 }
+
+export const getDataUsers = async (token) => {
+  const usersRef = collection(db, 'users');
+  const q = query(usersRef, where('tokenPartenaire', '==', token));
+  const querySnapshot = await getDocs(q);
+  let users = [];
+  querySnapshot.forEach((doc) => {
+    // doc.data() is never undefined for query doc snapshots
+    users.push(  {id : doc.id, data : doc.data()}  );
+  });
+  return users;
+}
+
+
+
+export const TotalUsers = async () => {
+  const querySnapshot = await getDocs(collection(db, "users"));
+  const users = [];
+  querySnapshot.forEach((doc) => {
+    if(!doc.data().additionalData) users.push({ id: doc.id, ...doc.data() });
+  });
+  console.log(users.length);
+  return users.length; // Retourne le nombre total d'utilisateurs
+}
+
 
 export const getDataAdressebyUserID = async (user) => {
 
@@ -111,17 +136,7 @@ export const getTempXcpByTokenID = async (Token) => {
   return res;
 }
 
-export const getUserParrainbyTokenID = async (Token) => {
-  const usersRef = collection(db, 'users');
-  const q = query(usersRef, where('tokenParrain', '==', Token));
-  const querySnapshot = await getDocs(q);
-  let res = [];
-  querySnapshot.forEach((doc) => {
-    // doc.data() is never undefined for query doc snapshots
-    res.push(  {id : doc.id, data : doc.data()}  );
-  });
-  return res;
-}
+
 
 export const getParrainbyTokenID = async (Token) => {
   const usersRef = collection(db, 'users');

@@ -14,7 +14,7 @@ import FullLengthBox from "./FullLengthBox";
 import "../home/home.scss";
 import Single from '../../components/single/Single';
 import moment from 'moment';
-import modalUsers from '../../components/allModal/modalUsers';
+import modalUsers from '../../components/allModal/ModalUsers';
 
 // Initialiser react-modal
 Modal.setAppElement('#root');
@@ -74,13 +74,12 @@ const UsersTraitements = ({ title }) => {
       field: "id", 
       headerName: "ID", 
       width: 40,
-      
-      
+    
       ////  ACTION   USERS   >  Route path="/users/:id"  >   user/User.tsx  >  <Single {...singleUser}/>
       renderCell: (params) => (
         <div onClick={() => {
-          //setSelectedUserId(params.value);
-          //setIsModalOpen(true);
+          setSelectedUserId(params.value);
+          setIsModalOpen(true);
           navigate(`/modalUsers/${params.value}`);
         }}> 
           {params.value}
@@ -116,6 +115,8 @@ const UsersTraitements = ({ title }) => {
       type: "date",
       headerName: "Created At",
       width: 110,
+
+      
       valueGetter: (params) => {
         const format = 'DD MMMM YYYY';
         const firebaseTimestamp = params.row.dateCreation;
@@ -254,12 +255,6 @@ const UsersTraitements = ({ title }) => {
         {open && <Add slug="user" columns={columns} setOpen={setOpen} />}
 
 
-        <Modal isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)}>
-          <Single userId={selectedUserId} />
-          <button onClick={() => setIsModalOpen(false)}>Retour à la page du grid</button>
-        </Modal>
-
-          
       </div>
     </div>
   );

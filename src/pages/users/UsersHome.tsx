@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-
-import BarChartBox from "../../components/barChartBox/BarChartBox";
-import BigChartBox from "../../components/bigChartBox/BigChartBox";
 import ChartBox from "../../components/chartBox/ChartBox";
-import PieChartBox from "../../components/pieCartBox/PieChartBox";
-import TopBox from "../../components/topBox/TopBox";
+import BarChartBox from "../../components/barChartBox/BarChartBox";
+//import BigChartBox from "../../components/bigChartBox/BigChartBox";
+//import PieChartBox from "../../components/pieCartBox/PieChartBox";
+//import TopBox from "../../components/topBox/TopBox";
+
+
 
 import {
   barChartBoxRevenue,
@@ -13,7 +14,7 @@ import {
   chartBoxProduct,
   chartBoxRevenue,
   chartBoxUser,
-  barChartBoxValidated,
+  //barChartBoxValidated,
 } from "../../data";
 import "../users/Usershome.scss";
 import FullLengthBox from "../../pages/users/FullLengthBox";
@@ -54,22 +55,11 @@ const UsersHome = ({ title }) => {
           </div>
         ))}
         
-
         {/*<div className="box box4"><PieChartBox /></div>{/*Leads by Source*/}
         
         {/*<div className="box box7"><BigChartBox /></div> {/*Analytics Global*/}
 
-
         {/*<div className="box box1"><TopBox /></div> {/*Top*/}
-
-       
-
-
-
-
-
-        
-
 
 
         {barChartBoxData.map((data, index) => (
@@ -77,9 +67,6 @@ const UsersHome = ({ title }) => {
             <BarChartBox {...data} />
           </div>
         ))}
-
-
-
 
       </div>
     </>

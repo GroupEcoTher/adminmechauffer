@@ -202,8 +202,6 @@ export const chartBoxUser = { // total Users
     { name: "Sat", users: 450 },
   ],
 };
-
-
 export const chartBoxProduct = { //CONVERSION Visites > Inscrits
   //color: "skyblue",
   //icon: "/productIcon.svg",
@@ -221,7 +219,6 @@ export const chartBoxProduct = { //CONVERSION Visites > Inscrits
     { name: "Sat", products: 450 },
   ],
 };
-
 export const chartBoxRevenue = {
   //color: "teal",
   //icon: "/revenueIcon.svg",
@@ -239,7 +236,6 @@ export const chartBoxRevenue = {
     { name: "Sat", revenue: 450 },
   ],
 };
-
 export const barChartBoxValidated = {// BOX USERS VALIDES à afficher
   title: "Users Valides",
   color: "Grey",
@@ -275,7 +271,6 @@ export const barChartBoxValidated = {// BOX USERS VALIDES à afficher
     },
   ],
 };
-
 export const chartBoxConversion = {//CONVERSION Inscrits > Validés
   //color: "gold",
   //icon: "/conversionIcon.svg",
@@ -363,6 +358,7 @@ export const barChartBoxVisit = { // Total Visit Green
     },
   ],
 };
+////////////////////////////////////////////////////////////
 
 export const userRows = [
   {
@@ -562,7 +558,6 @@ export const userRows = [
     verified: true,
   },
 ];
-
 export const products = [
   {
     id: 1,
@@ -662,7 +657,6 @@ export const products = [
     inStock: true,
   },
 ];
-
 export const singleProduct = {
   id: 1,
   title: "Playstation 5 Digital Edition",
