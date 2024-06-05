@@ -12,14 +12,14 @@
   justify-content: center;
 
   .modal {
-    width: 80%;
-    padding: 350px;
+    width: 60%;
+    padding: 20px;  // Ajuster le padding
     border-radius: 10px;
     background-color: $main-bg;
     position: relative;
 
     h1 {
-      margin-bottom: 40px;
+      margin-bottom: 20px;
       font-size: 24px;
       color: $soft-color;
     }
@@ -29,38 +29,36 @@
       top: 10px;
       right: 10px;
       cursor: pointer;
+      font-size: 24px;
+      color: $soft-color;
     }
 
     form {
       display: flex;
-      flex-wrap: wrap;
-      max-width: 500px;
-      justify-content: space-between;
+      flex-direction: column;  // Align items vertically
+      max-width: 100%;  // Utiliser toute la largeur disponible
 
       .item {
-        width: 40%;
+        width: 20%;  // Utiliser toute la largeur disponible
         display: flex;
         flex-direction: column;
         gap: 10px;
         margin-bottom: 20px;
 
-        label {
+        p {
           font-size: 14px;
         }
-
-        //input {
-          //padding: 10px;
-          //background-color: transparent;
-          //color: white;
-          //outline: none;
-          //border: 1px solid $soft-color;
-         // border-radius: 3px;
-        //}
       }
+
       button {
-        width: 100%;
-        padding: 10px;
+        margin-top: 20px;
+        padding: 10px 20px;
+        background-color: hwb(104 61% 0%);
+        color: rgb(14, 13, 13);
+        border: none;
+        border-radius: 4px;
         cursor: pointer;
+        align-self: flex-end;  // Aligner le bouton à droite
       }
     }
   }

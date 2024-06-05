@@ -7,34 +7,10 @@ type Props = {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-// import firebase from 'firebase/app';
-// import 'firebase/database';
-
-// Initialize Firebase
-// TODO: Replace with your project's customized code snippet
-// var config = {
-//   apiKey: "<API_KEY>",
-//   authDomain: "<PROJECT_ID>.firebaseapp.com",
-//   databaseURL: "https://<DATABASE_NAME>.firebaseio.com",
-//   storageBucket: "<BUCKET>.appspot.com",
-//   messagingSenderId: "<SENDER_ID>",
-// };
-// firebase.initializeApp(config);
 
 const Add = (props: Props) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    //add new item
-    // firebase.database().ref(`${props.slug}s/111`).set({
-    //   img: "",
-    //   lastName: "Hello",
-    //   firstName: "Test",
-    //   email: "testme@gmail.com",
-    //   phone: "123 456 789",
-    //   createdAt: "01.02.2023",
-    //   verified: true,
-    // });
 
     props.setOpen(false)
   };
@@ -48,6 +24,7 @@ const Add = (props: Props) => {
           X
         </span>
         <h1>Add new {props.slug}</h1>
+        
         <form onSubmit={handleSubmit}>
           {props.columns
             .filter((item) => item.field !== "id" && item.field !== "img" && item.field !== "action" && item.field !== "Vérifiée")
