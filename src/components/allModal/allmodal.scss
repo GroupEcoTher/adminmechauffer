@@ -12,7 +12,8 @@
   justify-content: center;
 
   .modal {
-    padding: 50px;
+    width: 80%;
+    padding: 350px;
     border-radius: 10px;
     background-color: $main-bg;
     position: relative;
@@ -47,14 +48,14 @@
           font-size: 14px;
         }
 
-        input {
-          padding: 10px;
-          background-color: transparent;
-          color: white;
-          outline: none;
-          border: 1px solid $soft-color;
-          border-radius: 3px;
-        }
+        //input {
+          //padding: 10px;
+          //background-color: transparent;
+          //color: white;
+          //outline: none;
+          //border: 1px solid $soft-color;
+         // border-radius: 3px;
+        //}
       }
       button {
         width: 100%;

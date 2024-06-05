@@ -6,20 +6,15 @@ import Modal from 'react-modal';
 import DataTable from "../../components/dataTable/DataTable";
 import { useEffect, useState } from "react";
 import Add from "../../components/add/Add";
-import { userRows } from "../../data";
-import DocValidnModal from "../../components/DocValidnModal/DocValidnModal";
 import { getData } from "../../config/firebase";
-import { getIncompleteUsers, getNCUsers, getAllUsers } from "../../config/firebase";
+import { getAllUsers } from "../../config/firebase";
 import FullLengthBox from "./FullLengthBox";
 import "../home/home.scss";
-import Single from '../../components/single/Single';
 import moment from 'moment';
-import modalUsers from '../../components/allModal/ModalUsers';
 
 // Initialiser react-modal
 Modal.setAppElement('#root');
 
-// Fonction dateCréation
 const dateCréation = (firebaseTimestamp) => {
   moment.locale('fr');
   const milliseconds = firebaseTimestamp.seconds * 1000 + firebaseTimestamp.nanoseconds / 1000000;
@@ -31,18 +26,20 @@ const UsersTraitements = ({ title }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [open, setOpen] = useState(false);
+  const [user, setUser] = useState(null);
+  const [documentVerification, setDocumentVerification] = useState({});
+
+  const [activeUserType, setActiveUserType] = useState('all');
   const [identityDocumentUrl, setIdentityDocumentUrl] = useState('');
   const [taxNoticeUrl, setTaxNoticeUrl] = useState('');
   const [documentVerified, setDocumentVerified] = useState(false);
   const [documentUrl, setDocumentUrl] = useState('');
   const [identityDocumentNC, setIdentityDocumentNC] = useState(false);
   const [taxNoticeNC, setTaxNoticeNC] = useState(false);
-  const [documentVerification, setDocumentVerification] = useState({});
-  const [user, setUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
-  const [activeUserType, setActiveUserType] = useState('all');
-
+  
+  
   const handleIncompleteUsersClick = async () => {
     const incompleteUsers = await getIncompleteUsers();
     setUser(incompleteUsers);
@@ -80,7 +77,7 @@ const UsersTraitements = ({ title }) => {
         <div onClick={() => {
           setSelectedUserId(params.value);
           setIsModalOpen(true);
-          navigate(`/modalUsers/${params.value}`);
+          navigate(`/ModalUsers/${params.value}`);
         }}> 
           {params.value}
         </div>
@@ -110,27 +107,23 @@ const UsersTraitements = ({ title }) => {
       headerName: "Phone",
       width: 120,
     },
+
+
+
+
     {
       field: "dateCreation",
       type: "date",
       headerName: "Created At",
-      width: 110,
-
-      
+      width: 110,   
       valueGetter: (params) => {
         const format = 'DD MMMM YYYY';
         const firebaseTimestamp = params.row.dateCreation;
-
         moment.locale('fr');
-
         if(firebaseTimestamp?.seconds && firebaseTimestamp?.nanoseconds) {  
-        
-        const milliseconds = firebaseTimestamp?.seconds * 1000 + firebaseTimestamp?.nanoseconds / 1000000;
-        
+        const milliseconds = firebaseTimestamp?.seconds * 1000 + firebaseTimestamp?.nanoseconds / 1000000;   
         const date = new Date(milliseconds);
-
         console.log(date);
-        
         return date;
         }
         else return '';
@@ -142,6 +135,10 @@ const UsersTraitements = ({ title }) => {
         return "";
       }
     },
+
+
+
+
     {
       field: "Pièce Identité",
       headerName: "Pièce Identité",
@@ -230,6 +227,7 @@ const UsersTraitements = ({ title }) => {
 
 
 
+
   return (
     <div className="home">
       <h1 className="page-title">{title}</h1>
@@ -237,13 +235,11 @@ const UsersTraitements = ({ title }) => {
       {/* MENU */}
       <FullLengthBox /> 
 
-
       {/* SOUS MENU*/}
       <div className={`info ${isActive ? 'active' : ''}`}>
         <button className={activeUserType === 'all' ? 'active' : ''} onClick={handleAllUsersClick}>ALL USERS</button>
         <button className={activeUserType === 'incomplete' ? 'active' : ''} onClick={handleIncompleteUsersClick}>USERS Incomplets</button>
         <button className={activeUserType === 'nc' ? 'active' : ''} onClick={handleNCUsersClick}>USERS NC</button>
-
 
         {/* LE BOUTTON ADD du GridColDef */}
         <button onClick={() => setOpen(true)}>Add New User</button>
@@ -254,13 +250,11 @@ const UsersTraitements = ({ title }) => {
         {/* LIEN DU BOUTTON Add New User */}
         {open && <Add slug="user" columns={columns} setOpen={setOpen} />}
 
-
       </div>
     </div>
   );
 };
 
 export default UsersTraitements;
-
 
 //RAPPEL : UsersTraitements > datatable grid > bouton action > user.tsx >>  single.tsx ----<Single {...singleUser}/>

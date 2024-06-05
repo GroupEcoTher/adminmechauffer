@@ -5,8 +5,6 @@ import BarChartBox from "../../components/barChartBox/BarChartBox";
 //import PieChartBox from "../../components/pieCartBox/PieChartBox";
 //import TopBox from "../../components/topBox/TopBox";
 
-
-
 import {
   barChartBoxRevenue,
   barChartBoxVisit,
@@ -44,10 +42,6 @@ const UsersHome = ({ title }) => {
       <div className="home">
         <h1 className="page-title">{title}</h1>
         <FullLengthBox />
-
-
-
-
 
         {chartBoxData.map((data, index) => (
           <div className={`box box${index+2}`} key={index}>

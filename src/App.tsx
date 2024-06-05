@@ -1,4 +1,4 @@
-import './config/firebase.js';
+import './config/firebase.jsx';
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -21,6 +21,8 @@ import Product from "./pages/product/Product";
 import "./styles/global.scss";
 import DataTable from './components/dataTable/DataTable';
 import ModalUsers from './components/allModal/ModalUsers';
+
+
 
 const queryClient = new QueryClient();
 

@@ -1,4 +1,5 @@
 
+
 import {
   DataGrid,
   GridColDef,
@@ -64,8 +65,10 @@ const DataTable = (props: Props) => {
     },
   };
 
+
   return (
     <div className="dataTable">
+
       <DataGrid
         className="dataGrid"
         rows={props.rows}

@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client';
 import App from './App';
-import './config/firebase.js';
+import './config/firebase.jsx';
 
 const root = document.getElementById('root');
 if (root !== null) {
