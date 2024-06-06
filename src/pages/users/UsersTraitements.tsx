@@ -70,7 +70,7 @@ const UsersTraitements = ({ title }) => {
     { 
       field: "id", 
       headerName: "ID", 
-      width: 40,
+      width: 15,
     
       ////  ACTION   USERS   >  Route path="/users/:id"  >   user/User.tsx  >  <Single {...singleUser}/>
       renderCell: (params) => (
@@ -127,6 +127,7 @@ const UsersTraitements = ({ title }) => {
         return date;
         }
         else return '';
+        
       },
       valueFormatter: (params) => {
         if (params.value) {
@@ -212,7 +213,7 @@ const UsersTraitements = ({ title }) => {
     {
       field: "Vérifiée",
       headerName: "Vérifiée",
-      width: 100,
+      width: 60,
       type: "boolean",
       valueGetter: (params) => {
         return documentVerification[params.row.id]?.identityDocumentVerified && documentVerification[params.row.id]?.taxNoticeVerified;

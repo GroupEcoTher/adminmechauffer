@@ -1,3 +1,5 @@
+
+
 @import "../../styles/variables.scss";
 
 .add {
@@ -8,58 +10,87 @@
   left: 0;
   background-color: rgba(0, 0, 0, 0.724);
   display: flex;
-  align-items: center;
+  align-items: normal;
   justify-content: center;
+  overflow: auto;  // Activer le défilement si le contenu dépasse la hauteur de la fenêtre
+
 
   .modal {
-    width: 60%;
-    padding: 20px;  // Ajuster le padding
+    width: 80%;
+    max-height: 120%;  // Limiter la hauteur du modal pour éviter qu'il ne dépasse la hauteur de la fenêtre
+    padding: 25px;
     border-radius: 10px;
     background-color: $main-bg;
-    position: relative;
+    //position: relative;
+    overflow: auto;  // Activer le défilement si le contenu du modal dépasse sa hauteur
+
 
     h1 {
-      margin-bottom: 20px;
-      font-size: 24px;
-      color: $soft-color;
+      margin-bottom: 5px;
+      font-size: 15px;
+      color: white;
     }
 
-    .close {
+    .close { // la croix pour fermer
       position: absolute;
       top: 10px;
       right: 10px;
       cursor: pointer;
       font-size: 24px;
-      color: $soft-color;
+      color: rgb(255, 255, 255);
     }
 
-    form {
-      display: flex;
-      flex-direction: column;  // Align items vertically
-      max-width: 100%;  // Utiliser toute la largeur disponible
+   
+    .content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;  // Deux colonnes égales
+      grid-gap: 400px;  // Espacement entre les éléments
 
-      .item {
-        width: 20%;  // Utiliser toute la largeur disponible
+      .column {
         display: flex;
         flex-direction: column;
-        gap: 10px;
-        margin-bottom: 20px;
+        gap: 5px;  // Espacement entre les éléments à l'intérieur de chaque colonne
 
-        p {
-          font-size: 14px;
+        .item {
+          //height: px;
+          width: 140%;
+          display: flex;
+          align-items: left;  // Centrer verticalement le contenu de chaque ligne
+          gap: 4px;  // Espacement entre les éléments à l'intérieur de chaque 
+          color: rgb(210, 210, 210);
+
+          label {
+            font-size: 14px;
+          }
+
+          p {
+            margin: 0;  // Supprimer les marges pour éviter les espacements supplémentaires
+            font-size: 12px;
+          }
+
+          input {
+            flex: 1;  // Les champs de saisie 
+            //height: 40px;
+            padding: 10px;
+            background-color: transparent;
+            color: rgb(255, 255, 255);
+            outline: none;
+            border: 1px solid $soft-color;
+            border-radius: 3px;
+          }
         }
       }
+    }
 
-      button {
-        margin-top: 20px;
-        padding: 10px 20px;
-        background-color: hwb(104 61% 0%);
-        color: rgb(14, 13, 13);
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        align-self: flex-end;  // Aligner le bouton à droite
-      }
+    button {
+      //width: 40%;  // Le bouton occupe toute la largeur des colonnes
+      //padding: px;
+      background-color: hwb(104 61% 0%);
+      color: rgb(14, 13, 13);
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 20px;  // Espacement par rapport au contenu précédent
     }
   }
 }
