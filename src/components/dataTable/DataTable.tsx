@@ -8,7 +8,7 @@ import "./dataTable.scss";
 
 type Props = {
   columns: GridColDef[];
-  rows: object[];
+  rows: readonly { archived: any; standby: any; verified: any; }[];
   slug: string;
 };
 
@@ -17,10 +17,10 @@ const DataTable = (props: Props) => {
 
   useEffect(() => {
     setRows(props.rows);
-  }, [props.rows]);
+  }, [props.rows]); 
 
   // Fonction pour sauvegarder l'historique des mouvements
-  const saveHistory = async (userId, action, details) => {
+  const saveHistory = async (userId: number, action: string, details: string) => {
     try {
       const historyRef = collection(db, "history");
       await addDoc(historyRef, {
@@ -179,7 +179,7 @@ const DataTable = (props: Props) => {
   ];
 
   // Définir une fonction de rendu de ligne pour colorer les lignes archivées, standby et vérifiées
-  const getRowClassName = (params) => {
+  const getRowClassName = (params: { row: { archived: any; standby: any; verified: any; }; }) => {
     if (params.row.archived) return 'archivedRow';
     if (params.row.standby) return 'standbyRow';
     if (params.row.verified) return 'verifiedRow';

@@ -11,6 +11,7 @@ import { getAllUsers } from "../../config/firebase";
 import FullLengthBox from "./FullLengthBox";
 import "../home/home.scss";
 import moment from 'moment';
+import { getDocumentById } from "../../config/firebase";
 
 // Initialiser react-modal
 Modal.setAppElement('#root');
@@ -28,7 +29,6 @@ const UsersTraitements = ({ title }) => {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [documentVerification, setDocumentVerification] = useState({});
-
   const [activeUserType, setActiveUserType] = useState('all');
   const [identityDocumentUrl, setIdentityDocumentUrl] = useState('');
   const [taxNoticeUrl, setTaxNoticeUrl] = useState('');
@@ -39,7 +39,7 @@ const UsersTraitements = ({ title }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
   
-  
+  //boutons audessus de la grille IIMCOMPLETE USERS, USERS NC, ALL USERS
   const handleIncompleteUsersClick = async () => {
     const incompleteUsers = await getIncompleteUsers();
     setUser(incompleteUsers);
@@ -151,6 +151,7 @@ const UsersTraitements = ({ title }) => {
             <button style={{ marginRight: '5px' }} onClick={() => {
               window.open(params.row.identityDocumentUrl, '_blank', 'height=600,width=800');
             }}>Voir</button>
+
             <input type="checkbox" checked={documentVerification[params.row.id]?.identityDocumentVerified} onChange={(e) => {
               setDocumentVerification({
                 ...documentVerification,
@@ -161,6 +162,7 @@ const UsersTraitements = ({ title }) => {
                 }
               });
             }} /> 
+
             <input type="checkbox" style={{ marginLeft: '5px', color: 'red' }} checked={documentVerification[params.row.id]?.identityDocumentNC} onChange={(e) => {
               setDocumentVerification({
                 ...documentVerification,
@@ -195,6 +197,7 @@ const UsersTraitements = ({ title }) => {
                   taxNoticeNC: !e.target.checked
                 }
               });
+              
             }} /> 
             <input type="checkbox" style={{ marginLeft: '5px', color: 'red' }} checked={documentVerification[params.row.id]?.taxNoticeNC} onChange={(e) => {
               setDocumentVerification({
@@ -241,6 +244,7 @@ const UsersTraitements = ({ title }) => {
         <button className={activeUserType === 'all' ? 'active' : ''} onClick={handleAllUsersClick}>ALL USERS</button>
         <button className={activeUserType === 'incomplete' ? 'active' : ''} onClick={handleIncompleteUsersClick}>USERS Incomplets</button>
         <button className={activeUserType === 'nc' ? 'active' : ''} onClick={handleNCUsersClick}>USERS NC</button>
+        <button className={activeUserType === 'usersarchive' ? 'active' : ''} onClick={handleNCUsersClick}>USERS ARCHIVES</button>
 
         {/* LE BOUTTON ADD du GridColDef */}
         <button onClick={() => setOpen(true)}>Add New User</button>
