@@ -1,29 +1,11 @@
-// Importation des fonctions nécessaires des SDK Firebase
-import { initializeApp } from 'firebase/app';
-import { getAuth, sendPasswordResetEmail, updateEmail, EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 'firebase/auth';
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  doc,
-  getDoc,
-  setDoc,
-  updateDoc,
-  query,
-  where,
-  getDocs,
-  arrayUnion,
-  arrayRemove,
-  serverTimestamp,
-  getAggregateFromServer,
-  sum,
-  orderBy,
-  onSnapshot,
-} from 'firebase/firestore';
-import { getStorage } from 'firebase/storage';
-import moment from 'moment';
+// src/config/firebase.tsx
 
-// Configuration de l'application Firebase
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import { getFirestore, getDocs, doc, getDoc, collection, query, where, orderBy } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
+
+// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: 'AIzaSyAJuCAWruOL5yBF3L7JXcTNTBReSA7lRAY',
   authDomain: 'mechauffernext.firebaseapp.com',
@@ -33,54 +15,94 @@ const firebaseConfig = {
   appId: '1:336346984646:web:00b5f78bbf7aa4225c27c7',
 };
 
-// Initialisation de Firebase
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const appSecond = initializeApp(firebaseConfig, 'Secondary');
 
-// Exportation des services Firebase pour une utilisation dans d'autres fichiers
 export const db = getFirestore(app);
 export const auth = getAuth(app);
 export const authSecond = getAuth(appSecond);
 export const storage = getStorage(app);
+export { app, appSecond };
 
-// Fonction pour récupérer les adresses par ID utilisateur
-export const getDataAdressebyUserID = async (user) => {
-  const usersRef = collection(db, 'adresse');
-  const q = query(usersRef, where('user', '==', user));
-  const querySnapshot = await getDocs(q);
-  let res = [];
+export const getData = async () => {
+  const querySnapshot = await getDocs(collection(db, "users"));
+  const users: { id: string; [key: string]: any }[] = [];
   querySnapshot.forEach((doc) => {
-    res.push({ id: doc.id, data: doc.data() });
+    users.push({ id: doc.id, ...doc.data() });
   });
-  return res;
+  console.log(users);
+  return users;
+}
+
+// Obtient tous les utilisateurs
+export const getAllUsers = async () => {
+  const querySnapshot = await getDocs(collection(db, "users"));
+  console.log("Nombre total d'utilisateurs: ", querySnapshot.size);
+  const users: { id: string; [key: string]: any }[] = [];
+  querySnapshot.forEach((doc) => {
+    users.push({ id: doc.id, ...doc.data() });
+  });
+  return users;
 };
 
-// Fonction pour récupérer les demandes par ID utilisateur
-export const getDataDemandesbyUserID = async (user) => {
+export const getIncompleteUsers = async () => {
+  const querySnapshot = await getDocs(collection(db, "users"));
+  const users: { id: string; [key: string]: any }[] = [];
+  querySnapshot.forEach((doc) => {
+    const data = doc.data();
+    if (!data.complet) {
+      users.push({ id: doc.id, ...data });
+    }
+  });
+  return users;
+};
+
+
+/////////////Constantes pour tous les utilisateurs//////////////////////////
+export const getDocumentById = async (id: string) => {
+  const docRef = doc(db, "users", id);
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    console.log("Document data:", docSnap.data());
+    return { id: docSnap.id, ...docSnap.data() };
+  } else {
+    console.log("No such document!");
+    return null;
+  }
+};
+  
+export const getDataAdressebyUserID = async (userID: string) => {
+  const docRef = doc(db, "users", userID);
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    const data = docSnap.data();
+    if (data && data.adresse) {
+      return data.adresse;
+    } else {
+      console.log("No address found for this user!");
+      return null;
+    }
+  } else {
+    console.log("No such document!");
+    return null;
+  }
+};
+
+export const getDataDemandesbyUserID = async (user: string) => {
   const dateInst = new Date();
   const usersRef = collection(db, 'demandes');
-  const q = query(usersRef, where('user', '==', user), where('dateCreation', '<=', dateInst), orderBy('dateCreation', 'desc'));
+  const q = query(usersRef, where('user', '==', user), where('dateCreation', '<=', dateInst), orderBy('dateCreation', "desc"));
   const querySnapshot = await getDocs(q);
-  let res = [];
+  const res: { id: string; data: any }[] = [];
   querySnapshot.forEach((doc) => {
     res.push({ id: doc.id, data: doc.data() });
   });
   return res;
-};
+}
 
-// Fonction pour récupérer les demandes par ID adresse
-export const getDataDemandesbyAddresseID = async (add) => {
-  const usersRef = collection(db, 'demandes');
-  const q = query(usersRef, where('adresse', '==', add));
-  const querySnapshot = await getDocs(q);
-  let res = [];
-  querySnapshot.forEach((doc) => {
-    res.push({ id: doc.id, data: doc.data() });
-  });
-  return res;
-};
-
-// Fonction pour récupérer les gains XCP temporaires par token ID
 export const getTempXcpByTokenID = async (Token) => {
   const usersRef = collection(db, 'demandes');
   const q = query(usersRef, where('tokenParrain', '==', Token), where('demandestatus', '==', 'En cours de traitement'), orderBy('XCPgain'));
@@ -93,9 +115,8 @@ export const getTempXcpByTokenID = async (Token) => {
     res.push({ id: doc.id, data: doc.data() });
   });
   return res;
-};
+}
 
-// Fonction pour récupérer les gains XCP temporaires par token partenaire
 export const getTempXcpByTokenPartenaire = async (user) => {
   const usersRef = collection(db, 'demandes');
   const q = query(usersRef, where('tokenParrain', '==', user.uid), where('demandestatus', '==', 'En cours de traitement'), orderBy('XCPgain'));
@@ -106,12 +127,10 @@ export const getTempXcpByTokenPartenaire = async (user) => {
   const snapshot2 = await getAggregateFromServer(q2, {
     totalTempXcp: sum('XCPgainParte')
   });
-
   const res = snapshot.data().totalTempXcp + snapshot2.data().totalTempXcp;
   return res;
-};
+}
 
-// Fonction pour récupérer les utilisateurs par token ID
 export const getUserParrainbyTokenID = async (Token) => {
   const usersRef = collection(db, 'users');
   const q = query(usersRef, where('tokenParrain', '==', Token));
@@ -121,9 +140,8 @@ export const getUserParrainbyTokenID = async (Token) => {
     res.push({ id: doc.id, data: doc.data() });
   });
   return res;
-};
+}
 
-// Fonction pour récupérer les parrains par token ID
 export const getParrainbyTokenID = async (Token) => {
   const usersRef = collection(db, 'users');
   const q = query(usersRef, where('tokenPartenaire', '==', Token));
@@ -133,9 +151,8 @@ export const getParrainbyTokenID = async (Token) => {
     res.push({ id: doc.id, data: doc.data() });
   });
   return res;
-};
+}
 
-// Fonction pour créer un document utilisateur
 export const createUserDocument = async (user, additionalData) => {
   if (!user) return;
   const { email } = user;
@@ -151,7 +168,6 @@ export const createUserDocument = async (user, additionalData) => {
   }
 };
 
-// Fonction pour ajouter un utilisateur à la liste des parrains
 export const adduserlisttoparrain = async (user, userparrain) => {
   if (!user) return;
   try {
@@ -163,7 +179,6 @@ export const adduserlisttoparrain = async (user, userparrain) => {
   }
 };
 
-// Fonction pour créer un document adresse
 export const createAdresseDoc = async (user, additionalData) => {
   if (!user) return;
   try {
@@ -175,7 +190,6 @@ export const createAdresseDoc = async (user, additionalData) => {
       user: user.uid,
       value: { ...additionalData.filter(item => item !== 4) },
     });
-
     await updateDoc(doc(db, 'users', user.uid), {
       adresse: arrayUnion(AddrRef.id)
     });
@@ -185,22 +199,172 @@ export const createAdresseDoc = async (user, additionalData) => {
   }
 };
 
-// Définition des valeurs XCP pour les demandes
-const demandesValueXCP = {
-  'Isolation des combles': [1, 0.5],
-  'Isolation du sol': [0.5, 0.5],
-  'Chauffe-eau thermodynamique': [1, 0.5],
-  'Chauffe-eau solaire individuel': [0.5, 0.5],
-  'Pompe à chaleur Air/Eau': [2, 0.5],
-  'climatisation réversible (pompe à chaleur Air/Air)': [2, 0.5],
-  'Pompe à chaleur géothermique': [2, 0.5],
-  'Chaudière Bois (Granulés ou bûches)': [2, 0.5],
-  'Poêle à bois (Granulés ou bûches)': [1, 0.5],
-  'VMC Double Flux': [1, 0.5],
-  'Fenêtres / Portes-fenêtres': [1, 0.5],
+export const DeleteAdresseDoc = async (user, index, type) => {
+  if (!user) return;
+  console.log(index);
+  try {
+    const docRef = await updateDoc(doc(db, 'users', user.uid), {
+      adresse: { [type]: arrayRemove(index) }
+    });
+    return docRef;
+  } catch (e) {
+    console.log('error : ', e);
+  }
 };
 
-// Fonction pour créer un document demande
+export const EmailUpdate = async (user, value) => {
+  const credential = EmailAuthProvider.credential(
+    user.email,
+    value.oldpass
+  );
+  const result = reauthenticateWithCredential(auth.currentUser, credential)
+    .then(() => {
+      return updateEmail(auth.currentUser, value.email).then(async () => {
+        await updateDoc(doc(db, 'users', user.uid), {
+          'email': value.email,
+        });
+        return { msg: "Votre email est bien changer", type: "msg" };
+      }).catch(() => {
+        return { msg: "Ce email est déjà faites", type: "error" };
+      });
+    })
+    .catch((error) => {
+      return { msg: "Mot de passe non valide", type: "error" };
+    });
+  return result;
+};
+
+export const PassUpdate = async (user, value) => {
+  const credential = EmailAuthProvider.credential(
+    user.email,
+    value.oldpass
+  );
+  const result = reauthenticateWithCredential(auth.currentUser, credential)
+    .then(() => {
+      return updatePassword(auth.currentUser, value.newpass).then(async () => {
+        await updateDoc(doc(db, 'users', user.uid), {
+          'lastpassupdate': serverTimestamp()
+        });
+        return { msg: "Votre mot de passe est bien changer", type: "msg" };
+      }).catch(() => {
+        return { msg: "Veuillez réessayer plus tard", type: "error" };
+      });
+    })
+    .catch((error) => {
+      return { msg: "L'ancien Mot de passe non valide", type: "error" };
+    });
+  return result;
+};
+
+export const PhoneUpdate = async (user, value) => {
+  const credential = EmailAuthProvider.credential(
+    user.email,
+    value.oldpass
+  );
+  const result = reauthenticateWithCredential(auth.currentUser, credential)
+    .then(async () => {
+      return await updateDoc(doc(db, 'users', user.uid), {
+        'phone': value.phone,
+      }).then(() => {
+        return { msg: "Votre numero est bien changer", type: "msg" };
+      }).catch(() => {
+        return { msg: "Veuillez réessayer plus tard", type: "error" };
+      })
+    }).catch(() => {
+      return { msg: "L'ancien Mot de passe non valide", type: "error" };
+    });
+  return result;
+};
+
+export const updateUserDocument = async (user, additionalData) => {
+  if (!user) return;
+  try {
+    await updateDoc(doc(db, 'users', user.uid), {
+      'additionalData.devis': { ...additionalData },
+    });
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const removeParrainFirstUser = async (user) => {
+  if (!user) return;
+  try {
+    await updateDoc(doc(db, 'users', user.uid), {
+      'additionalData.user': null,
+    });
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const updateUserCoordoneeDocument = async (user, additionalData) => {
+  if (!user) return;
+  try {
+    await updateDoc(doc(db, 'users', user.uid), {
+      'firstname': additionalData.firstname,
+      'lastname': additionalData.lastname,
+      'ville': additionalData.ville,
+      'civilite': additionalData.civilite,
+      'pays': additionalData.pays,
+      'codePostal': additionalData.codePostal,
+      'adresse': additionalData.adresse,
+      'iban': additionalData.iban,
+      'nomCompte': additionalData.nomCompte,
+    });
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const updateUserStatusDocument = async (user, status) => {
+  if (!user) return;
+  try {
+    await updateDoc(doc(db, 'users', user), {
+      'status': status,
+    });
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const getUserById = async (userId) => {
+  if (!userId) return;
+  try {
+    const docRef = doc(db, 'users', userId);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      return docSnap.data();
+    } else {
+      throw new Error('No such document!');
+    }
+  } catch (e) {
+    throw new Error(e);
+  }
+};
+
+export const getDevisByUserId = async (userId) => {
+  if (!userId) return;
+  try {
+    const usersRef = collection(db, 'users');
+    const q = query(usersRef, where('tokenParrain', '==', userId));
+    const querySnapshot = await getDocs(q);
+    let res = [];
+    querySnapshot.forEach((doc) => {
+      res.push({ uid: doc.id, data: doc.data() });
+    });
+    return res;
+  } catch (e) {
+    throw new Error(e);
+  }
+};
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export const createDemandeDoc = async (user, adresseId, additionalData) => {
   if (!user) return;
   const userid = user.uid;
@@ -216,37 +380,61 @@ export const createDemandeDoc = async (user, adresseId, additionalData) => {
   });
 
   if (user.tokenParrain) { tokenParrain = { tokenParrain: user.tokenParrain } };
+
   if (user.tokenPartenaire) { tokenPartenaire = { tokenPartenaire: user.tokenPartenaire } };
 
-  const ValueNewDoc = {
-    user: userid,
-    dateCreation: serverTimestamp(),
-    ...additionalData,
-    ...tokenParrain,
-    ...tokenPartenaire,
-    ...XCPgain,
-    adresse: adresseId,
-    region: vilregadrr.data().region,
-    ville: vilregadrr.data().ville,
-    clientmail: vilregadrr.data().clientmail,
-  };
-
   try {
-    const docRef = await addDoc(collection(db, 'demandes'), ValueNewDoc);
+    const docRef = await addDoc(collection(db, "demandes"), {
+      user: userid,
+      adresse: adresseId,
+      dateCreation: serverTimestamp(),
+      demandestatus: 'En cours de traitement',
+      region: vilregadrr.data().region,
+      ville: vilregadrr.data().ville,
+      ...additionalData,
+      ...tokenParrain,
+      ...tokenPartenaire,
+      ...XCPgain,
+    });
+    await updateDoc(doc(db, 'adresse', adresseId), {
+      demandes: arrayUnion(docRef.id)
+    });
+    await updateDoc(doc(db, 'users', userid), {
+      demandes: arrayUnion(docRef.id)
+    });
     return docRef;
   } catch (e) {
-    console.log('Erreur : ', e);
+    console.log('error : ', e);
   }
 };
 
-// Fonction pour récupérer les utilisateurs en temps réel
-export const getUsers = (callback) => {
-  const q = query(collection(db, 'users'));
-  return onSnapshot(q, callback);
+export const resetEmail = async (email) => {
+  try {
+    const auth = getAuth();
+    sendPasswordResetEmail(auth, email)
+      .then(() => {
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+      });
+  } catch (e) { }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+  const demandesValueXCP = {
+    'Isolation des combles': [1, 0.5],
+    'Isolation du sol': [0.5, 0.5],
+    'Chauffe-eau thermodynamique': [1, 0.5],
+    'Chauffe-eau solaire individuel': [0.5, 0.5],
+    'Pompe à chaleur Air/Eau': [2, 0.5],
+    'climatisation réversible (pompe à chaleur Air/Air)': [2, 0.5],
+    'Pompe à chaleur géothermique': [2, 0.5],
+    'Chaudière Bois (Granulés ou bûches)': [2, 0.5],
+    'Poêle à bois (Granulés ou bûches)': [1, 0.5],
+    'VMC Double Flux': [1, 0.5],
+    'Fenêtres / Portes-fenêtres': [1, 0.5],
+  }
 };
 
-// Fonction pour récupérer les demandes en temps réel
-export const getDemandes = (callback) => {
-  const q = query(collection(db, 'demandes'));
-  return onSnapshot(q, callback);
-};
+/////////////// Constantes générales
+export default firebaseConfig;
