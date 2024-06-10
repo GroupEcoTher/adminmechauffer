@@ -1,11 +1,9 @@
-// src/config/firebase.tsx
-
 import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getFirestore, getDocs, doc, getDoc, collection, query, where, orderBy } from 'firebase/firestore';
+import { getAuth, EmailAuthProvider, reauthenticateWithCredential, updateEmail, updatePassword, sendPasswordResetEmail } from 'firebase/auth';
+import { getFirestore, getDocs, doc, getDoc, collection, query, where, orderBy, setDoc, serverTimestamp, updateDoc, addDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 
-// Your web app's Firebase configuration
+// CONFIGURATION DE L'APPLICATION FIREBASE
 const firebaseConfig = {
   apiKey: 'AIzaSyAJuCAWruOL5yBF3L7JXcTNTBReSA7lRAY',
   authDomain: 'mechauffernext.firebaseapp.com',
@@ -15,16 +13,46 @@ const firebaseConfig = {
   appId: '1:336346984646:web:00b5f78bbf7aa4225c27c7',
 };
 
-// Initialize Firebase
+// INITIALISATION DE L'APPLICATION FIREBASE
 const app = initializeApp(firebaseConfig);
 const appSecond = initializeApp(firebaseConfig, 'Secondary');
 
+// exportation des constantes globales
 export const db = getFirestore(app);
 export const auth = getAuth(app);
 export const authSecond = getAuth(appSecond);
 export const storage = getStorage(app);
 export { app, appSecond };
 
+// CONSTANTES D'AFFICHAGE POUR LES UTILISATEURS
+
+// Met à jour le document des coordonnées de l'utilisateur
+/*export const updateUserCoordoneeDocument = async (user, additionalData) => {
+  if (!user) return;
+  try {
+    await updateDoc(doc(db, 'users', user.uid), {
+      'firstname': additionalData.firstname,
+      'lastname': additionalData.lastname,
+      'ville': additionalData.ville,
+      'civilite': additionalData.civilite,
+      'pays': additionalData.pays,
+      'codePostal': additionalData.codePostal,
+      'adresse': additionalData.adresse,
+      'iban': additionalData.iban,
+      'nomCompte': additionalData.nomCompte,
+    });
+  } catch (e) {
+    console.log(e);
+  }
+};*/
+
+
+
+
+
+
+
+// obtient les données des utilisateurs
 export const getData = async () => {
   const querySnapshot = await getDocs(collection(db, "users"));
   const users: { id: string; [key: string]: any }[] = [];
@@ -35,7 +63,7 @@ export const getData = async () => {
   return users;
 }
 
-// Obtient tous les utilisateurs
+// obtient tous les utilisateurs
 export const getAllUsers = async () => {
   const querySnapshot = await getDocs(collection(db, "users"));
   console.log("Nombre total d'utilisateurs: ", querySnapshot.size);
@@ -46,12 +74,13 @@ export const getAllUsers = async () => {
   return users;
 };
 
-// Fonction pour obtenir le nombre total d'utilisateurs
+// fonction pour obtenir le nombre total d'utilisateurs
 export const getTotalUsers = async () => {
   const querySnapshot = await getDocs(collection(db, 'users'));
   return querySnapshot.size;
 };
 
+// obtient les utilisateurs incomplets
 export const getIncompleteUsers = async () => {
   const querySnapshot = await getDocs(collection(db, "users"));
   const users: { id: string; [key: string]: any }[] = [];
@@ -64,8 +93,7 @@ export const getIncompleteUsers = async () => {
   return users;
 };
 
-
-// Ajout de la fonction getNCUsers
+// ajout de la fonction getNCUsers
 export const getNCUsers = async () => {
   const querySnapshot = await getDocs(collection(db, 'users'));
   const users = [];
@@ -78,8 +106,7 @@ export const getNCUsers = async () => {
   return users;
 };
 
-
-/////////////Constantes pour tous les utilisateurs//////////////////////////
+// obtient un document par ID
 export const getDocumentById = async (id: string) => {
   const docRef = doc(db, "users", id);
   const docSnap = await getDoc(docRef);
@@ -93,6 +120,7 @@ export const getDocumentById = async (id: string) => {
   }
 };
   
+// obtient les données d'adresse par user ID
 export const getDataAdressebyUserID = async (userID: string) => {
   const docRef = doc(db, "users", userID);
   const docSnap = await getDoc(docRef);
@@ -111,6 +139,7 @@ export const getDataAdressebyUserID = async (userID: string) => {
   }
 };
 
+// obtient les demandes par user ID
 export const getDataDemandesbyUserID = async (user: string) => {
   const dateInst = new Date();
   const usersRef = collection(db, 'demandes');
@@ -123,6 +152,7 @@ export const getDataDemandesbyUserID = async (user: string) => {
   return res;
 }
 
+// obtient le temp XCP par token ID
 export const getTempXcpByTokenID = async (Token) => {
   const usersRef = collection(db, 'demandes');
   const q = query(usersRef, where('tokenParrain', '==', Token), where('demandestatus', '==', 'En cours de traitement'), orderBy('XCPgain'));
@@ -137,6 +167,7 @@ export const getTempXcpByTokenID = async (Token) => {
   return res;
 }
 
+// obtient le temp XCP par token partenaire
 export const getTempXcpByTokenPartenaire = async (user) => {
   const usersRef = collection(db, 'demandes');
   const q = query(usersRef, where('tokenParrain', '==', user.uid), where('demandestatus', '==', 'En cours de traitement'), orderBy('XCPgain'));
@@ -151,6 +182,7 @@ export const getTempXcpByTokenPartenaire = async (user) => {
   return res;
 }
 
+// obtient les utilisateurs parrain par token ID
 export const getUserParrainbyTokenID = async (Token) => {
   const usersRef = collection(db, 'users');
   const q = query(usersRef, where('tokenParrain', '==', Token));
@@ -162,6 +194,7 @@ export const getUserParrainbyTokenID = async (Token) => {
   return res;
 }
 
+// obtient les parrains par token ID
 export const getParrainbyTokenID = async (Token) => {
   const usersRef = collection(db, 'users');
   const q = query(usersRef, where('tokenPartenaire', '==', Token));
@@ -173,6 +206,9 @@ export const getParrainbyTokenID = async (Token) => {
   return res;
 }
 
+// CONSTANTES D'ACTION POUR LES UTILISATEURS
+
+// crée un document utilisateur
 export const createUserDocument = async (user, additionalData) => {
   if (!user) return;
   const { email } = user;
@@ -188,6 +224,7 @@ export const createUserDocument = async (user, additionalData) => {
   }
 };
 
+// ajoute un utilisateur à la liste de parrainage
 export const adduserlisttoparrain = async (user, userparrain) => {
   if (!user) return;
   try {
@@ -198,7 +235,8 @@ export const adduserlisttoparrain = async (user, userparrain) => {
     console.log('error : ', e);
   }
 };
-  
+
+// crée un document d'adresse
 export const createAdresseDoc = async (user, additionalData) => {
   if (!user) return;
   try {
@@ -219,6 +257,7 @@ export const createAdresseDoc = async (user, additionalData) => {
   }
 };
 
+// supprime un document d'adresse
 export const DeleteAdresseDoc = async (user, index, type) => {
   if (!user) return;
   console.log(index);
@@ -232,6 +271,7 @@ export const DeleteAdresseDoc = async (user, index, type) => {
   }
 };
 
+// met à jour l'email
 export const EmailUpdate = async (user, value) => {
   const credential = EmailAuthProvider.credential(
     user.email,
@@ -254,6 +294,7 @@ export const EmailUpdate = async (user, value) => {
   return result;
 };
 
+// met à jour le mot de passe
 export const PassUpdate = async (user, value) => {
   const credential = EmailAuthProvider.credential(
     user.email,
@@ -276,6 +317,7 @@ export const PassUpdate = async (user, value) => {
   return result;
 };
 
+// met à jour le numéro de téléphone
 export const PhoneUpdate = async (user, value) => {
   const credential = EmailAuthProvider.credential(
     user.email,
@@ -296,6 +338,7 @@ export const PhoneUpdate = async (user, value) => {
   return result;
 };
 
+// met à jour le document utilisateur
 export const updateUserDocument = async (user, additionalData) => {
   if (!user) return;
   try {
@@ -307,6 +350,7 @@ export const updateUserDocument = async (user, additionalData) => {
   }
 };
 
+// supprime le premier utilisateur parrain
 export const removeParrainFirstUser = async (user) => {
   if (!user) return;
   try {
@@ -318,6 +362,7 @@ export const removeParrainFirstUser = async (user) => {
   }
 };
 
+// met à jour le document des coordonnées de l'utilisateur
 export const updateUserCoordoneeDocument = async (user, additionalData) => {
   if (!user) return;
   try {
@@ -337,6 +382,7 @@ export const updateUserCoordoneeDocument = async (user, additionalData) => {
   }
 };
 
+// met à jour le statut de l'utilisateur
 export const updateUserStatusDocument = async (user, status) => {
   if (!user) return;
   try {
@@ -348,6 +394,7 @@ export const updateUserStatusDocument = async (user, status) => {
   }
 };
 
+// obtient un utilisateur par ID
 export const getUserById = async (userId) => {
   if (!userId) return;
   try {
@@ -363,6 +410,7 @@ export const getUserById = async (userId) => {
   }
 };
 
+// obtient les devis par ID utilisateur
 export const getDevisByUserId = async (userId) => {
   if (!userId) return;
   try {
@@ -379,12 +427,9 @@ export const getDevisByUserId = async (userId) => {
   }
 };
 
+// CONSTANTES D'ACTION POUR LES PARTENAIRES
 
-
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-
+// crée un document de demande
 export const createDemandeDoc = async (user, adresseId, additionalData) => {
   if (!user) return;
   const userid = user.uid;
@@ -428,6 +473,9 @@ export const createDemandeDoc = async (user, adresseId, additionalData) => {
   }
 };
 
+// CONSTANTES D'AFFICHAGE POUR LES PARTENAIRES
+
+// réinitialise l'email
 export const resetEmail = async (email) => {
   try {
     const auth = getAuth();
@@ -440,21 +488,35 @@ export const resetEmail = async (email) => {
       });
   } catch (e) { }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-  const demandesValueXCP = {
-    'Isolation des combles': [1, 0.5],
-    'Isolation du sol': [0.5, 0.5],
-    'Chauffe-eau thermodynamique': [1, 0.5],
-    'Chauffe-eau solaire individuel': [0.5, 0.5],
-    'Pompe à chaleur Air/Eau': [2, 0.5],
-    'climatisation réversible (pompe à chaleur Air/Air)': [2, 0.5],
-    'Pompe à chaleur géothermique': [2, 0.5],
-    'Chaudière Bois (Granulés ou bûches)': [2, 0.5],
-    'Poêle à bois (Granulés ou bûches)': [1, 0.5],
-    'VMC Double Flux': [1, 0.5],
-    'Fenêtres / Portes-fenêtres': [1, 0.5],
-  }
-};
+// valeur des demandes XCP
+/*const demandesValueXCP = {
+  'Isolation des combles': [1, 0.5],
+  'Isolation du sol': [0.5, 0.5],
+  'Chauffe-eau thermodynamique': [1, 0.5],
+  'Chauffe-eau solaire individuel': [0.5, 0.5],
+  'Pompe à chaleur Air/Eau': [2, 0.5],
+  'climatisation réversible (pompe à chaleur Air/Air)': [2, 0.5],
+  'Pompe à chaleur géothermique': [2, 0.5],
+  'Chaudière Bois (Granulés ou bûches)': [2, 0.5],
+  'Poêle à bois (Granulés ou bûches)': [1, 0.5],
+  'VMC Double Flux': [1, 0.5],
+  'Fenêtres / Portes-fenêtres': [1, 0.5],
+};*/
 
-/////////////// Constantes générales
+// valeur des demandes XCP
+/*export const demandesValueXCP = {
+  'Pompe à chaleur Air/Eau': [2, 0.5],
+  'Chaudière Bois (Granulés ou bûches)': [2, 0.5],
+  'Poêle à bois (Granulés ou bûches)': [1, 0.5],
+  'VMC Double Flux': [1, 0.5],
+  'Chauffe-eau thermodynamique': [1, 0.5],
+  'Isolation des combles': [1, 0.5],
+  'Fenêtres / Portes-fenêtres': [1, 0.5],
+  'Chauffe-eau solaire individuel': [0.5, 0.5],
+  'Isolation du sol': [0.5, 0.5]
+};*/
+
+
+// CONSTANTES GÉNÉRALES
+};
 export default firebaseConfig;

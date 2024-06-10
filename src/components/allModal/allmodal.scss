@@ -1,96 +1,111 @@
-
-
+// Importation des variables SCSS depuis un fichier externe
 @import "../../styles/variables.scss";
 
+// Styles pour le conteneur principal .add
 .add {
-  width: 100vw;
-  height: 100vh;  
-  position: absolute;
+  width: 100vw; // Largeur de 100% de la fenêtre
+  height: 100vh; // Hauteur de 100% de la fenêtre
+  position: absolute; // Positionnement absolu
   top: 0;
   left: 0;
-  background-color: rgba(0, 0, 0, 0.724);
-  display: flex;
-  align-items: normal;
-  justify-content: center;
-  overflow: auto;  // Activer le défilement si le contenu dépasse la hauteur de la fenêtre
+  background-color: rgba(0, 0, 0, 0.724); // Couleur de fond semi-transparente
+  display: flex; // Utilisation de flexbox pour aligner les éléments
+  align-items: normal; // Alignement vertical normal des éléments flex
+  justify-content: center; // Centrage horizontal des éléments flex
+  overflow: auto; // Activer le défilement si le contenu dépasse la hauteur de la fenêtre
 
-
+  // Styles pour la classe interne .modal
   .modal {
-    width: 92%;
-    max-height: 120%;  // Limiter la hauteur du modal pour éviter qu'il ne dépasse la hauteur de la fenêtre
-    padding: 15px;
-    border-radius: 10px;
-    background-color: $main-bg;
-    //position: relative;
-    overflow: auto;  // Activer le défilement si le contenu du modal dépasse sa hauteur
+    width: 95%; // Largeur de 95% du conteneur parent
+    max-height: none; // Pas de limitation spécifique de la hauteur
+    padding: 15px; // Espacement interne
+    border-radius: 10px; // Coins arrondis
+    background-color: $main-bg; // Couleur de fond depuis les variables SCSS
+    overflow: auto; // Activer le défilement si le contenu du modal dépasse sa hauteur
 
-
+    // Styles pour les titres h1 à l'intérieur du modal
     h1 {
-      margin-bottom: 5px;
-      font-size: 15px;
-      color: white;
+      margin-bottom: 5px; // Marge inférieure
+      font-size: 15px; // Taille de police
+      color: white; // Couleur de police
     }
 
-    .close { // la croix pour fermer
-      position: absolute;
+    // Styles pour le bouton de fermeture (la croix)
+    .close {
+      position: absolute; // Positionnement absolu à l'intérieur du modal
       top: 10px;
       right: 10px;
-      cursor: pointer;
-      font-size: 24px;
-      color: rgb(255, 255, 255);
+      cursor: pointer; // Curseur pointeur (main)
+      font-size: 24px; // Taille de police
+      color: rgb(255, 255, 255); // Couleur de la croix
     }
 
-   
+    // Styles pour la section de contenu .content
     .content {
-      display: grid;
-      grid-template-columns: 1fr 1fr;  // Deux colonnes égales
-      grid-gap: 400px;  // Espacement entre les éléments
+      display: grid; // Utilisation de la grille CSS pour organiser les éléments en lignes et colonnes
+      grid-template-columns: repeat(3, 1fr); // Trois colonnes égales
+      grid-gap: 20px; // Espacement entre les éléments de la grille
+      padding: 10px; // Espacement interne autour de la grille
+      justify-items: stretch; // Étend les éléments pour remplir les cellules de la grille
+      align-items: start; // Aligne les éléments en haut de chaque cellule de la grille
 
+      // Styles pour chaque colonne de contenu
       .column {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;  // Espacement entre les éléments à l'intérieur de chaque colonne
+        display: flex; // Utilisation de flexbox pour les éléments internes
+        flex-direction: column; // Disposition des éléments en colonne
+        gap: 10px; // Espacement entre les éléments à l'intérieur de chaque colonne
+        padding: 20px; // Espacement interne autour de chaque colonne
+        background-color: rgba(255, 255, 255, 0.1); // Couleur de fond légèrement transparente pour chaque colonne
+        border-radius: 5px; // Coins arrondis pour chaque colonne
 
+        // Styles pour chaque élément .item à l'intérieur des colonnes
         .item {
-          //height: px;
-          width: 140%;
-          display: flex;
-          align-items: left;  // Centrer verticalement le contenu de chaque ligne
-          gap: 4px;  // Espacement entre les éléments à l'intérieur de chaque 
-          color: rgb(210, 210, 210);
+          width: 100%; // Largeur de 100% du conteneur parent
+          display: flex; // Utilisation de flexbox
+          align-items: center; // Centrage vertical des éléments
+          gap: 4px; // Espacement entre les éléments à l'intérieur de chaque ligne
+          color: rgb(210, 210, 210); // Couleur de texte
+          padding: 10px; // Espacement interne autour de chaque élément
+          background-color: rgba(0, 0, 0, 0.2); // Couleur de fond légèrement transparente pour chaque élément
+          border-radius: 3px; // Coins arrondis pour chaque élément
 
+          // Styles pour les étiquettes label à l'intérieur des éléments
           label {
-            font-size: 14px;
+            font-size: 14px; // Taille de police
           }
 
+          // Styles pour les paragraphes p à l'intérieur des éléments
           p {
-            margin: 0;  // Supprimer les marges pour éviter les espacements supplémentaires
-            font-size: 12px;
+            margin: 0; // Supprimer les marges pour éviter les espacements supplémentaires
+            font-size: 12px; // Taille de police
           }
 
+          // Styles pour les champs de saisie input à l'intérieur des éléments
           input {
-            flex: 1;  // Les champs de saisie 
-            //height: 40px;
-            padding: 10px;
-            background-color: transparent;
-            color: rgb(255, 255, 255);
-            outline: none;
-            border: 1px solid $soft-color;
-            border-radius: 3px;
+            flex: 1; // Les champs de saisie prennent tout l'espace disponible
+            padding: 10px; // Espacement interne
+            background-color: transparent; // Fond transparent
+            color: rgb(255, 255, 255); // Couleur de texte
+            outline: none; // Suppression du contour par défaut
+            border: 1px solid $soft-color; // Bordure définie par les variables SCSS
+            border-radius: 3px; // Coins arrondis
           }
         }
       }
     }
 
+    // Styles pour les boutons à l'intérieur du modal
     button {
-      //width: 40%;  // Le bouton occupe toute la largeur des colonnes
-      //padding: 100px;
-      background-color: hwb(104 61% 0%);
-      color: rgb(14, 13, 13);
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      margin-top: 20px;  // Espacement par rapport au contenu précédent
+      background-color: hwb(104 61% 0%); // Couleur de fond (utilise le modèle de couleur HWB)
+      color: rgb(14, 13, 13); // Couleur de texte
+      border: none; // Suppression des bordures
+      border-radius: 4px; // Coins arrondis
+      cursor: pointer; // Curseur pointeur (main)
+      margin-top: 5px; // Espacement par rapport au contenu précédent
+      width: 75px; // Largeur du bouton
+      height: 20px; // Hauteur du bouton
+      padding: 5px; // Espacement interne (padding)
+      font-size: 10px; // Taille de la police du texte du bouton
     }
   }
 }

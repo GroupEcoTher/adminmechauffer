@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import '../../components/allModal/allmodal.scss';
-import { db, getDocumentById, getDataAdressebyUserID } from "../../config/firebase";
+import { db, getDocumentById, getDataAdressebyUserID, getDataDemandesbyUserID, getTempXcpByTokenID, getTempXcpByTokenPartenaire, getUserParrainbyTokenID, getParrainbyTokenID } from "../../config/firebase";
 import { doc, updateDoc, getDoc, collection, getDocs, addDoc, setDoc, deleteDoc } from "firebase/firestore";
 import moment from 'moment';
 import { Checkbox, Button, FormControlLabel, FormGroup } from "@mui/material";
@@ -16,21 +16,24 @@ const ModalUsers = (props: Props) => {
   const [roles, setRoles] = useState<string[]>([]);
   const [userHistory, setUserHistory] = useState<any[]>([]);
   const [documentData, setDocumentData] = useState<any | null>(null);
-  const [userRoles, setUserRoles] = useState<string[]>([]); // État pour stocker les rôles de l'utilisateur
+  const [userRoles, setUserRoles] = useState<string[]>([]);
   const [dataAdresse, setDataAdresse] = useState<any | null>(null);
-
-  
+  const [dataDemandes, setDataDemandes] = useState<any | null>(null);
+  const [tempXcpToken, setTempXcpToken] = useState<any | null>(null);
+  const [tempXcpPartenaire, setTempXcpPartenaire] = useState<any | null>(null);
+  const [userParrain, setUserParrain] = useState<any | null>(null);
+  const [parrain, setParrain] = useState<any | null>(null);
 
   // Fonction pour récupérer les données de l'utilisateur par ID
   const getUserData = async (userId: string) => {
     try {
-      const userRef = doc(db, "users", userId); // Référence au document utilisateur
-      const docSnapshot = await getDoc(userRef); // Récupère le document utilisateur
+      const userRef = doc(db, "users", userId);
+      const docSnapshot = await getDoc(userRef);
       if (docSnapshot.exists()) {
         const data = docSnapshot.data();
-        setUserData({ id: docSnapshot.id, ...data }); // Met à jour l'état avec les données de l'utilisateur
-        setEditData({ id: docSnapshot.id, ...data }); // Met à jour l'état pour l'édition des données de l'utilisateur
-        setUserRoles(data.roles || []); // Met à jour l'état avec les rôles de l'utilisateur
+        setUserData({ id: docSnapshot.id, ...data });
+        setEditData({ id: docSnapshot.id, ...data });
+        setUserRoles(data.roles || []);
       } else {
         console.error("User document does not exist");
       }
@@ -42,7 +45,7 @@ const ModalUsers = (props: Props) => {
   // Fonction pour enregistrer l'historique des actions utilisateur
   const saveHistory = async (userId: number, action: string, details: string) => {
     try {
-      const historyRef = collection(db, "history"); // Référence à la collection "history"
+      const historyRef = collection(db, "history");
       await addDoc(historyRef, {
         userId,
         action,
@@ -58,18 +61,18 @@ const ModalUsers = (props: Props) => {
   // Fonction pour supprimer et archiver un utilisateur
   const handleDelete = async (id: number) => {
     try {
-      const userDocRef = doc(db, "users", id.toString()); // Référence au document utilisateur
-      const userDocSnap = await getDoc(userDocRef); // Récupère le document utilisateur
+      const userDocRef = doc(db, "users", id.toString());
+      const userDocSnap = await getDoc(userDocRef);
 
       if (userDocSnap.exists()) {
-        const userData = userDocSnap.data(); // Données utilisateur
-        const archiveUserDocRef = doc(db, "archiveUsers", id.toString()); // Référence au document archivé
-        await setDoc(archiveUserDocRef, { ...userData, archived: true }); // Crée un document archivé
-        await deleteDoc(userDocRef); // Supprime le document utilisateur
+        const userData = userDocSnap.data();
+        const archiveUserDocRef = doc(db, "archiveUsers", id.toString());
+        await setDoc(archiveUserDocRef, { ...userData, archived: true });
+        await deleteDoc(userDocRef);
 
         console.log(`Deleted item with id: ${id} and archived it successfully.`);
-        setUserData((prevData) => prevData && prevData.id === id ? { ...prevData, archived: true } : prevData); // Met à jour l'état
-        await saveHistory(id, "archive", `User with id ${id} archived`); // Enregistre l'historique
+        setUserData((prevData) => prevData && prevData.id === id ? { ...prevData, archived: true } : prevData);
+        await saveHistory(id, "archive", `User with id ${id} archived`);
       } else {
         console.log("No such document!");
       }
@@ -81,18 +84,18 @@ const ModalUsers = (props: Props) => {
   // Fonction pour désarchiver un utilisateur
   const handleUnarchive = async (id: number) => {
     try {
-      const archiveUserDocRef = doc(db, "archiveUsers", id.toString()); // Référence au document archivé
-      const archiveUserDocSnap = await getDoc(archiveUserDocRef); // Récupère le document archivé
+      const archiveUserDocRef = doc(db, "archiveUsers", id.toString());
+      const archiveUserDocSnap = await getDoc(archiveUserDocRef);
 
       if (archiveUserDocSnap.exists()) {
-        const userData = archiveUserDocSnap.data(); // Données utilisateur archivées
-        const userDocRef = doc(db, "users", id.toString()); // Référence au document utilisateur
-        await setDoc(userDocRef, { ...userData, archived: false }); // Crée un nouveau document utilisateur
-        await deleteDoc(archiveUserDocRef); // Supprime le document archivé
+        const userData = archiveUserDocSnap.data();
+        const userDocRef = doc(db, "users", id.toString());
+        await setDoc(userDocRef, { ...userData, archived: false });
+        await deleteDoc(archiveUserDocRef);
 
         console.log(`Unarchived item with id: ${id} successfully.`);
-        setUserData((prevData) => prevData && prevData.id === id ? { ...prevData, archived: false } : prevData); // Met à jour l'état
-        await saveHistory(id, "unarchive", `User with id ${id} unarchived`); // Enregistre l'historique
+        setUserData((prevData) => prevData && prevData.id === id ? { ...prevData, archived: false } : prevData);
+        await saveHistory(id, "unarchive", `User with id ${id} unarchived`);
       } else {
         console.log("No such document!");
       }
@@ -104,14 +107,14 @@ const ModalUsers = (props: Props) => {
   // Fonction pour mettre un utilisateur en mode StandBY
   const handleStandBY = async (id: number, standby: boolean) => {
     try {
-      const userDocRef = doc(db, "users", id.toString()); // Référence au document utilisateur
+      const userDocRef = doc(db, "users", id.toString());
       await updateDoc(userDocRef, {
         standby: standby
       });
 
       console.log(`User with id: ${id} is now ${standby ? 'in StandBY mode' : 'active'}.`);
-      setUserData((prevData) => prevData && prevData.id === id ? { ...prevData, standby } : prevData); // Met à jour l'état
-      await saveHistory(id, "standby", `User with id ${id} set to ${standby ? 'StandBY' : 'active'}`); // Enregistre l'historique
+      setUserData((prevData) => prevData && prevData.id === id ? { ...prevData, standby } : prevData);
+      await saveHistory(id, "standby", `User with id ${id} set to ${standby ? 'StandBY' : 'active'}`);
     } catch (error) {
       console.error("Error updating document: ", error);
     }
@@ -120,12 +123,12 @@ const ModalUsers = (props: Props) => {
   // Fonction pour récupérer l'historique d'un utilisateur
   const getUserHistory = async (userId: string) => {
     try {
-      const historyRef = collection(db, "history"); // Référence à la collection "history"
-      const historySnapshot = await getDocs(historyRef); // Récupère les documents de la collection "history"
+      const historyRef = collection(db, "history");
+      const historySnapshot = await getDocs(historyRef);
       const userHistoryData = historySnapshot.docs
         .filter(doc => doc.data().userId === userId)
-        .map(doc => doc.data().description); // Filtre et mappe les données d'historique
-      setUserHistory(userHistoryData); // Met à jour l'état avec les données d'historique
+        .map(doc => doc.data().description);
+      setUserHistory(userHistoryData);
     } catch (error) {
       console.error("Error fetching user history:", error);
     }
@@ -134,31 +137,68 @@ const ModalUsers = (props: Props) => {
   // Fonction pour récupérer les rôles disponibles
   const getRoles = async () => {
     try {
-      const rolesRef = collection(db, "roles"); // Référence à la collection "roles"
-      const rolesSnapshot = await getDocs(rolesRef); // Récupère les documents de la collection "roles"
-      const rolesList = rolesSnapshot.docs.map(doc => doc.data().name); // Mappe les noms des rôles
-      console.log("Roles fetched: ", rolesList); // Affiche les rôles récupérés
-      setRoles(rolesList); // Met à jour l'état avec les rôles
+      const rolesRef = collection(db, "roles");
+      const rolesSnapshot = await getDocs(rolesRef);
+      const rolesList = rolesSnapshot.docs.map(doc => doc.data().name);
+      console.log("Roles fetched: ", rolesList);
+      setRoles(rolesList);
     } catch (error) {
       console.error("Error fetching roles:", error);
     }
   };
 
   // Fonction pour récupérer un document par son ID
-  const fetchDocumentById = async (id) => {
-    const document = await getDocumentById(id); // Récupère le document par ID
-    console.log("Document data fetched: ", document); // Affiche les données du document
-    setDocumentData(document); // Met à jour l'état avec les données du document
+  const fetchDocumentById = async (id: string) => {
+    const document = await getDocumentById(id);
+    console.log("Document data fetched: ", document);
+    setDocumentData(document);
   };
-
 
   const fetchDataAdresseByUserId = async (userId: string) => {
     const data = await getDataAdressebyUserID(userId);
     console.log("Address data fetched: ", data);
     setDataAdresse(data);
   };
-  
-  const fetchParrainNames = async (parrainIds) => {
+
+  const fetchDataDemandesByUserId = async (userId: string) => {
+    const data = await getDataDemandesbyUserID(userId);
+    console.log("Demandes data fetched: ", data);
+
+    // Trier les demandes par date de création
+    const sortedData = data.sort((a: any, b: any) => {
+      const dateA = a.data.dateCreation.seconds * 1000 + a.data.dateCreation.nanoseconds / 1000000;
+      const dateB = b.data.dateCreation.seconds * 1000 + b.data.dateCreation.nanoseconds / 1000000;
+      return dateB - dateA;
+    });
+
+    setDataDemandes(sortedData);
+  };
+
+  const fetchTempXcpByTokenId = async (tokenId: string) => {
+    const data = await getTempXcpByTokenID(tokenId);
+    console.log("TempXcp data fetched by Token ID: ", data);
+    setTempXcpToken(data);
+  };
+
+  const fetchTempXcpByTokenPartenaire = async (tokenPartenaire: string) => {
+    const data = await getTempXcpByTokenPartenaire(tokenPartenaire);
+    console.log("TempXcp data fetched by Token Partenaire: ", data);
+    setTempXcpPartenaire(data);
+  };
+
+  const fetchUserParrainByTokenId = async (tokenId: string) => {
+    const data = await getUserParrainbyTokenID(tokenId);
+    console.log("User Parrain data fetched by Token ID: ", data);
+    setUserParrain(data);
+  };
+
+  const fetchParrainByTokenId = async (tokenId: string) => {
+    const data = await getParrainbyTokenID(tokenId);
+    console.log("Parrain data fetched by Token ID: ", data);
+    setParrain(data);
+  };
+
+  const fetchParrainNames = async (parrainIds: string[]) => {
     try {
       const parrains = await Promise.all(parrainIds.map(async (id) => {
         const userRef = doc(db, "users", id);
@@ -175,18 +215,14 @@ const ModalUsers = (props: Props) => {
       return parrainIds; // En cas d'erreur, retournez les ID d'origine
     }
   };
-  
-
-//////////////////////////////////////////////////////////////////////////
-
 
   // Utilisation de useEffect pour récupérer les données utilisateur, les rôles et l'historique à l'initialisation
   useEffect(() => {
     const url = window.location.href;
-    const userId = url.substring(url.lastIndexOf('/') + 1); // Récupère l'ID utilisateur depuis l'URL
-    getUserData(userId); // Récupère les données utilisateur
-    getRoles(); // Récupère les rôles
-    getUserHistory(userId); // Récupère l'historique utilisateur
+    const userId = url.substring(url.lastIndexOf('/') + 1);
+    getUserData(userId);
+    getRoles();
+    getUserHistory(userId);
 
     if (userData && userData.userParrainList) {  // recupère les nom des id liés au parrain
       fetchParrainNames(userData.userParrainList).then((parrains) => {
@@ -213,16 +249,16 @@ const ModalUsers = (props: Props) => {
   // Fonction pour gérer les changements de rôles
   const handleRoleChange = (role: string, checked: boolean) => {
     if (checked) {
-      setUserRoles((prevRoles) => [...prevRoles, role]); // Ajoute le rôle à la liste des rôles
+      setUserRoles((prevRoles) => [...prevRoles, role]);
     } else {
-      setUserRoles((prevRoles) => prevRoles.filter((r) => r !== role)); // Retire le rôle de la liste des rôles
+      setUserRoles((prevRoles) => prevRoles.filter((r) => r !== role));
     }
   };
 
   // Fonction pour mettre à jour les données utilisateur
   const handleUpdate = async () => {
     try {
-      const userRef = doc(db, "users", editData.id); // Référence au document utilisateur
+      const userRef = doc(db, "users", editData.id);
       const updatedData = { ...editData, roles: userRoles };
 
       Object.keys(updatedData).forEach(key => {
@@ -231,7 +267,7 @@ const ModalUsers = (props: Props) => {
         }
       });
 
-      await updateDoc(userRef, updatedData); // Met à jour le document utilisateur
+      await updateDoc(userRef, updatedData);
 
       for (const key of Object.keys(editData)) {
         if (editData[key] instanceof File) {
@@ -239,8 +275,8 @@ const ModalUsers = (props: Props) => {
         }
       }
 
-      getUserData(editData.id); // Récupère les données utilisateur mises à jour
-      closeModal(); // Ferme le modal
+      getUserData(editData.id);
+      closeModal();
     } catch (error) {
       console.error("Error updating user data:", error);
     }
@@ -271,10 +307,8 @@ const ModalUsers = (props: Props) => {
                     <p>Id : {userData.id}</p>
                   </div>
 
-
-
                   <div className="item">
-                    <p>Rôle à l'inscription : {userData.role}</p> {/* Affiche le rôle initial */}
+                    <p>Rôle à l'inscription : {userData.role}</p>
                   </div>
 
                   <div className="item">
@@ -297,8 +331,8 @@ const ModalUsers = (props: Props) => {
 
                   <div className="item">
                     <p>Civilité : {userData.civilite}</p>
-                    <input type="text" name="civilite" value={editData.civilite || ''} onChange={handleInputChange} />  
-                  </div> 
+                    <input type="text" name="civilite" value={editData.civilite || ''} onChange={handleInputChange} />
+                  </div>
 
                   <div className="item">
                     <p>Nom : {userData.lastname}</p>
@@ -317,8 +351,6 @@ const ModalUsers = (props: Props) => {
                     <input type="text" name="phone" value={editData.phone || ''} onChange={handleInputChange} />
                   </div>
 
-
-
                   <div className="item">
                     <p>Validationdocument : {userData.Validationdocument}</p>
                   </div>
@@ -331,28 +363,38 @@ const ModalUsers = (props: Props) => {
                     <input type="file" name="avisImpots" onChange={handleInputChange} />
                   </div>
 
-
                   <div className="item">
                     <p>Dernière mise à jour du mot de passe : {userData.lastpassupdate && moment(userData.lastpassupdate.toDate()).format('DD MMMM YYYY')}</p>
                   </div>
                   <div className="item">
-                  <Button onClick={() => fetchDataAdresseByUserId(userData.id)}>Fetch Address Data By User ID</Button>
+                    <Button onClick={() => fetchDataAdresseByUserId(userData.id)}>Fetch Address Data By User ID</Button>
+                    {dataAdresse && (
+                      <div>
+                        <h3>Address Data:</h3>
+                        <pre>{JSON.stringify(dataAdresse, null, 2)}</pre>
+                      </div>
+                    )}
                   </div>
-                  
+
+                  <div className="item">
+                    <Button onClick={() => fetchDataDemandesByUserId(userData.id)}>Fetch Demandes Data By User ID</Button>
+                    {dataDemandes && (
+                      <div>
+                        <h3>Demandes Data:</h3>
+                        <pre>{JSON.stringify(dataDemandes, null, 2)}</pre>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 <div className="column">
-
-
                   <div className="item">
-                      <p>Parrains - Liste des parainés :</p>
-                      {userData.userParrainList && userData.userParrainList.map((parrain, index) => (
-                        <p key={index}>{parrain}</p>
-                      ))}
+                    <p>Parrains - Liste des parainés :</p>
+                    {userData.userParrainList && userData.userParrainList.map((parrain, index) => (
+                      <p key={index}>{parrain}</p>
+                    ))}
                   </div>
 
- 
-                
                   <div className="item">
                     <p>Lien : {userData.lien}</p>
                     <input type="text" name="lien" value={editData.lien || ''} onChange={handleInputChange} />
@@ -363,6 +405,45 @@ const ModalUsers = (props: Props) => {
                     <input type="text" name="tokenPartenaire" value={editData.tokenPartenaire || ''} onChange={handleInputChange} />
                   </div>
 
+                  <div className="item">
+                    <Button onClick={() => fetchTempXcpByTokenId(userData.tokenPartenaire)}>Fetch TempXcp By Token ID</Button>
+                    {tempXcpToken && (
+                      <div>
+                        <h3>TempXcp Data By Token ID:</h3>
+                        <pre>{JSON.stringify(tempXcpToken, null, 2)}</pre>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="item">
+                    <Button onClick={() => fetchTempXcpByTokenPartenaire(userData.tokenPartenaire)}>Fetch TempXcp By Token Partenaire</Button>
+                    {tempXcpPartenaire && (
+                      <div>
+                        <h3>TempXcp Data By Token Partenaire:</h3>
+                        <pre>{JSON.stringify(tempXcpPartenaire, null, 2)}</pre>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="item">
+                    <Button onClick={() => fetchUserParrainByTokenId(userData.tokenPartenaire)}>Fetch User Parrain By Token ID</Button>
+                    {userParrain && (
+                      <div>
+                        <h3>User Parrain Data By Token ID:</h3>
+                        <pre>{JSON.stringify(userParrain, null, 2)}</pre>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="item">
+                    <Button onClick={() => fetchParrainByTokenId(userData.tokenPartenaire)}>Fetch Parrain By Token ID</Button>
+                    {parrain && (
+                      <div>
+                        <h3>Parrain Data By Token ID:</h3>
+                        <pre>{JSON.stringify(parrain, null, 2)}</pre>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -398,11 +479,6 @@ const ModalUsers = (props: Props) => {
                   </div>
                 )}
               </div>
-              {/*<div className="item">
-              <Button onClick={() => fetchDataAdresseByUserId(userData.id)}>Fetch Address Data By User ID</Button>
-              </div>*/}
-
-
             </div>
           ) : (
             <p>Chargement des données utilisateur...</p>

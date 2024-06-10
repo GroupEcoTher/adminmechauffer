@@ -9,7 +9,7 @@ import { getData, getAllUsers, getIncompleteUsers, getNCUsers } from "../../conf
 import FullLengthBox from "./FullLengthBox";
 import "../home/home.scss";
 import moment from 'moment';
-import { getDocumentById } from "../../config/firebase";
+//import { getDocumentById } from "../../config/firebase";
 
 // Initialiser react-modal
 Modal.setAppElement('#root');
@@ -26,9 +26,10 @@ const UsersTraitements = ({ title }) => {
   const location = useLocation();
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState(null);
-  const [totalUsers, setTotalUsers] = useState(0); // État pour stocker le nombre total d'utilisateurs
+  const [totalUsers, setTotalUsers] = useState(0); 
   const [documentVerification, setDocumentVerification] = useState({});
   const [activeUserType, setActiveUserType] = useState('all');
+
   const [identityDocumentUrl, setIdentityDocumentUrl] = useState('');
   const [taxNoticeUrl, setTaxNoticeUrl] = useState('');
   const [documentVerified, setDocumentVerified] = useState(false);
