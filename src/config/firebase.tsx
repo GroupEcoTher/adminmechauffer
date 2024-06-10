@@ -24,35 +24,45 @@ export const authSecond = getAuth(appSecond);
 export const storage = getStorage(app);
 export { app, appSecond };
 
-// CONSTANTES D'AFFICHAGE POUR LES UTILISATEURS
+// Fonction pour obtenir les utilisateurs incomplets
+export const getIncompleteUsers = async () => {
+  const usersRef = collection(db, 'users');
 
-// Met à jour le document des coordonnées de l'utilisateur
-/*export const updateUserCoordoneeDocument = async (user, additionalData) => {
-  if (!user) return;
-  try {
-    await updateDoc(doc(db, 'users', user.uid), {
-      'firstname': additionalData.firstname,
-      'lastname': additionalData.lastname,
-      'ville': additionalData.ville,
-      'civilite': additionalData.civilite,
-      'pays': additionalData.pays,
-      'codePostal': additionalData.codePostal,
-      'adresse': additionalData.adresse,
-      'iban': additionalData.iban,
-      'nomCompte': additionalData.nomCompte,
-    });
-  } catch (e) {
-    console.log(e);
-  }
-};*/
+  // Créer une requête pour obtenir les utilisateurs qui n'ont pas rempli les conditions
+  const q = query(
+    usersRef,
+    where('civilite', '==', ''),
+    where('email', '==', ''),
+    where('lastname', '==', ''),
+    where('firstname', '==', ''),
+    where('phone', '==', ''),
+    where('adresse', '==', '')
+  );
 
+  // Exécuter la requête et obtenir les documents
+  const querySnapshot = await getDocs(q);
 
+  const incompleteUsers: { id: string; [key: string]: any }[] = [];
 
+  querySnapshot.forEach((doc) => {
+    const userData = doc.data();
 
+    // Vérifier si les documents sont présents et validés
+    const isIdentityValid = userData.documents?.identity?.status === 'Validé';
+    const isTaxNoticeValid = userData.documents?.taxNotice?.status === 'Validé';
 
+    if (!isIdentityValid || !isTaxNoticeValid) {
+      incompleteUsers.push({
+        id: doc.id,
+        ...userData,
+      });
+    }
+  });
 
+  return incompleteUsers;
+};
 
-// obtient les données des utilisateurs
+// Fonction pour obtenir les données des utilisateurs
 export const getData = async () => {
   const querySnapshot = await getDocs(collection(db, "users"));
   const users: { id: string; [key: string]: any }[] = [];
@@ -63,7 +73,7 @@ export const getData = async () => {
   return users;
 }
 
-// obtient tous les utilisateurs
+// Fonction pour obtenir tous les utilisateurs
 export const getAllUsers = async () => {
   const querySnapshot = await getDocs(collection(db, "users"));
   console.log("Nombre total d'utilisateurs: ", querySnapshot.size);
@@ -74,39 +84,26 @@ export const getAllUsers = async () => {
   return users;
 };
 
-// fonction pour obtenir le nombre total d'utilisateurs
+// Fonction pour obtenir le nombre total d'utilisateurs
 export const getTotalUsers = async () => {
   const querySnapshot = await getDocs(collection(db, 'users'));
   return querySnapshot.size;
 };
 
-// obtient les utilisateurs incomplets
-export const getIncompleteUsers = async () => {
-  const querySnapshot = await getDocs(collection(db, "users"));
-  const users: { id: string; [key: string]: any }[] = [];
-  querySnapshot.forEach((doc) => {
-    const data = doc.data();
-    if (!data.complet) {
-      users.push({ id: doc.id, ...data });
-    }
-  });
-  return users;
-};
-
-// ajout de la fonction getNCUsers
+// Fonction pour obtenir les utilisateurs NC
 export const getNCUsers = async () => {
   const querySnapshot = await getDocs(collection(db, 'users'));
   const users = [];
   querySnapshot.forEach((doc) => {
     const data = doc.data();
-    if (data.nc) {
+    if (data.documents?.identity?.status === 'Non Conforme' || data.documents?.taxNotice?.status === 'Non Conforme') {
       users.push({ id: doc.id, ...data });
     }
   });
   return users;
 };
 
-// obtient un document par ID
+// Fonction pour obtenir un document par ID
 export const getDocumentById = async (id: string) => {
   const docRef = doc(db, "users", id);
   const docSnap = await getDoc(docRef);
@@ -119,8 +116,8 @@ export const getDocumentById = async (id: string) => {
     return null;
   }
 };
-  
-// obtient les données d'adresse par user ID
+
+// Fonction pour obtenir les données d'adresse par user ID
 export const getDataAdressebyUserID = async (userID: string) => {
   const docRef = doc(db, "users", userID);
   const docSnap = await getDoc(docRef);
@@ -139,7 +136,7 @@ export const getDataAdressebyUserID = async (userID: string) => {
   }
 };
 
-// obtient les demandes par user ID
+// Fonction pour obtenir les demandes par user ID
 export const getDataDemandesbyUserID = async (user: string) => {
   const dateInst = new Date();
   const usersRef = collection(db, 'demandes');
@@ -152,7 +149,7 @@ export const getDataDemandesbyUserID = async (user: string) => {
   return res;
 }
 
-// obtient le temp XCP par token ID
+// Fonction pour obtenir le temp XCP par token ID
 export const getTempXcpByTokenID = async (Token) => {
   const usersRef = collection(db, 'demandes');
   const q = query(usersRef, where('tokenParrain', '==', Token), where('demandestatus', '==', 'En cours de traitement'), orderBy('XCPgain'));
@@ -167,7 +164,7 @@ export const getTempXcpByTokenID = async (Token) => {
   return res;
 }
 
-// obtient le temp XCP par token partenaire
+// Fonction pour obtenir le temp XCP par token partenaire
 export const getTempXcpByTokenPartenaire = async (user) => {
   const usersRef = collection(db, 'demandes');
   const q = query(usersRef, where('tokenParrain', '==', user.uid), where('demandestatus', '==', 'En cours de traitement'), orderBy('XCPgain'));
@@ -182,7 +179,7 @@ export const getTempXcpByTokenPartenaire = async (user) => {
   return res;
 }
 
-// obtient les utilisateurs parrain par token ID
+// Fonction pour obtenir les utilisateurs parrain par token ID
 export const getUserParrainbyTokenID = async (Token) => {
   const usersRef = collection(db, 'users');
   const q = query(usersRef, where('tokenParrain', '==', Token));
@@ -194,7 +191,7 @@ export const getUserParrainbyTokenID = async (Token) => {
   return res;
 }
 
-// obtient les parrains par token ID
+// Fonction pour obtenir les parrains par token ID
 export const getParrainbyTokenID = async (Token) => {
   const usersRef = collection(db, 'users');
   const q = query(usersRef, where('tokenPartenaire', '==', Token));
@@ -206,9 +203,7 @@ export const getParrainbyTokenID = async (Token) => {
   return res;
 }
 
-// CONSTANTES D'ACTION POUR LES UTILISATEURS
-
-// crée un document utilisateur
+// Fonction pour créer un document utilisateur
 export const createUserDocument = async (user, additionalData) => {
   if (!user) return;
   const { email } = user;
@@ -224,7 +219,7 @@ export const createUserDocument = async (user, additionalData) => {
   }
 };
 
-// ajoute un utilisateur à la liste de parrainage
+// Fonction pour ajouter un utilisateur à la liste de parrainage
 export const adduserlisttoparrain = async (user, userparrain) => {
   if (!user) return;
   try {
@@ -236,7 +231,7 @@ export const adduserlisttoparrain = async (user, userparrain) => {
   }
 };
 
-// crée un document d'adresse
+// Fonction pour créer un document d'adresse
 export const createAdresseDoc = async (user, additionalData) => {
   if (!user) return;
   try {
@@ -257,7 +252,7 @@ export const createAdresseDoc = async (user, additionalData) => {
   }
 };
 
-// supprime un document d'adresse
+// Fonction pour supprimer un document d'adresse
 export const DeleteAdresseDoc = async (user, index, type) => {
   if (!user) return;
   console.log(index);
@@ -271,7 +266,7 @@ export const DeleteAdresseDoc = async (user, index, type) => {
   }
 };
 
-// met à jour l'email
+// Fonction pour mettre à jour l'email
 export const EmailUpdate = async (user, value) => {
   const credential = EmailAuthProvider.credential(
     user.email,
@@ -294,7 +289,7 @@ export const EmailUpdate = async (user, value) => {
   return result;
 };
 
-// met à jour le mot de passe
+// Fonction pour mettre à jour le mot de passe
 export const PassUpdate = async (user, value) => {
   const credential = EmailAuthProvider.credential(
     user.email,
@@ -317,7 +312,7 @@ export const PassUpdate = async (user, value) => {
   return result;
 };
 
-// met à jour le numéro de téléphone
+// Fonction pour mettre à jour le numéro de téléphone
 export const PhoneUpdate = async (user, value) => {
   const credential = EmailAuthProvider.credential(
     user.email,
@@ -338,7 +333,7 @@ export const PhoneUpdate = async (user, value) => {
   return result;
 };
 
-// met à jour le document utilisateur
+// Fonction pour mettre à jour le document utilisateur
 export const updateUserDocument = async (user, additionalData) => {
   if (!user) return;
   try {
@@ -350,7 +345,7 @@ export const updateUserDocument = async (user, additionalData) => {
   }
 };
 
-// supprime le premier utilisateur parrain
+// Fonction pour supprimer le premier utilisateur parrain
 export const removeParrainFirstUser = async (user) => {
   if (!user) return;
   try {
@@ -362,7 +357,7 @@ export const removeParrainFirstUser = async (user) => {
   }
 };
 
-// met à jour le document des coordonnées de l'utilisateur
+// Fonction pour mettre à jour le document des coordonnées de l'utilisateur
 export const updateUserCoordoneeDocument = async (user, additionalData) => {
   if (!user) return;
   try {
@@ -382,7 +377,7 @@ export const updateUserCoordoneeDocument = async (user, additionalData) => {
   }
 };
 
-// met à jour le statut de l'utilisateur
+// Fonction pour mettre à jour le statut de l'utilisateur
 export const updateUserStatusDocument = async (user, status) => {
   if (!user) return;
   try {
@@ -394,7 +389,7 @@ export const updateUserStatusDocument = async (user, status) => {
   }
 };
 
-// obtient un utilisateur par ID
+// Fonction pour obtenir un utilisateur par ID
 export const getUserById = async (userId) => {
   if (!userId) return;
   try {
@@ -410,7 +405,7 @@ export const getUserById = async (userId) => {
   }
 };
 
-// obtient les devis par ID utilisateur
+// Fonction pour obtenir les devis par ID utilisateur
 export const getDevisByUserId = async (userId) => {
   if (!userId) return;
   try {
@@ -427,9 +422,7 @@ export const getDevisByUserId = async (userId) => {
   }
 };
 
-// CONSTANTES D'ACTION POUR LES PARTENAIRES
-
-// crée un document de demande
+// Fonction pour créer un document de demande
 export const createDemandeDoc = async (user, adresseId, additionalData) => {
   if (!user) return;
   const userid = user.uid;
@@ -473,9 +466,7 @@ export const createDemandeDoc = async (user, adresseId, additionalData) => {
   }
 };
 
-// CONSTANTES D'AFFICHAGE POUR LES PARTENAIRES
-
-// réinitialise l'email
+// Fonction pour réinitialiser l'email
 export const resetEmail = async (email) => {
   try {
     const auth = getAuth();
@@ -487,6 +478,8 @@ export const resetEmail = async (email) => {
         const errorMessage = error.message;
       });
   } catch (e) { }
+};
+
 
 // valeur des demandes XCP
 /*const demandesValueXCP = {
@@ -518,5 +511,5 @@ export const resetEmail = async (email) => {
 
 
 // CONSTANTES GÉNÉRALES
-};
+
 export default firebaseConfig;

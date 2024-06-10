@@ -1,5 +1,4 @@
-import { useLocation } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { GridColDef } from "@mui/x-data-grid";
 import Modal from 'react-modal';
 import DataTable from "../../components/dataTable/DataTable";
@@ -9,7 +8,6 @@ import { getData, getAllUsers, getIncompleteUsers, getNCUsers } from "../../conf
 import FullLengthBox from "./FullLengthBox";
 import "../home/home.scss";
 import moment from 'moment';
-//import { getDocumentById } from "../../config/firebase";
 
 // Initialiser react-modal
 Modal.setAppElement('#root');
@@ -26,7 +24,7 @@ const UsersTraitements = ({ title }) => {
   const location = useLocation();
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState(null);
-  const [totalUsers, setTotalUsers] = useState(0); 
+  const [totalUsers, setTotalUsers] = useState(0);
   const [documentVerification, setDocumentVerification] = useState({});
   const [activeUserType, setActiveUserType] = useState('all');
 
@@ -38,11 +36,9 @@ const UsersTraitements = ({ title }) => {
   const [taxNoticeNC, setTaxNoticeNC] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
-  
-  // Définir la fonction isActive
+
   const isActive = (path) => location.pathname === path ? 'active' : '';
 
-  // Boutons au-dessus de la grille
   const handleIncompleteUsersClick = async () => {
     const incompleteUsers = await getIncompleteUsers();
     setUser(incompleteUsers);
@@ -58,7 +54,7 @@ const UsersTraitements = ({ title }) => {
   const handleAllUsersClick = async () => {
     const allUsers = await getAllUsers();
     setUser(allUsers);
-    setTotalUsers(allUsers.length); // Mettre à jour le nombre total d'utilisateurs
+    setTotalUsers(allUsers.length);
     setActiveUserType('all');
   };
 
@@ -66,7 +62,7 @@ const UsersTraitements = ({ title }) => {
     const userFetchFunction = async () => {
       const userFetch = await getData();
       setUser(userFetch);
-      setTotalUsers(userFetch.length); // Définir le nombre total d'utilisateurs
+      setTotalUsers(userFetch.length);
     };
     userFetchFunction();
   }, []);
@@ -114,15 +110,13 @@ const UsersTraitements = ({ title }) => {
       field: "dateCreation",
       type: "date",
       headerName: "Created At",
-      width: 110,   
+      width: 110,
       valueGetter: (params) => {
-        const format = 'DD MMMM YYYY';
         const firebaseTimestamp = params.row.dateCreation;
         moment.locale('fr');
-        if(firebaseTimestamp?.seconds && firebaseTimestamp?.nanoseconds) {  
-          const milliseconds = firebaseTimestamp?.seconds * 1000 + firebaseTimestamp?.nanoseconds / 1000000;   
+        if (firebaseTimestamp?.seconds && firebaseTimestamp?.nanoseconds) {  
+          const milliseconds = firebaseTimestamp.seconds * 1000 + firebaseTimestamp.nanoseconds / 1000000;   
           const date = new Date(milliseconds);
-          console.log(date);
           return date;
         } else {
           return '';
@@ -222,12 +216,10 @@ const UsersTraitements = ({ title }) => {
   return (
     <div className="home">
       <h1 className="page-title">{title}</h1>
-      <p>Nombre total d'utilisateurs : <span className="total-users">{totalUsers}</span></p> {/* Afficher le nombre total d'utilisateurs en vert */}
+      <p>Nombre total d'utilisateurs : <span className="total-users">{totalUsers}</span></p>
       
-      {/* MENU */}
-      <FullLengthBox totalUsers={totalUsers} /> {/* Passer totalUsers à FullLengthBox */}
+      <FullLengthBox totalUsers={totalUsers} />
 
-      {/* SOUS MENU */}
       <div className={`info ${isActive ? 'active' : ''}`}>
         <button className={activeUserType === 'all' ? 'active' : ''} onClick={handleAllUsersClick}>
           ALL USERS <span className="total-users">{`(${totalUsers})`}</span>
@@ -236,13 +228,10 @@ const UsersTraitements = ({ title }) => {
         <button className={activeUserType === 'nc' ? 'active' : ''} onClick={handleNCUsersClick}>USERS NC</button>
         <button className={activeUserType === 'usersarchive' ? 'active' : ''} onClick={handleNCUsersClick}>USERS ARCHIVES</button>
 
-        {/* LE BOUTTON ADD du GridColDef */}
         <button onClick={() => setOpen(true)}>Add New User</button>
         
-        {/* LE GRID LA GRILLE */}
         {user && <DataTable slug="users" columns={columns} rows={user} />}
         
-        {/* LIEN DU BOUTTON Add New User */}
         {open && <Add slug="user" columns={columns} setOpen={setOpen} />}
       </div>
     </div>
@@ -250,5 +239,3 @@ const UsersTraitements = ({ title }) => {
 };
 
 export default UsersTraitements;
-
-// RAPPEL : UsersTraitements > datatable grid > bouton action > user.tsx >> single.tsx ----<Single {...singleUser}/>
