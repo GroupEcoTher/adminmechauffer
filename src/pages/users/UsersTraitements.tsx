@@ -1,4 +1,3 @@
-// usersTraitements.tsx
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { GridColDef } from "@mui/x-data-grid";
@@ -6,8 +5,7 @@ import Modal from 'react-modal';
 import DataTable from "../../components/dataTable/DataTable";
 import { useEffect, useState } from "react";
 import Add from "../../components/add/Add";
-import { getData } from "../../config/firebase";
-import { getAllUsers } from "../../config/firebase";
+import { getData, getAllUsers, getIncompleteUsers, getNCUsers } from "../../config/firebase";
 import FullLengthBox from "./FullLengthBox";
 import "../home/home.scss";
 import moment from 'moment';
@@ -28,6 +26,7 @@ const UsersTraitements = ({ title }) => {
   const location = useLocation();
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const [totalUsers, setTotalUsers] = useState(0); // État pour stocker le nombre total d'utilisateurs
   const [documentVerification, setDocumentVerification] = useState({});
   const [activeUserType, setActiveUserType] = useState('all');
   const [identityDocumentUrl, setIdentityDocumentUrl] = useState('');
@@ -39,7 +38,10 @@ const UsersTraitements = ({ title }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
   
-  //boutons audessus de la grille IIMCOMPLETE USERS, USERS NC, ALL USERS
+  // Définir la fonction isActive
+  const isActive = (path) => location.pathname === path ? 'active' : '';
+
+  // Boutons au-dessus de la grille
   const handleIncompleteUsersClick = async () => {
     const incompleteUsers = await getIncompleteUsers();
     setUser(incompleteUsers);
@@ -55,6 +57,7 @@ const UsersTraitements = ({ title }) => {
   const handleAllUsersClick = async () => {
     const allUsers = await getAllUsers();
     setUser(allUsers);
+    setTotalUsers(allUsers.length); // Mettre à jour le nombre total d'utilisateurs
     setActiveUserType('all');
   };
 
@@ -62,6 +65,7 @@ const UsersTraitements = ({ title }) => {
     const userFetchFunction = async () => {
       const userFetch = await getData();
       setUser(userFetch);
+      setTotalUsers(userFetch.length); // Définir le nombre total d'utilisateurs
     };
     userFetchFunction();
   }, []);
@@ -71,8 +75,6 @@ const UsersTraitements = ({ title }) => {
       field: "id", 
       headerName: "ID", 
       width: 15,
-    
-      ////  ACTION   USERS   >  Route path="/users/:id"  >   user/User.tsx  >  <Single {...singleUser}/>
       renderCell: (params) => (
         <div onClick={() => {
           setSelectedUserId(params.value);
@@ -107,10 +109,6 @@ const UsersTraitements = ({ title }) => {
       headerName: "Phone",
       width: 120,
     },
-
-
-
-
     {
       field: "dateCreation",
       type: "date",
@@ -121,13 +119,13 @@ const UsersTraitements = ({ title }) => {
         const firebaseTimestamp = params.row.dateCreation;
         moment.locale('fr');
         if(firebaseTimestamp?.seconds && firebaseTimestamp?.nanoseconds) {  
-        const milliseconds = firebaseTimestamp?.seconds * 1000 + firebaseTimestamp?.nanoseconds / 1000000;   
-        const date = new Date(milliseconds);
-        console.log(date);
-        return date;
+          const milliseconds = firebaseTimestamp?.seconds * 1000 + firebaseTimestamp?.nanoseconds / 1000000;   
+          const date = new Date(milliseconds);
+          console.log(date);
+          return date;
+        } else {
+          return '';
         }
-        else return '';
-        
       },
       valueFormatter: (params) => {
         if (params.value) {
@@ -136,10 +134,6 @@ const UsersTraitements = ({ title }) => {
         return "";
       }
     },
-
-
-
-
     {
       field: "Pièce Identité",
       headerName: "Pièce Identité",
@@ -151,7 +145,6 @@ const UsersTraitements = ({ title }) => {
             <button style={{ marginRight: '5px' }} onClick={() => {
               window.open(params.row.identityDocumentUrl, '_blank', 'height=600,width=800');
             }}>Voir</button>
-
             <input type="checkbox" checked={documentVerification[params.row.id]?.identityDocumentVerified} onChange={(e) => {
               setDocumentVerification({
                 ...documentVerification,
@@ -162,12 +155,11 @@ const UsersTraitements = ({ title }) => {
                 }
               });
             }} /> 
-
             <input type="checkbox" style={{ marginLeft: '5px', color: 'red' }} checked={documentVerification[params.row.id]?.identityDocumentNC} onChange={(e) => {
               setDocumentVerification({
                 ...documentVerification,
                 [params.row.id]: {
-                  ...documentVerification[params.row.id],
+                  ...documentVerification,
                   identityDocumentNC: e.target.checked,
                   identityDocumentVerified: !e.target.checked
                 }
@@ -192,18 +184,17 @@ const UsersTraitements = ({ title }) => {
               setDocumentVerification({
                 ...documentVerification,
                 [params.row.id]: {
-                  ...documentVerification[params.row.id],
+                  ...documentVerification,
                   taxNoticeVerified: e.target.checked,
                   taxNoticeNC: !e.target.checked
                 }
               });
-              
             }} /> 
             <input type="checkbox" style={{ marginLeft: '5px', color: 'red' }} checked={documentVerification[params.row.id]?.taxNoticeNC} onChange={(e) => {
               setDocumentVerification({
                 ...documentVerification,
                 [params.row.id]: {
-                  ...documentVerification[params.row.id],
+                  ...documentVerification,
                   taxNoticeNC: e.target.checked,
                   taxNoticeVerified: !e.target.checked
                 }
@@ -227,21 +218,19 @@ const UsersTraitements = ({ title }) => {
     },
   ];
 
-  const isActive = (path) => location.pathname === path ? 'active' : '';
-
-
-
-
   return (
     <div className="home">
       <h1 className="page-title">{title}</h1>
-
+      <p>Nombre total d'utilisateurs : <span className="total-users">{totalUsers}</span></p> {/* Afficher le nombre total d'utilisateurs en vert */}
+      
       {/* MENU */}
-      <FullLengthBox /> 
+      <FullLengthBox totalUsers={totalUsers} /> {/* Passer totalUsers à FullLengthBox */}
 
-      {/* SOUS MENU*/}
+      {/* SOUS MENU */}
       <div className={`info ${isActive ? 'active' : ''}`}>
-        <button className={activeUserType === 'all' ? 'active' : ''} onClick={handleAllUsersClick}>ALL USERS</button>
+        <button className={activeUserType === 'all' ? 'active' : ''} onClick={handleAllUsersClick}>
+          ALL USERS <span className="total-users">{`(${totalUsers})`}</span>
+        </button>
         <button className={activeUserType === 'incomplete' ? 'active' : ''} onClick={handleIncompleteUsersClick}>USERS Incomplets</button>
         <button className={activeUserType === 'nc' ? 'active' : ''} onClick={handleNCUsersClick}>USERS NC</button>
         <button className={activeUserType === 'usersarchive' ? 'active' : ''} onClick={handleNCUsersClick}>USERS ARCHIVES</button>
@@ -249,12 +238,11 @@ const UsersTraitements = ({ title }) => {
         {/* LE BOUTTON ADD du GridColDef */}
         <button onClick={() => setOpen(true)}>Add New User</button>
         
-        {/* LE GRID LA GRILLE*/}
+        {/* LE GRID LA GRILLE */}
         {user && <DataTable slug="users" columns={columns} rows={user} />}
         
         {/* LIEN DU BOUTTON Add New User */}
         {open && <Add slug="user" columns={columns} setOpen={setOpen} />}
-
       </div>
     </div>
   );
@@ -262,4 +250,4 @@ const UsersTraitements = ({ title }) => {
 
 export default UsersTraitements;
 
-//RAPPEL : UsersTraitements > datatable grid > bouton action > user.tsx >>  single.tsx ----<Single {...singleUser}/>
+// RAPPEL : UsersTraitements > datatable grid > bouton action > user.tsx >> single.tsx ----<Single {...singleUser}/>

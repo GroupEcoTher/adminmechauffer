@@ -152,8 +152,7 @@ const ModalUsers = (props: Props) => {
   };
 
 
-
-  const fetchDataAdresseByUserId = async (userId) => {
+  const fetchDataAdresseByUserId = async (userId: string) => {
     const data = await getDataAdressebyUserID(userId);
     console.log("Address data fetched: ", data);
     setDataAdresse(data);
@@ -178,13 +177,7 @@ const ModalUsers = (props: Props) => {
   };
   
 
-
-
-
 //////////////////////////////////////////////////////////////////////////
-
-
-
 
 
   // Utilisation de useEffect pour récupérer les données utilisateur, les rôles et l'historique à l'initialisation
@@ -278,9 +271,7 @@ const ModalUsers = (props: Props) => {
                     <p>Id : {userData.id}</p>
                   </div>
 
-                  <div className="item">
-                    <p>Validationdocument : {userData.Validationdocument}</p>
-                  </div>
+
 
                   <div className="item">
                     <p>Rôle à l'inscription : {userData.role}</p> {/* Affiche le rôle initial */}
@@ -325,6 +316,22 @@ const ModalUsers = (props: Props) => {
                     <p>Téléphone : {userData.phone}</p>
                     <input type="text" name="phone" value={editData.phone || ''} onChange={handleInputChange} />
                   </div>
+
+
+
+                  <div className="item">
+                    <p>Validationdocument : {userData.Validationdocument}</p>
+                  </div>
+                  <div className="item">
+                    <label>Pièce Identité :</label>
+                    <input type="file" name="pieceIdentite" onChange={handleInputChange} />
+                  </div>
+                  <div className="item">
+                    <label>Avis D'impôts :</label>
+                    <input type="file" name="avisImpots" onChange={handleInputChange} />
+                  </div>
+
+
                   <div className="item">
                     <p>Dernière mise à jour du mot de passe : {userData.lastpassupdate && moment(userData.lastpassupdate.toDate()).format('DD MMMM YYYY')}</p>
                   </div>
@@ -338,7 +345,7 @@ const ModalUsers = (props: Props) => {
 
 
                   <div className="item">
-                      <p>Parrains : liste des parainés :</p>
+                      <p>Parrains - Liste des parainés :</p>
                       {userData.userParrainList && userData.userParrainList.map((parrain, index) => (
                         <p key={index}>{parrain}</p>
                       ))}
@@ -355,14 +362,7 @@ const ModalUsers = (props: Props) => {
                     <p>Token Partenaire : {userData.tokenPartenaire}</p>
                     <input type="text" name="tokenPartenaire" value={editData.tokenPartenaire || ''} onChange={handleInputChange} />
                   </div>
-                  <div className="item">
-                    <label>Pièce Identité :</label>
-                    <input type="file" name="pieceIdentite" onChange={handleInputChange} />
-                  </div>
-                  <div className="item">
-                    <label>Avis D'impôts :</label>
-                    <input type="file" name="avisImpots" onChange={handleInputChange} />
-                  </div>
+
                 </div>
               </div>
 

@@ -1,7 +1,8 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import './FullLengthBox.scss';
 
-const FullLengthBox = () => {
+const FullLengthBox = ({ totalUsers }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -9,7 +10,9 @@ const FullLengthBox = () => {
 
   return (
     <div className="fullLengthBox">
-      <button className={`hoverEffect ${isActive('/UsersHome')}`} onClick={() => navigate('/UsersHome')}>Home Users</button>
+      <button className={`hoverEffect ${isActive('/UsersHome')}`} onClick={() => navigate('/UsersHome')}>
+        Home Users <span className="total-users">{totalUsers ? `(${totalUsers})` : ''}</span>
+      </button>
       <button className={`hoverEffect ${isActive('/UsersTraitements')}`} onClick={() => navigate('/UsersTraitements')}>Gestion Users <br /> États traitements</button>
       <button className={`hoverEffect ${isActive('/RecepMail')}`} onClick={() => navigate('/RecepMail')}>Réception Mails</button>
       <button className={`hoverEffect ${isActive('/QuestDem')}`} onClick={() => navigate('/QuestDem')}>Questions Demandes via le Site</button>

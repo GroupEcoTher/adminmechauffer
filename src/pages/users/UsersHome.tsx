@@ -1,9 +1,10 @@
+// UsersHome.jsx
 import React, { useEffect, useState } from 'react';
 import ChartBox from "../../components/chartBox/ChartBox";
 import BarChartBox from "../../components/barChartBox/BarChartBox";
-//import BigChartBox from "../../components/bigChartBox/BigChartBox";
-//import PieChartBox from "../../components/pieCartBox/PieChartBox";
-//import TopBox from "../../components/topBox/TopBox";
+// import BigChartBox from "../../components/bigChartBox/BigChartBox";
+// import PieChartBox from "../../components/pieCartBox/PieChartBox";
+// import TopBox from "../../components/topBox/TopBox";
 
 import {
   barChartBoxRevenue,
@@ -12,12 +13,11 @@ import {
   chartBoxProduct,
   chartBoxRevenue,
   chartBoxUser,
-  //barChartBoxValidated,
+  // barChartBoxValidated,
 } from "../../data";
 import "../users/Usershome.scss";
 import FullLengthBox from "../../pages/users/FullLengthBox";
-
-
+import { getData, getTotalUsers } from "../../config/firebase"; // Assurez-vous d'importer correctement getData et getTotalUsers
 
 const chartBoxData = [chartBoxUser, chartBoxProduct, chartBoxConversion, chartBoxRevenue];
 const barChartBoxData = [barChartBoxVisit, barChartBoxRevenue];
@@ -29,7 +29,7 @@ const UsersHome = ({ title }) => {
   useEffect(() => {
     const fetchData = async () => {
       const usersData = await getData();
-      const totalUsersCount = await getTotalUsers('user'); 
+      const totalUsersCount = await getTotalUsers(); // Corrected here
       setUsers(usersData);
       setTotalUsers(totalUsersCount);
     };
@@ -41,7 +41,7 @@ const UsersHome = ({ title }) => {
     <>
       <div className="home">
         <h1 className="page-title">{title}</h1>
-        <FullLengthBox />
+        <FullLengthBox totalUsers={totalUsers} /> {/* Passer totalUsers à FullLengthBox */}
 
         {chartBoxData.map((data, index) => (
           <div className={`box box${index+2}`} key={index}>
@@ -49,19 +49,17 @@ const UsersHome = ({ title }) => {
           </div>
         ))}
         
-        {/*<div className="box box4"><PieChartBox /></div>{/*Leads by Source*/}
+        {/* <div className="box box4"><PieChartBox /></div> Leadds by Source */}
         
-        {/*<div className="box box7"><BigChartBox /></div> {/*Analytics Global*/}
+        {/* <div className="box box7"><BigChartBox /></div> Analytics Global */}
 
-        {/*<div className="box box1"><TopBox /></div> {/*Top*/}
-
+        {/* <div className="box box1"><TopBox /></div> Top */}
 
         {barChartBoxData.map((data, index) => (
           <div className={`box box${index+2}`} key={index}>
             <BarChartBox {...data} />
           </div>
         ))}
-
       </div>
     </>
   );

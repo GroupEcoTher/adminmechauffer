@@ -46,12 +46,32 @@ export const getAllUsers = async () => {
   return users;
 };
 
+// Fonction pour obtenir le nombre total d'utilisateurs
+export const getTotalUsers = async () => {
+  const querySnapshot = await getDocs(collection(db, 'users'));
+  return querySnapshot.size;
+};
+
 export const getIncompleteUsers = async () => {
   const querySnapshot = await getDocs(collection(db, "users"));
   const users: { id: string; [key: string]: any }[] = [];
   querySnapshot.forEach((doc) => {
     const data = doc.data();
     if (!data.complet) {
+      users.push({ id: doc.id, ...data });
+    }
+  });
+  return users;
+};
+
+
+// Ajout de la fonction getNCUsers
+export const getNCUsers = async () => {
+  const querySnapshot = await getDocs(collection(db, 'users'));
+  const users = [];
+  querySnapshot.forEach((doc) => {
+    const data = doc.data();
+    if (data.nc) {
       users.push({ id: doc.id, ...data });
     }
   });
@@ -178,7 +198,7 @@ export const adduserlisttoparrain = async (user, userparrain) => {
     console.log('error : ', e);
   }
 };
-
+  
 export const createAdresseDoc = async (user, additionalData) => {
   if (!user) return;
   try {

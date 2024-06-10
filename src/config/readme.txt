@@ -19,3 +19,15 @@ Fonctions pour créer et mettre à jour des données :
 createUserDocument : Crée un nouveau document utilisateur avec des données supplémentaires.
 adduserlisttoparrain : Ajoute un utilisateur à la liste des utilisateurs d'un parrain.
 Ces fonctions utilisent diverses méthodes Firestore pour interagir avec la base de données, y compris getDocs, query, where, orderBy, setDoc, updateDoc, doc, collection, et d'autres.
+
+
+
+XCP
+- DROIT 1
+- DROIT 2
+
+ACCES 1
+ACCES 2
+
+80 %
+40 %
