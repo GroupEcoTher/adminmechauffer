@@ -4,7 +4,7 @@ import Modal from 'react-modal';
 import DataTable from "../../components/dataTable/DataTable";
 import { useEffect, useState } from "react";
 import Add from "../../components/add/Add";
-import { getData, getAllUsers, getIncompleteUsers, getNCUsers } from "../../config/firebase";
+import { getData, getAllUsers, getIncompleteUsers, getNCUsers, AfficheImg } from "../../config/firebase";
 import FullLengthBox from "./FullLengthBox";
 import "../home/home.scss";
 import moment from 'moment';
@@ -138,7 +138,8 @@ const UsersTraitements = ({ title }) => {
         return (
           <>
             <button style={{ marginRight: '5px' }} onClick={() => {
-              window.open(params.row.identityDocumentUrl, '_blank', 'height=600,width=800');
+              /*window.open(params.row.identityDocumentUrl, '_blank', 'height=600,width=800');*/
+              AfficheImg(params.row.id , 'ci0.png');
             }}>Voir</button>
             <input type="checkbox" checked={documentVerification[params.row.id]?.identityDocumentVerified} onChange={(e) => {
               setDocumentVerification({
@@ -149,7 +150,7 @@ const UsersTraitements = ({ title }) => {
                   identityDocumentNC: !e.target.checked
                 }
               });
-            }} /> 
+            }} />
             <input type="checkbox" style={{ marginLeft: '5px', color: 'red' }} checked={documentVerification[params.row.id]?.identityDocumentNC} onChange={(e) => {
               setDocumentVerification({
                 ...documentVerification,
@@ -172,30 +173,46 @@ const UsersTraitements = ({ title }) => {
       renderCell: (params) => {
         return (
           <>
-            <button style={{ marginRight: '5px' }} onClick={() => {
-              window.open(params.row.taxNoticeUrl, '_blank', 'height=600,width=800');
-            }}>Voir</button>
-            <input type="checkbox" checked={documentVerification[params.row.id]?.taxNoticeVerified} onChange={(e) => {
+          <button
+            style={{ marginRight: '5px' }}
+            onClick={() => {
+              AfficheImg(params.row.id , 'impot0.png');
+            }}
+          >
+            Open Tax Notice
+          </button>
+          <input
+            type="checkbox"
+            checked={documentVerification[params.row.id]?.taxNoticeVerified}
+            onChange={(e) => {
               setDocumentVerification({
                 ...documentVerification,
                 [params.row.id]: {
-                  ...documentVerification,
+                  ...documentVerification[params.row.id],
                   taxNoticeVerified: e.target.checked,
                   taxNoticeNC: !e.target.checked
                 }
               });
-            }} /> 
-            <input type="checkbox" style={{ marginLeft: '5px', color: 'red' }} checked={documentVerification[params.row.id]?.taxNoticeNC} onChange={(e) => {
+            }}
+          />
+          <input
+            type="checkbox"
+            style={{ marginLeft: '5px', color: 'red' }}
+            checked={documentVerification[params.row.id]?.taxNoticeNC}
+            onChange={(e) => {
               setDocumentVerification({
                 ...documentVerification,
                 [params.row.id]: {
-                  ...documentVerification,
+                  ...documentVerification[params.row.id],
                   taxNoticeNC: e.target.checked,
                   taxNoticeVerified: !e.target.checked
                 }
               });
-            }} /> <span className="nc-circle">NC</span>
-          </>
+            }}
+          />
+          <span className="nc-circle">NC</span>
+        </>
+        
         );
       },
     },

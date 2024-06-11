@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, EmailAuthProvider, reauthenticateWithCredential, updateEmail, updatePassword, sendPasswordResetEmail } from 'firebase/auth';
 import { getFirestore, getDocs, doc, getDoc, collection, query, where, orderBy, setDoc, serverTimestamp, updateDoc, addDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
-import { getStorage } from 'firebase/storage';
+import { getStorage ,ref, getDownloadURL} from 'firebase/storage';
 
 // CONFIGURATION DE L'APPLICATION FIREBASE
 const firebaseConfig = {
@@ -479,6 +479,18 @@ export const resetEmail = async (email) => {
       });
   } catch (e) { }
 };
+
+export const AfficheImg = async (user , path) => {
+  const storage = getStorage();
+  getDownloadURL(ref(storage, user+'/'+path))
+  .then((url) => {
+
+    window.open(url, '_blank', 'height=600,width=800');
+  })
+  .catch(() => {
+    alert('Il y a aucune document')
+  });
+}
 
 
 // valeur des demandes XCP
