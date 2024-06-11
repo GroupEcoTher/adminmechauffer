@@ -6,17 +6,28 @@ import { useEffect, useState } from "react";
 import Add from "../../components/add/Add";
 import { getData, getAllUsers, getIncompleteUsers, getNCUsers, AfficheImg } from "../../config/firebase";
 import FullLengthBox from "./FullLengthBox";
-import "../home/home.scss";
 import moment from 'moment';
 
 // Initialiser react-modal
 Modal.setAppElement('#root');
 
+// Fonction pour formater la date
 const dateCréation = (firebaseTimestamp) => {
   moment.locale('fr');
   const milliseconds = firebaseTimestamp.seconds * 1000 + firebaseTimestamp.nanoseconds / 1000000;
   const date = new Date(milliseconds);
   return moment(date).format('DD MMMM YYYY');
+};
+
+// Fonction pour sauvegarder l'état de vérification dans le local storage
+const saveVerificationStateToLocalStorage = (state) => {
+  localStorage.setItem('documentVerification', JSON.stringify(state));
+};
+
+// Fonction pour charger l'état de vérification depuis le local storage
+const loadVerificationStateFromLocalStorage = () => {
+  const savedState = localStorage.getItem('documentVerification');
+  return savedState ? JSON.parse(savedState) : {};
 };
 
 const UsersTraitements = ({ title }) => {
@@ -25,32 +36,31 @@ const UsersTraitements = ({ title }) => {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [totalUsers, setTotalUsers] = useState(0);
-  const [documentVerification, setDocumentVerification] = useState({});
+  const [documentVerification, setDocumentVerification] = useState(loadVerificationStateFromLocalStorage());
+  const [documentDisplayed, setDocumentDisplayed] = useState({});
   const [activeUserType, setActiveUserType] = useState('all');
 
-  const [identityDocumentUrl, setIdentityDocumentUrl] = useState('');
-  const [taxNoticeUrl, setTaxNoticeUrl] = useState('');
-  const [documentVerified, setDocumentVerified] = useState(false);
-  const [documentUrl, setDocumentUrl] = useState('');
-  const [identityDocumentNC, setIdentityDocumentNC] = useState(false);
-  const [taxNoticeNC, setTaxNoticeNC] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
 
+  // Détermine si le chemin actuel est actif
   const isActive = (path) => location.pathname === path ? 'active' : '';
 
+  // Gestion des utilisateurs incomplets
   const handleIncompleteUsersClick = async () => {
     const incompleteUsers = await getIncompleteUsers();
     setUser(incompleteUsers);
     setActiveUserType('incomplete');
   };
 
+  // Gestion des utilisateurs NC
   const handleNCUsersClick = async () => {
     const ncUsers = await getNCUsers();
     setUser(ncUsers);
     setActiveUserType('nc');
   };
 
+  // Gestion de tous les utilisateurs
   const handleAllUsersClick = async () => {
     const allUsers = await getAllUsers();
     setUser(allUsers);
@@ -58,6 +68,7 @@ const UsersTraitements = ({ title }) => {
     setActiveUserType('all');
   };
 
+  // Chargement des données utilisateur à l'initialisation
   useEffect(() => {
     const userFetchFunction = async () => {
       const userFetch = await getData();
@@ -66,6 +77,32 @@ const UsersTraitements = ({ title }) => {
     };
     userFetchFunction();
   }, []);
+
+  // Sauvegarde de l'état de vérification dans le local storage à chaque modification
+  useEffect(() => {
+    saveVerificationStateToLocalStorage(documentVerification);
+  }, [documentVerification]);
+
+  const handleViewDocument = async (userId, path, documentType) => {
+    const documentExists = await AfficheImg(userId, path);
+    if (documentExists) {
+      setDocumentDisplayed({
+        ...documentDisplayed,
+        [userId]: {
+          ...documentDisplayed[userId],
+          [documentType]: true,
+        },
+      });
+    } else {
+      setDocumentDisplayed({
+        ...documentDisplayed,
+        [userId]: {
+          ...documentDisplayed[userId],
+          [documentType]: false,
+        },
+      });
+    }
+  };
 
   const columns: GridColDef[] = [
     { 
@@ -135,32 +172,53 @@ const UsersTraitements = ({ title }) => {
       width: 100,
       type: "string",
       renderCell: (params) => {
+        const hasDocument = !!params.row.identityDocumentUrl; // Vérifie si l'URL du document existe
         return (
           <>
-            <button style={{ marginRight: '5px' }} onClick={() => {
-              /*window.open(params.row.identityDocumentUrl, '_blank', 'height=600,width=800');*/
-              AfficheImg(params.row.id , 'ci0.png');
-            }}>Voir</button>
-            <input type="checkbox" checked={documentVerification[params.row.id]?.identityDocumentVerified} onChange={(e) => {
-              setDocumentVerification({
-                ...documentVerification,
-                [params.row.id]: {
-                  ...documentVerification[params.row.id],
-                  identityDocumentVerified: e.target.checked,
-                  identityDocumentNC: !e.target.checked
-                }
-              });
-            }} />
-            <input type="checkbox" style={{ marginLeft: '5px', color: 'red' }} checked={documentVerification[params.row.id]?.identityDocumentNC} onChange={(e) => {
-              setDocumentVerification({
-                ...documentVerification,
-                [params.row.id]: {
+            <button
+              className={`button-view ${hasDocument ? 'has-document' : ''}`}
+              style={{ color: hasDocument ? 'orange' : '' }}
+              onClick={() => handleViewDocument(params.row.id, 'ci0.png', 'identityDocumentDisplayed')}
+            >
+              Voir
+            </button>
+            <input
+              type="checkbox"
+              className="checkbox"
+              checked={documentVerification[params.row.id]?.identityDocumentVerified}
+              disabled={!documentDisplayed[params.row.id]?.identityDocumentDisplayed}
+              onChange={(e) => {
+                const updatedVerification = {
                   ...documentVerification,
-                  identityDocumentNC: e.target.checked,
-                  identityDocumentVerified: !e.target.checked
-                }
-              });
-            }} /> <span className="nc-circle">NC</span>
+                  [params.row.id]: {
+                    ...documentVerification[params.row.id],
+                    identityDocumentVerified: e.target.checked,
+                    identityDocumentNC: !e.target.checked,
+                  },
+                };
+                setDocumentVerification(updatedVerification);
+                saveVerificationStateToLocalStorage(updatedVerification);
+              }}
+            />
+            <input
+              type="checkbox"
+              className={`checkbox orange`}
+              style={{ marginLeft: '1px' }}
+              checked={documentVerification[params.row.id]?.identityDocumentNC}
+              onChange={(e) => {
+                const updatedVerification = {
+                  ...documentVerification,
+                  [params.row.id]: {
+                    ...documentVerification[params.row.id],
+                    identityDocumentNC: e.target.checked,
+                    identityDocumentVerified: !e.target.checked,
+                  },
+                };
+                setDocumentVerification(updatedVerification);
+                saveVerificationStateToLocalStorage(updatedVerification);
+              }}
+            />
+            <span className="nc-circle">NC</span>
           </>
         );
       },
@@ -171,48 +229,54 @@ const UsersTraitements = ({ title }) => {
       width: 100,
       type: "string",
       renderCell: (params) => {
+        const hasDocument = !!params.row.taxNoticeUrl; // Vérifie si l'URL du document existe
         return (
           <>
-          <button
-            style={{ marginRight: '5px' }}
-            onClick={() => {
-              AfficheImg(params.row.id , 'impot0.png');
-            }}
-          >
-            Open Tax Notice
-          </button>
-          <input
-            type="checkbox"
-            checked={documentVerification[params.row.id]?.taxNoticeVerified}
-            onChange={(e) => {
-              setDocumentVerification({
-                ...documentVerification,
-                [params.row.id]: {
-                  ...documentVerification[params.row.id],
-                  taxNoticeVerified: e.target.checked,
-                  taxNoticeNC: !e.target.checked
-                }
-              });
-            }}
-          />
-          <input
-            type="checkbox"
-            style={{ marginLeft: '5px', color: 'red' }}
-            checked={documentVerification[params.row.id]?.taxNoticeNC}
-            onChange={(e) => {
-              setDocumentVerification({
-                ...documentVerification,
-                [params.row.id]: {
-                  ...documentVerification[params.row.id],
-                  taxNoticeNC: e.target.checked,
-                  taxNoticeVerified: !e.target.checked
-                }
-              });
-            }}
-          />
-          <span className="nc-circle">NC</span>
-        </>
-        
+            <button
+              className={`button-view ${hasDocument ? 'has-document' : ''}`}
+              style={{ color: hasDocument ? 'orange' : '' }}
+              onClick={() => handleViewDocument(params.row.id, 'impot0.png', 'taxNoticeDisplayed')}
+            >
+              Voir
+            </button>
+            <input
+              type="checkbox"
+              className="checkbox"
+              checked={documentVerification[params.row.id]?.taxNoticeVerified}
+              disabled={!documentDisplayed[params.row.id]?.taxNoticeDisplayed}
+              onChange={(e) => {
+                const updatedVerification = {
+                  ...documentVerification,
+                  [params.row.id]: {
+                    ...documentVerification[params.row.id],
+                    taxNoticeVerified: e.target.checked,
+                    taxNoticeNC: !e.target.checked,
+                  },
+                };
+                setDocumentVerification(updatedVerification);
+                saveVerificationStateToLocalStorage(updatedVerification);
+              }}
+            />
+            <input
+              type="checkbox"
+              className={`checkbox orange`}
+              style={{ marginLeft: '1px' }}
+              checked={documentVerification[params.row.id]?.taxNoticeNC}
+              onChange={(e) => {
+                const updatedVerification = {
+                  ...documentVerification,
+                  [params.row.id]: {
+                    ...documentVerification[params.row.id],
+                    taxNoticeNC: e.target.checked,
+                    taxNoticeVerified: !e.target.checked,
+                  },
+                };
+                setDocumentVerification(updatedVerification);
+                saveVerificationStateToLocalStorage(updatedVerification);
+              }}
+            />
+            <span className="nc-circle">NC</span>
+          </>
         );
       },
     },
@@ -225,8 +289,15 @@ const UsersTraitements = ({ title }) => {
         return documentVerification[params.row.id]?.identityDocumentVerified && documentVerification[params.row.id]?.taxNoticeVerified;
       },
       cellClassName: (params) => {
-        return params.value ? 'green' : 'red';
-      }
+        return params.value ? 'green' : '';
+      },
+      renderCell: (params) => {
+        return params.value ? (
+          <div className="verified-icon"></div>
+        ) : (
+          <div></div>
+        );
+      },
     },
   ];
 
@@ -234,7 +305,7 @@ const UsersTraitements = ({ title }) => {
     <div className="home">
       <h1 className="page-title">{title}</h1>
       <p>Nombre total d'utilisateurs : <span className="total-users">{totalUsers}</span></p>
-      
+
       <FullLengthBox totalUsers={totalUsers} />
 
       <div className={`info ${isActive ? 'active' : ''}`}>

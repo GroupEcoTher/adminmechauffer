@@ -28,6 +28,38 @@
     grid-auto-rows: minmax(120px, auto); // Hauteur des lignes minimale de 120px
   }
 
+
+    /* home.scss */
+  .checkbox {
+    appearance: none;
+    width: 5px;
+    height: 5px;
+    border: 5px solid #ccc;
+    border-radius: 1px;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 5px;
+    outline: none;
+  }
+
+  .checkbox:checked {
+    background-color: green; /* Couleur par défaut pour les cases cochées */
+    border-color: green;
+  }
+
+  .checkbox.orange:checked {
+    background-color: orange; /* Couleur orange pour les cases cochées */
+    border-color: rgb(255, 140, 0);
+  }
+
+  .nc-circle {
+    color: rgb(0, 0, 0);
+  }
+
+
+
   .page-title {
     grid-column: span 4; // Le titre occupe 4 colonnes
     text-align: left; // Aligner le texte à gauche
@@ -87,12 +119,29 @@
       height: 50px; // Hauteur en hover/actif
     }
   }
+  /* Ajouter ce style à votre fichier CSS ou SCSS */
+
+.verified-icon {
+  width: 20px;
+  height: 20px;
+  background-color: green;
+  border-radius: 50%;
+  margin: auto;
+}
 
   .total-users {
     color: green;
   }
   
+  /* Styles spécifiques pour les boutons "Voir" */
+  .button-view {
+    margin-right: 5px;
+    color: white; /* Couleur par défaut */
+  }
 
+  .button-view.has-document {
+    color: orange !important; /* Couleur si le document existe, avec priorité élevée */
+  }
 
   .box {
     padding: 20px; // Padding interne des boîtes

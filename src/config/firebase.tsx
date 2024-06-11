@@ -480,17 +480,18 @@ export const resetEmail = async (email) => {
   } catch (e) { }
 };
 
-export const AfficheImg = async (user , path) => {
+export const AfficheImg = async (user, path) => {
   const storage = getStorage();
-  getDownloadURL(ref(storage, user+'/'+path))
-  .then((url) => {
-
+  try {
+    const url = await getDownloadURL(ref(storage, `${user}/${path}`));
     window.open(url, '_blank', 'height=600,width=800');
-  })
-  .catch(() => {
-    alert('Il y a aucune document')
-  });
-}
+    return true; // Document exists
+  } catch (error) {
+    alert('Il y a aucun document');
+    return false; // Document does not exist
+  }
+};
+
 
 
 // valeur des demandes XCP
