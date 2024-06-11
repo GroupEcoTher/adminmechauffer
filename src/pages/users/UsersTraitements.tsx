@@ -83,6 +83,7 @@ const UsersTraitements = ({ title }) => {
     saveVerificationStateToLocalStorage(documentVerification);
   }, [documentVerification]);
 
+  // Fonction pour gérer l'affichage du document et vérifier son existence
   const handleViewDocument = async (userId, path, documentType) => {
     const documentExists = await AfficheImg(userId, path);
     if (documentExists) {
@@ -188,16 +189,18 @@ const UsersTraitements = ({ title }) => {
               checked={documentVerification[params.row.id]?.identityDocumentVerified}
               disabled={!documentDisplayed[params.row.id]?.identityDocumentDisplayed}
               onChange={(e) => {
-                const updatedVerification = {
-                  ...documentVerification,
-                  [params.row.id]: {
-                    ...documentVerification[params.row.id],
-                    identityDocumentVerified: e.target.checked,
-                    identityDocumentNC: !e.target.checked,
-                  },
-                };
-                setDocumentVerification(updatedVerification);
-                saveVerificationStateToLocalStorage(updatedVerification);
+                if (documentDisplayed[params.row.id]?.identityDocumentDisplayed) {
+                  const updatedVerification = {
+                    ...documentVerification,
+                    [params.row.id]: {
+                      ...documentVerification[params.row.id],
+                      identityDocumentVerified: e.target.checked,
+                      identityDocumentNC: !e.target.checked,
+                    },
+                  };
+                  setDocumentVerification(updatedVerification);
+                  saveVerificationStateToLocalStorage(updatedVerification);
+                }
               }}
             />
             <input
@@ -206,16 +209,18 @@ const UsersTraitements = ({ title }) => {
               style={{ marginLeft: '1px' }}
               checked={documentVerification[params.row.id]?.identityDocumentNC}
               onChange={(e) => {
-                const updatedVerification = {
-                  ...documentVerification,
-                  [params.row.id]: {
-                    ...documentVerification[params.row.id],
-                    identityDocumentNC: e.target.checked,
-                    identityDocumentVerified: !e.target.checked,
-                  },
-                };
-                setDocumentVerification(updatedVerification);
-                saveVerificationStateToLocalStorage(updatedVerification);
+                if (documentDisplayed[params.row.id]?.identityDocumentDisplayed) {
+                  const updatedVerification = {
+                    ...documentVerification,
+                    [params.row.id]: {
+                      ...documentVerification[params.row.id],
+                      identityDocumentNC: e.target.checked,
+                      identityDocumentVerified: !e.target.checked,
+                    },
+                  };
+                  setDocumentVerification(updatedVerification);
+                  saveVerificationStateToLocalStorage(updatedVerification);
+                }
               }}
             />
             <span className="nc-circle">NC</span>
@@ -245,16 +250,18 @@ const UsersTraitements = ({ title }) => {
               checked={documentVerification[params.row.id]?.taxNoticeVerified}
               disabled={!documentDisplayed[params.row.id]?.taxNoticeDisplayed}
               onChange={(e) => {
-                const updatedVerification = {
-                  ...documentVerification,
-                  [params.row.id]: {
-                    ...documentVerification[params.row.id],
-                    taxNoticeVerified: e.target.checked,
-                    taxNoticeNC: !e.target.checked,
-                  },
-                };
-                setDocumentVerification(updatedVerification);
-                saveVerificationStateToLocalStorage(updatedVerification);
+                if (documentDisplayed[params.row.id]?.taxNoticeDisplayed) {
+                  const updatedVerification = {
+                    ...documentVerification,
+                    [params.row.id]: {
+                      ...documentVerification[params.row.id],
+                      taxNoticeVerified: e.target.checked,
+                      taxNoticeNC: !e.target.checked,
+                    },
+                  };
+                  setDocumentVerification(updatedVerification);
+                  saveVerificationStateToLocalStorage(updatedVerification);
+                }
               }}
             />
             <input
@@ -263,16 +270,18 @@ const UsersTraitements = ({ title }) => {
               style={{ marginLeft: '1px' }}
               checked={documentVerification[params.row.id]?.taxNoticeNC}
               onChange={(e) => {
-                const updatedVerification = {
-                  ...documentVerification,
-                  [params.row.id]: {
-                    ...documentVerification[params.row.id],
-                    taxNoticeNC: e.target.checked,
-                    taxNoticeVerified: !e.target.checked,
-                  },
-                };
-                setDocumentVerification(updatedVerification);
-                saveVerificationStateToLocalStorage(updatedVerification);
+                if (documentDisplayed[params.row.id]?.taxNoticeDisplayed) {
+                  const updatedVerification = {
+                    ...documentVerification,
+                    [params.row.id]: {
+                      ...documentVerification[params.row.id],
+                      taxNoticeNC: e.target.checked,
+                      taxNoticeVerified: !e.target.checked,
+                    },
+                  };
+                  setDocumentVerification(updatedVerification);
+                  saveVerificationStateToLocalStorage(updatedVerification);
+                }
               }}
             />
             <span className="nc-circle">NC</span>

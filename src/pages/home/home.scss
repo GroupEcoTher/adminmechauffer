@@ -32,21 +32,21 @@
     /* home.scss */
   .checkbox {
     appearance: none;
-    width: 5px;
-    height: 5px;
-    border: 5px solid #ccc;
-    border-radius: 1px;
+    width: 20px;
+    height: 30px;
+    border: 8px solid #ccc;
+    border-radius: 40px;
     cursor: pointer;
     position: relative;
     display: inline-block;
     vertical-align: middle;
-    margin-right: 5px;
+    margin-right: 4px;
     outline: none;
   }
 
   .checkbox:checked {
     background-color: green; /* Couleur par défaut pour les cases cochées */
-    border-color: green;
+    border-color: rgb(70, 205, 70);
   }
 
   .checkbox.orange:checked {
@@ -123,9 +123,9 @@
 
 .verified-icon {
   width: 20px;
-  height: 20px;
+  height: 45px;
   background-color: green;
-  border-radius: 50%;
+  border-radius: 7%;
   margin: auto;
 }
 
