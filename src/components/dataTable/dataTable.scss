@@ -31,6 +31,19 @@
         cursor: pointer;
       }
     }
+    /* Exemple de style pour les lignes */
+    .archivedRow {
+      background-color: #f8d7da;
+    }
+
+    .standbyRow {
+      background-color: #fff3cd;
+    }
+
+    .verifiedRow {
+      background-color: #d4edda;
+    }
+
 
     // Styles pour les lignes spécifiques
     .archivedRow {

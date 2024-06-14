@@ -3,6 +3,7 @@ import { getAuth, EmailAuthProvider, reauthenticateWithCredential, updateEmail, 
 import { getFirestore, getDocs, doc, getDoc, collection, query, where, orderBy, setDoc, serverTimestamp, updateDoc, addDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 import { getStorage ,ref, getDownloadURL} from 'firebase/storage';
 
+
 // CONFIGURATION DE L'APPLICATION FIREBASE
 const firebaseConfig = {
   apiKey: 'AIzaSyAJuCAWruOL5yBF3L7JXcTNTBReSA7lRAY',
@@ -73,16 +74,37 @@ export const getData = async () => {
   return users;
 }
 
-// Fonction pour obtenir tous les utilisateurs
+// Fonction pour obtenir tous les utilisateurs, y compris les archivés
 export const getAllUsers = async () => {
-  const querySnapshot = await getDocs(collection(db, "users"));
-  console.log("Nombre total d'utilisateurs: ", querySnapshot.size);
+  // Créez une requête pour récupérer les utilisateurs où le champ "archived" est soit absent, soit égal à false
+  const activeUsersQuery = query(collection(db, "users"), where("archived", "==", false));
+  const archivedUsersQuery = query(collection(db, "users"), where("archived", "==", true));
+
+  // Exécutez les requêtes
+  const [activeUsersSnapshot, archivedUsersSnapshot] = await Promise.all([
+    getDocs(activeUsersQuery),
+    getDocs(archivedUsersQuery)
+  ]);
+
+  // Fusionnez les résultats des deux requêtes
   const users: { id: string; [key: string]: any }[] = [];
-  querySnapshot.forEach((doc) => {
+  
+  activeUsersSnapshot.forEach((doc) => {
     users.push({ id: doc.id, ...doc.data() });
   });
+
+  archivedUsersSnapshot.forEach((doc) => {
+    users.push({ id: doc.id, ...doc.data() });
+  });
+
+  console.log("Nombre total d'utilisateurs: ", users.length);
   return users;
 };
+
+
+
+
+
 
 // Fonction pour obtenir le nombre total d'utilisateurs
 export const getTotalUsers = async () => {
@@ -102,6 +124,52 @@ export const getNCUsers = async () => {
   });
   return users;
 };
+
+
+
+// Fonction pour récupérer les utilisateurs archivés
+export const fetchArchivedUsers = async () => {
+  const q = query(collection(db, 'users'), where('archived', '==', true));
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+};
+
+
+
+// Fonction pour désarchiver un utilisateur
+export const unarchiveUser = async (userId) => {
+  // Met à jour le champ 'archived' du document utilisateur spécifié à false
+  await db.collection('users').doc(userId).update({ archived: false });
+};
+
+
+
+
+
+
+// Fonction pour récupérer la liste des éléments archivés
+export const fetchArchived = async () => {
+  const archivedRef = collection(db, 'archived'); // Remplacez 'archived' par le nom de votre collection d'éléments archivés
+  const q = query(archivedRef);
+
+  // Exécuter la requête et obtenir les documents
+  const querySnapshot = await getDocs(q);
+
+  const archivedItems: { id: string; [key: string]: any }[] = [];
+
+  querySnapshot.forEach((doc) => {
+    archivedItems.push({
+      id: doc.id,
+      ...doc.data(),
+    });
+  });
+
+  console.log('Archived Items:', archivedItems);
+  return archivedItems;
+};
+
+
+
 
 // Fonction pour obtenir un document par ID
 export const getDocumentById = async (id: string) => {
@@ -487,9 +555,29 @@ export const AfficheImg = async (user, path) => {
     window.open(url, '_blank', 'height=600,width=800');
     return true; // Document exists
   } catch (error) {
-    alert('Il y a aucun document');
+    console.error('Pas de documents trouvés:', error);
+
     return false; // Document does not exist
   }
+};
+
+
+
+// Fonction pour télécharger un document depuis Firebase Storage
+export const downloadDocument = async (userId: string, fileName: string) => {
+  const storage = getStorage();
+  try {
+    const url = await getDownloadURL(ref(storage, `${userId}/${fileName}`));
+    const response = await fetch(url);
+    const blob = await response.blob();
+    const file = new File([blob], fileName, { type: blob.type });
+    return file;
+  } catch (error) {
+    console.error('Pas de documents trouvés:', error);
+    alert('Pas de documents trouvés');
+    return null;
+  }
+  
 };
 
 

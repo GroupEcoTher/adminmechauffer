@@ -51,20 +51,34 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       { path: "/", element: <Home title="Homepage : les stats basic et messages internes" /> },
-      { path: "/UsersHome", element: <UsersHome title="Gestion - Users" /> },
-      { path: "/UsersTraitements", element: <UsersTraitements title="Gestion Users - États & Traitements" /> },
+
+
+      // Menu gauche
       { path: "/Partenaires", element: <Partenaires title="Gestion - Partenaires" /> },
       { path: "/Parains", element: <Parains title="Gestion - Parrains" /> },
-      { path: "/HistAction", element: <HistAction title="Historique des actions - Résumé d’utilisation" /> },
-      { path: "/QuestDem", element: <QuestDem title="Questions - Demandes - Via Le Site" /> },
-      { path: "/RecepMail", element: <RecepMail title="Réception des mails" /> },
       { path: "/products", element: <Products title="Gestion Xcp" /> },
-      { path: "/users/:id", element: <User title="Détails de l'utilisateur" /> },
-      { path: "/products/:id", element: <Product title="Détails du produit" /> },
+
+
+      // Users 
+      { path: "/UsersHome", element: <UsersHome title="Gestion - Users" /> },
+      { path: "/UsersTraitements", element: <UsersTraitements title="Gestion Users - États & Traitements" /> },
+     
+
+      //Menu FullenghtBox
+      { path: "/HistAction", element: <HistAction title="Historique des actions - Résumé d’utilisation" /> },
+      { path: "/RecepMail", element: <RecepMail title="Réception des mails" /> },
+      { path: "/QuestDem", element: <QuestDem title="Questions - Demandes - Via Le Site" /> },
       { path: "/AideDoc", element: <AideDoc title="Aide - Documentation" /> },
-      { path: "/datatable", element: <DataTable title= "table"/> },
+
+
+      // BY ID
+      { path: "/users/:id", element: <User title="Détails de l'utilisateur" /> },
       { path: "/ModalUsers/:id", element: <ModalUsers title="Modal Users" /> },
-   
+      { path: "/products/:id", element: <Product title="Détails du produit" /> },
+      
+      // MODULES
+      { path: "/datatable", element: <DataTable title= "table"/> },
+ 
       
     
     ],

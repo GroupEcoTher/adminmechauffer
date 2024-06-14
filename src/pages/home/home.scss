@@ -46,16 +46,16 @@
 
   .checkbox:checked {
     background-color: green; /* Couleur par défaut pour les cases cochées */
-    border-color: rgb(70, 205, 70);
+    border-color: rgb(87, 215, 87);
   }
 
   .checkbox.orange:checked {
-    background-color: orange; /* Couleur orange pour les cases cochées */
-    border-color: rgb(255, 140, 0);
+    background-color: rgb(255, 199, 96); /* Couleur orange pour les cases cochées */
+    border-color: rgb(255, 180, 89);
   }
 
   .nc-circle {
-    color: rgb(0, 0, 0);
+  color: rgb(0, 0, 0);
   }
 
 

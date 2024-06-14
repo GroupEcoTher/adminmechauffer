@@ -300,6 +300,9 @@ const UsersTraitements = ({ title }) => {
       cellClassName: (params) => {
         return params.value ? 'green' : '';
       },
+
+
+      
       renderCell: (params) => {
         return params.value ? (
           <div className="verified-icon"></div>

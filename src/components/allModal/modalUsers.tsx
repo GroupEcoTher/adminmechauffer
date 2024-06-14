@@ -1,14 +1,41 @@
 import { useEffect, useState } from 'react';
 import '../../components/allModal/allmodal.scss';
-import { db, getDocumentById, getDataAdressebyUserID, getDataDemandesbyUserID, getTempXcpByTokenID, getTempXcpByTokenPartenaire, getUserParrainbyTokenID, getParrainbyTokenID } from "../../config/firebase";
+import { db, getDocumentById, getTempXcpByTokenID, getTempXcpByTokenPartenaire, getUserParrainbyTokenID, getParrainbyTokenID, fetchArchived } from "../../config/firebase";
 import { doc, updateDoc, getDoc, collection, getDocs, addDoc, setDoc, deleteDoc } from "firebase/firestore";
 import moment from 'moment';
-import { Checkbox, Button, FormControlLabel, FormGroup } from "@mui/material";
+import { Checkbox, Button, FormControlLabel, FormGroup, Collapse, IconButton } from "@mui/material";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
 interface Props {
   setOpen: (open: boolean) => void;
   slug: string;
 }
+
+// Section component with expandable feature
+const Section = ({ title, count, children }) => {
+  const [open, setOpen] = useState(false);
+
+  const handleToggle = () => {
+    setOpen(!open);
+  };
+
+  return (
+    <div className="section">
+      <div className="section-header" onClick={handleToggle}>
+        <h3>{title} ({count})</h3>
+        <IconButton>
+          {open ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+        </IconButton>
+      </div>
+      <Collapse in={open}>
+        <div className="section-content">
+          {children}
+        </div>
+      </Collapse>
+    </div>
+  );
+};
 
 const ModalUsers = (props: Props) => {
   const [userData, setUserData] = useState<any | null>(null);
@@ -17,14 +44,17 @@ const ModalUsers = (props: Props) => {
   const [userHistory, setUserHistory] = useState<any[]>([]);
   const [documentData, setDocumentData] = useState<any | null>(null);
   const [userRoles, setUserRoles] = useState<string[]>([]);
-  const [dataAdresse, setDataAdresse] = useState<any | null>(null);
-  const [dataDemandes, setDataDemandes] = useState<any | null>(null);
+  const [dataAdresse, setDataAdresse] = useState<any[]>([]);
+  const [dataDemandes, setDataDemandes] = useState<any[]>([]);
   const [tempXcpToken, setTempXcpToken] = useState<any | null>(null);
   const [tempXcpPartenaire, setTempXcpPartenaire] = useState<any | null>(null);
   const [userParrain, setUserParrain] = useState<any | null>(null);
   const [parrain, setParrain] = useState<any | null>(null);
+  const [archivedItems, setArchivedItems] = useState<any[]>([]);
+  const [documentVerification, setDocumentVerification] = useState<any>({});
+  const [documentDisplayed, setDocumentDisplayed] = useState<any>({});
 
-  // Fonction pour récupérer les données de l'utilisateur par ID
+  // Function to fetch user data by ID
   const getUserData = async (userId: string) => {
     try {
       const userRef = doc(db, "users", userId);
@@ -34,6 +64,7 @@ const ModalUsers = (props: Props) => {
         setUserData({ id: docSnapshot.id, ...data });
         setEditData({ id: docSnapshot.id, ...data });
         setUserRoles(data.roles || []);
+        fetchLinkedData(data);
       } else {
         console.error("User document does not exist");
       }
@@ -42,7 +73,34 @@ const ModalUsers = (props: Props) => {
     }
   };
 
-  // Fonction pour enregistrer l'historique des actions utilisateur
+  // Function to fetch linked data (addresses and requests)
+  const fetchLinkedData = async (data: any) => {
+    try {
+      if (data.demandes) {
+        const demandesData = await Promise.all(data.demandes.map(async (demandeId: string) => {
+          const demandeRef = doc(db, "demandes", demandeId);
+          const demandeDoc = await getDoc(demandeRef);
+          return demandeDoc.exists() ? { id: demandeDoc.id, ...demandeDoc.data() } : null;
+        }));
+        const sortedDemandesData = demandesData.filter((d: any) => d !== null).sort((a: any, b: any) => {
+          return b.dateCreation.seconds - a.dateCreation.seconds;
+        });
+        setDataDemandes(sortedDemandesData);
+      }
+
+      if (data.adresse) {
+        const adresseData = await Promise.all(data.adresse.map(async (adresseId: string) => {
+          const adresseRef = doc(db, "adresse", adresseId);
+          const adresseDoc = await getDoc(adresseRef);
+          return adresseDoc.exists() ? { id: adresseDoc.id, ...adresseDoc.data() } : null;
+        }));
+        setDataAdresse(adresseData.filter((a: any) => a !== null));
+      }
+    } catch (error) {
+      console.error("Error fetching linked data:", error);
+    }
+  };
+
   const saveHistory = async (userId: number, action: string, details: string) => {
     try {
       const historyRef = collection(db, "history");
@@ -58,7 +116,6 @@ const ModalUsers = (props: Props) => {
     }
   };
 
-  // Fonction pour supprimer et archiver un utilisateur
   const handleDelete = async (id: number) => {
     try {
       const userDocRef = doc(db, "users", id.toString());
@@ -81,7 +138,6 @@ const ModalUsers = (props: Props) => {
     }
   };
 
-  // Fonction pour désarchiver un utilisateur
   const handleUnarchive = async (id: number) => {
     try {
       const archiveUserDocRef = doc(db, "archiveUsers", id.toString());
@@ -104,7 +160,6 @@ const ModalUsers = (props: Props) => {
     }
   };
 
-  // Fonction pour mettre un utilisateur en mode StandBY
   const handleStandBY = async (id: number, standby: boolean) => {
     try {
       const userDocRef = doc(db, "users", id.toString());
@@ -120,7 +175,6 @@ const ModalUsers = (props: Props) => {
     }
   };
 
-  // Fonction pour récupérer l'historique d'un utilisateur
   const getUserHistory = async (userId: string) => {
     try {
       const historyRef = collection(db, "history");
@@ -134,7 +188,6 @@ const ModalUsers = (props: Props) => {
     }
   };
 
-  // Fonction pour récupérer les rôles disponibles
   const getRoles = async () => {
     try {
       const rolesRef = collection(db, "roles");
@@ -147,31 +200,10 @@ const ModalUsers = (props: Props) => {
     }
   };
 
-  // Fonction pour récupérer un document par son ID
   const fetchDocumentById = async (id: string) => {
     const document = await getDocumentById(id);
     console.log("Document data fetched: ", document);
     setDocumentData(document);
-  };
-
-  const fetchDataAdresseByUserId = async (userId: string) => {
-    const data = await getDataAdressebyUserID(userId);
-    console.log("Address data fetched: ", data);
-    setDataAdresse(data);
-  };
-
-  const fetchDataDemandesByUserId = async (userId: string) => {
-    const data = await getDataDemandesbyUserID(userId);
-    console.log("Demandes data fetched: ", data);
-
-    // Trier les demandes par date de création
-    const sortedData = data.sort((a: any, b: any) => {
-      const dateA = a.data.dateCreation.seconds * 1000 + a.data.dateCreation.nanoseconds / 1000000;
-      const dateB = b.data.dateCreation.seconds * 1000 + b.data.dateCreation.nanoseconds / 1000000;
-      return dateB - dateA;
-    });
-
-    setDataDemandes(sortedData);
   };
 
   const fetchTempXcpByTokenId = async (tokenId: string) => {
@@ -207,16 +239,20 @@ const ModalUsers = (props: Props) => {
           const data = docSnapshot.data();
           return `${data.firstname} ${data.lastname}`;
         }
-        return id; // Si le document n'existe pas, retournez l'ID
+        return id;
       }));
       return parrains;
     } catch (error) {
       console.error("Error fetching parrain names:", error);
-      return parrainIds; // En cas d'erreur, retournez les ID d'origine
+      return parrainIds;
     }
   };
 
-  // Utilisation de useEffect pour récupérer les données utilisateur, les rôles et l'historique à l'initialisation
+  const handleFetchArchived = async () => {
+    const items = await fetchArchived();
+    setArchivedItems(items);
+  };
+
   useEffect(() => {
     const url = window.location.href;
     const userId = url.substring(url.lastIndexOf('/') + 1);
@@ -224,29 +260,34 @@ const ModalUsers = (props: Props) => {
     getRoles();
     getUserHistory(userId);
 
-    if (userData && userData.userParrainList) {  // recupère les nom des id liés au parrain
+    if (userData && userData.userParrainList) {
       fetchParrainNames(userData.userParrainList).then((parrains) => {
         setUserData((prevData) => ({ ...prevData, userParrainList: parrains }));
       });
     }
   }, []);
 
-  // Fonction pour fermer le modal
   const closeModal = () => {
     props.setOpen(false);
   };
 
-  // Gestion des changements dans les champs de formulaire
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, files } = e.target as HTMLInputElement;
     if (files && files[0]) {
       setEditData((prevData) => ({ ...prevData, [name]: files[0] }));
     } else {
       setEditData((prevData) => ({ ...prevData, [name]: value }));
+
+      try {
+        const userRef = doc(db, "users", editData.id);
+        await updateDoc(userRef, { [name]: value });
+        console.log(`${name} updated successfully`);
+      } catch (error) {
+        console.error(`Error updating ${name}: `, error);
+      }
     }
   };
 
-  // Fonction pour gérer les changements de rôles
   const handleRoleChange = (role: string, checked: boolean) => {
     if (checked) {
       setUserRoles((prevRoles) => [...prevRoles, role]);
@@ -255,7 +296,27 @@ const ModalUsers = (props: Props) => {
     }
   };
 
-  // Fonction pour mettre à jour les données utilisateur
+  const handleViewDocument = async (userId, path, documentType) => {
+    const documentExists = await AfficheImg(userId, path);
+    if (documentExists) {
+      setDocumentDisplayed({
+        ...documentDisplayed,
+        [userId]: {
+          ...documentDisplayed[userId],
+          [documentType]: true,
+        },
+      });
+    } else {
+      setDocumentDisplayed({
+        ...documentDisplayed,
+        [userId]: {
+          ...documentDisplayed[userId],
+          [documentType]: false,
+        },
+      });
+    }
+  };
+
   const handleUpdate = async () => {
     try {
       const userRef = doc(db, "users", editData.id);
@@ -292,9 +353,11 @@ const ModalUsers = (props: Props) => {
               <h2>Gestion Users - États & Traitements {props.slug}</h2>
               <h1>Informations sur l'utilisateur {props.slug}</h1>
 
-              <div className="content">
-                <div className="column">
-                  <div style={{ display: 'flex', alignItems: 'center', color: userData.standby ? 'red' : 'green' }}>
+              <div className="content" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <div className="column" style={{ flex: 1, marginRight: '10px' }}>
+                  <div style={{ display: 'flex', alignItems: 'left', color: userData.standby ? 'red' : 'green' }}>
+
+                    
                     {userData.standby ? 'User StandBY Mode Désactivé' : 'User activé '}
                     <Checkbox checked={userData.standby} onChange={(e) => handleStandBY(userData.id, e.target.checked)} />
                   </div>
@@ -331,7 +394,11 @@ const ModalUsers = (props: Props) => {
 
                   <div className="item">
                     <p>Civilité : {userData.civilite}</p>
-                    <input type="text" name="civilite" value={editData.civilite || ''} onChange={handleInputChange} />
+                    <select name="civilite" value={editData.civilite || ''} onChange={handleInputChange}>
+                      <option value="">Sélectionnez</option>
+                      <option value="Madame">Madame</option>
+                      <option value="Monsieur">Monsieur</option>
+                    </select>
                   </div>
 
                   <div className="item">
@@ -352,48 +419,138 @@ const ModalUsers = (props: Props) => {
                   </div>
 
                   <div className="item">
-                    <p>Validationdocument : {userData.Validationdocument}</p>
-                  </div>
-                  <div className="item">
-                    <label>Pièce Identité :</label>
-                    <input type="file" name="pieceIdentite" onChange={handleInputChange} />
-                  </div>
-                  <div className="item">
-                    <label>Avis D'impôts :</label>
-                    <input type="file" name="avisImpots" onChange={handleInputChange} />
+                    <p>Validation document : {userData.validationDocument ? "Validé" : "Non Validé"}</p>
+                    <div className="document-verification">
+                      <Button
+                        className={`button-view ${documentDisplayed[userData.id]?.identityDocumentDisplayed ? 'has-document' : ''}`}
+                        style={{ color: documentDisplayed[userData.id]?.identityDocumentDisplayed ? 'orange' : '' }}
+                        onClick={() => handleViewDocument(userData.id, 'ci0.png', 'identityDocumentDisplayed')}
+                      >
+                        Voir Pièce Identité
+                      </Button>
+                      <Checkbox
+                        className="checkbox"
+                        checked={documentVerification[userData.id]?.identityDocumentVerified}
+                        disabled={!documentDisplayed[userData.id]?.identityDocumentDisplayed}
+                        onChange={(e) => {
+                          if (documentDisplayed[userData.id]?.identityDocumentDisplayed) {
+                            const updatedVerification = {
+                              ...documentVerification,
+                              [userData.id]: {
+                                ...documentVerification[userData.id],
+                                identityDocumentVerified: e.target.checked,
+                                identityDocumentNC: !e.target.checked,
+                              },
+                            };
+                            setDocumentVerification(updatedVerification);
+                          }
+                        }}
+                      />
+                      <Checkbox
+                        className="checkbox orange"
+                        style={{ marginLeft: '1px' }}
+                        checked={documentVerification[userData.id]?.identityDocumentNC}
+                        onChange={(e) => {
+                          if (documentDisplayed[userData.id]?.identityDocumentDisplayed) {
+                            const updatedVerification = {
+                              ...documentVerification,
+                              [userData.id]: {
+                                ...documentVerification[userData.id],
+                                identityDocumentNC: e.target.checked,
+                                identityDocumentVerified: !e.target.checked,
+                              },
+                            };
+                            setDocumentVerification(updatedVerification);
+                          }
+                        }}
+                      />
+                      <span className="nc-circle">NC</span>
+                    </div>
+                    <div className="document-verification">
+                      <Button
+                        className={`button-view ${documentDisplayed[userData.id]?.taxNoticeDisplayed ? 'has-document' : ''}`}
+                        style={{ color: documentDisplayed[userData.id]?.taxNoticeDisplayed ? 'orange' : '' }}
+                        onClick={() => handleViewDocument(userData.id, 'impot0.png', 'taxNoticeDisplayed')}
+                      >
+                        Voir Avis D'impôts
+                      </Button>
+                      <Checkbox
+                        className="checkbox"
+                        checked={documentVerification[userData.id]?.taxNoticeVerified}
+                        disabled={!documentDisplayed[userData.id]?.taxNoticeDisplayed}
+                        onChange={(e) => {
+                          if (documentDisplayed[userData.id]?.taxNoticeDisplayed) {
+                            const updatedVerification = {
+                              ...documentVerification,
+                              [userData.id]: {
+                                ...documentVerification[userData.id],
+                                taxNoticeVerified: e.target.checked,
+                                taxNoticeNC: !e.target.checked,
+                              },
+                            };
+                            setDocumentVerification(updatedVerification);
+                          }
+                        }}
+                      />
+                      <Checkbox
+                        className="checkbox orange"
+                        style={{ marginLeft: '1px' }}
+                        checked={documentVerification[userData.id]?.taxNoticeNC}
+                        onChange={(e) => {
+                          if (documentDisplayed[userData.id]?.taxNoticeDisplayed) {
+                            const updatedVerification = {
+                              ...documentVerification,
+                              [userData.id]: {
+                                ...documentVerification[userData.id],
+                                taxNoticeNC: e.target.checked,
+                                taxNoticeVerified: !e.target.checked,
+                              },
+                            };
+                            setDocumentVerification(updatedVerification);
+                          }
+                        }}
+                      />
+                      <span className="nc-circle">NC</span>
+                    </div>
                   </div>
 
                   <div className="item">
                     <p>Dernière mise à jour du mot de passe : {userData.lastpassupdate && moment(userData.lastpassupdate.toDate()).format('DD MMMM YYYY')}</p>
                   </div>
-                  <div className="item">
-                    <Button onClick={() => fetchDataAdresseByUserId(userData.id)}>Fetch Address Data By User ID</Button>
-                    {dataAdresse && (
-                      <div>
-                        <h3>Address Data:</h3>
-                        <pre>{JSON.stringify(dataAdresse, null, 2)}</pre>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="item">
-                    <Button onClick={() => fetchDataDemandesByUserId(userData.id)}>Fetch Demandes Data By User ID</Button>
-                    {dataDemandes && (
-                      <div>
-                        <h3>Demandes Data:</h3>
-                        <pre>{JSON.stringify(dataDemandes, null, 2)}</pre>
-                      </div>
-                    )}
-                  </div>
                 </div>
 
-                <div className="column">
-                  <div className="item">
-                    <p>Parrains - Liste des parainés :</p>
+                <div className="column" style={{ flex: 1, marginLeft: '10px' }}>
+                  <Section title="Adresses" count={dataAdresse.length}>
+                    {dataAdresse.length > 0 ? (
+                      dataAdresse.map((adresse, index) => (
+                        <div key={index}>
+                          <p>Adresse {index + 1} :</p>
+                          <pre>{JSON.stringify(adresse, null, 2)}</pre>
+                        </div>
+                      ))
+                    ) : (
+                      <p>Aucune adresse trouvée</p>
+                    )}
+                  </Section>
+
+                  <Section title="Demandes" count={dataDemandes.length}>
+                    {dataDemandes.length > 0 ? (
+                      dataDemandes.map((demande, index) => (
+                        <div key={index}>
+                          <p>Demande {index + 1} :</p>
+                          <pre>{JSON.stringify(demande, null, 2)}</pre>
+                        </div>
+                      ))
+                    ) : (
+                      <p>Aucune demande trouvée</p>
+                    )}
+                  </Section>
+
+                  <Section title="Parrains" count={userData.userParrainList ? userData.userParrainList.length : 0}>
                     {userData.userParrainList && userData.userParrainList.map((parrain, index) => (
                       <p key={index}>{parrain}</p>
                     ))}
-                  </div>
+                  </Section>
 
                   <div className="item">
                     <p>Lien : {userData.lien}</p>
@@ -405,7 +562,7 @@ const ModalUsers = (props: Props) => {
                     <input type="text" name="tokenPartenaire" value={editData.tokenPartenaire || ''} onChange={handleInputChange} />
                   </div>
 
-                  <div className="item">
+                  <Section title="TempXcp By Token ID" count={tempXcpToken ? 1 : 0}>
                     <Button onClick={() => fetchTempXcpByTokenId(userData.tokenPartenaire)}>Fetch TempXcp By Token ID</Button>
                     {tempXcpToken && (
                       <div>
@@ -413,9 +570,9 @@ const ModalUsers = (props: Props) => {
                         <pre>{JSON.stringify(tempXcpToken, null, 2)}</pre>
                       </div>
                     )}
-                  </div>
+                  </Section>
 
-                  <div className="item">
+                  <Section title="TempXcp By Token Partenaire" count={tempXcpPartenaire ? 1 : 0}>
                     <Button onClick={() => fetchTempXcpByTokenPartenaire(userData.tokenPartenaire)}>Fetch TempXcp By Token Partenaire</Button>
                     {tempXcpPartenaire && (
                       <div>
@@ -423,9 +580,9 @@ const ModalUsers = (props: Props) => {
                         <pre>{JSON.stringify(tempXcpPartenaire, null, 2)}</pre>
                       </div>
                     )}
-                  </div>
+                  </Section>
 
-                  <div className="item">
+                  <Section title="User Parrain By Token ID" count={userParrain ? 1 : 0}>
                     <Button onClick={() => fetchUserParrainByTokenId(userData.tokenPartenaire)}>Fetch User Parrain By Token ID</Button>
                     {userParrain && (
                       <div>
@@ -433,9 +590,9 @@ const ModalUsers = (props: Props) => {
                         <pre>{JSON.stringify(userParrain, null, 2)}</pre>
                       </div>
                     )}
-                  </div>
+                  </Section>
 
-                  <div className="item">
+                  <Section title="Parrain By Token ID" count={parrain ? 1 : 0}>
                     <Button onClick={() => fetchParrainByTokenId(userData.tokenPartenaire)}>Fetch Parrain By Token ID</Button>
                     {parrain && (
                       <div>
@@ -443,34 +600,46 @@ const ModalUsers = (props: Props) => {
                         <pre>{JSON.stringify(parrain, null, 2)}</pre>
                       </div>
                     )}
-                  </div>
+                  </Section>
                 </div>
               </div>
 
-              <button type="submit">Mettre à Jour</button>
+              <button type="submit" style={{ backgroundColor: 'blue', 
+                                             color: 'white', 
+                                             padding: '5px 20px',
+                                             border: 'none', 
+                                             borderRadius: '5px', 
+                                             marginTop: '20px' }}>METTRE  A  JOUR</button>
 
-              <div className="archived">
+              <div className="archived" style={{ marginTop: '60px' }}>
                 {userData.archived ? (
                   <>
-                    <Button style={{ width: '10px', height: '10px', backgroundColor: 'orange', color: 'black', fontSize: '5px' }} onClick={() => handleUnarchive(userData.id)}>Unarchive</Button>
+                    <Button style={{ backgroundColor: 'orange', 
+                                     color: 'black', 
+                                     fontSize: '12px', 
+                                     padding: '5px 10px' }} onClick={() => handleUnarchive(userData.id)}>Unarchive</Button>
                   </>
                 ) : (
-                  <Button style={{ width: '60px', height: '30px', backgroundColor: 'red', color: 'black', fontSize: '7x' }} onClick={() => handleDelete(userData.id)}>Archiver</Button>
+                  <Button style={{ backgroundColor: 'red', 
+                                   color: 'white', 
+                                   fontSize: '12px', padding: '5px 10px' }} onClick={() => handleDelete(userData.id)}>Archiver</Button>
                 )}
               </div>
 
-              <div className="item">
-                <p>HISTORY :</p>
-                {userHistory.length > 0 ? (
-                  userHistory.map((historyItem, index) => (
-                    <p key={index}>{historyItem}</p>
-                  ))
-                ) : (
-                  <p>No history found</p>
-                )}
-              </div>
+              <Section title="History" count={userHistory.length}>
+                <div className="item">
+                  <p>HISTORY :</p>
+                  {userHistory.length > 0 ? (
+                    userHistory.map((historyItem, index) => (
+                      <p key={index}>{historyItem}</p>
+                    ))
+                  ) : (
+                    <p>No history found</p>
+                  )}
+                </div>
+              </Section>
 
-              <div className="item">
+              <Section title="Document Data" count={documentData ? 1 : 0}>
                 <Button onClick={() => fetchDocumentById(userData.id)}>Fetch Document By ID</Button>
                 {documentData && (
                   <div>
@@ -478,7 +647,17 @@ const ModalUsers = (props: Props) => {
                     <pre>{JSON.stringify(documentData, null, 2)}</pre>
                   </div>
                 )}
-              </div>
+              </Section>
+
+              <Section title="Archived Items" count={archivedItems.length}>
+                <Button onClick={handleFetchArchived}>Afficher les éléments archivés</Button>
+                {archivedItems.length > 0 && (
+                  <div>
+                    <h3>Archived Items:</h3>
+                    <pre>{JSON.stringify(archivedItems, null, 2)}</pre>
+                  </div>
+                )}
+              </Section>
             </div>
           ) : (
             <p>Chargement des données utilisateur...</p>

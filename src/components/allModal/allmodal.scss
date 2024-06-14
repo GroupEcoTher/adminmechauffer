@@ -9,7 +9,7 @@
   top: 0;
   left: 0;
   background-color: rgba(0, 0, 0, 0.724); // Couleur de fond semi-transparente
-  display: flex; // Utilisation de flexbox pour aligner les éléments
+  display: left; // Utilisation de flexbox pour aligner les éléments
   align-items: normal; // Alignement vertical normal des éléments flex
   justify-content: center; // Centrage horizontal des éléments flex
   overflow: auto; // Activer le défilement si le contenu dépasse la hauteur de la fenêtre
@@ -28,6 +28,8 @@
       margin-bottom: 5px; // Marge inférieure
       font-size: 15px; // Taille de police
       color: white; // Couleur de police
+      display: left; // Utilisation de flexbox pour aligner les éléments
+      ;
     }
 
     // Styles pour le bouton de fermeture (la croix)
@@ -43,18 +45,18 @@
     // Styles pour la section de contenu .content
     .content {
       display: grid; // Utilisation de la grille CSS pour organiser les éléments en lignes et colonnes
-      grid-template-columns: repeat(3, 1fr); // Trois colonnes égales
-      grid-gap: 20px; // Espacement entre les éléments de la grille
-      padding: 10px; // Espacement interne autour de la grille
-      justify-items: stretch; // Étend les éléments pour remplir les cellules de la grille
+      //grid-template-columns: repeat(2, 1fr); // Trois colonnes égales
+      grid-gap: 40px; // Espacement entre les éléments de la grille
+      padding: 40px; // Espacement interne autour de la grille
+      justify-items: left; // Étend les éléments pour remplir les cellules de la grille
       align-items: start; // Aligne les éléments en haut de chaque cellule de la grille
 
       // Styles pour chaque colonne de contenu
       .column {
-        display: flex; // Utilisation de flexbox pour les éléments internes
+        display: left; // Utilisation de flexbox pour les éléments internes
         flex-direction: column; // Disposition des éléments en colonne
         gap: 10px; // Espacement entre les éléments à l'intérieur de chaque colonne
-        padding: 20px; // Espacement interne autour de chaque colonne
+        padding: 10px; // Espacement interne autour de chaque colonne
         background-color: rgba(255, 255, 255, 0.1); // Couleur de fond légèrement transparente pour chaque colonne
         border-radius: 5px; // Coins arrondis pour chaque colonne
 
@@ -62,7 +64,7 @@
         .item {
           width: 100%; // Largeur de 100% du conteneur parent
           display: flex; // Utilisation de flexbox
-          align-items: center; // Centrage vertical des éléments
+          align-items: left; // Centrage vertical des éléments
           gap: 4px; // Espacement entre les éléments à l'intérieur de chaque ligne
           color: rgb(210, 210, 210); // Couleur de texte
           padding: 10px; // Espacement interne autour de chaque élément
@@ -77,7 +79,8 @@
           // Styles pour les paragraphes p à l'intérieur des éléments
           p {
             margin: 0; // Supprimer les marges pour éviter les espacements supplémentaires
-            font-size: 12px; // Taille de police
+            font-size: 12px; // Taille de 
+            
           }
 
           // Styles pour les champs de saisie input à l'intérieur des éléments
