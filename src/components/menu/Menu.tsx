@@ -12,7 +12,7 @@ const Menu = () => {
           <span className="title">{item.title}</span>
           {item.listItems.map((listItem) => (
             // Assurez-vous que chaque listItem a une clé unique basée sur son id
-            <Link to={listItem.url} className="listItem" key={listItem.id}>
+            <Link to={listItem.url || ""} className="listItem" key={listItem.id}>
               <img src={listItem.icon} alt={listItem.title} />
               <span className="listItemTitle">{listItem.title}</span>
             </Link>

@@ -1,4 +1,3 @@
-
 export const menu = [
   {
     id: 1,
@@ -6,62 +5,57 @@ export const menu = [
     listItems: [
       {
         id: 1,
-        title: "Homepage", 
+        title: "Homepage",
         url: "/",
         icon: "home.svg",
       },
-
     ],
   },
   {
     id: 2,
     title: "lists",
     listItems: [
-
       {
-        id: 1,
+        id: 2, // Correction de l'id pour être unique
         title: "Users",
         url: "/UsersHome",
         icon: "user.svg",
       },
       {
-       // id: 2,
-       // title: "Parains",
-       // url: "/Parains",
-        //icon: "user.svg",
+        id: 3, // Correction de l'id pour être unique
+        title: "Parains",
+        url: "/Parains",
+        icon: "user.svg",
       },
       {
-       // id: 3,
-       // title: "Partenaires",
-       // url: "/Partenaires",
-        //icon: "user.svg",
-      },
-
-      {
-        //id: 4,
-        //title: "Profile...TEST",
-        //icon: "user.svg",
-      },
-
-      {
-       // id: 5,
-        //title: "Products",
-        //url: "/products",
-        //icon: "product.svg",
+        id: 4, // Correction de l'id pour être unique
+        title: "Partenaires",
+        url: "/Partenaires",
+        icon: "user.svg",
       },
       {
-        // id: 6,
-        // title: "Orders",
-        // url: "/orders",
-        // icon: "order.svg",
+        id: 5, // Correction de l'id pour être unique
+        title: "Profile...TEST",
+        icon: "user.svg",
       },
       {
-        // id: 7,
-        // title: "Posts",
-        // url: "/posts",
-        // icon: "order.svg",
+        id: 6, // Correction de l'id pour être unique
+        title: "Products",
+        url: "/products",
+        icon: "product.svg",
       },
-      
+      {
+        id: 7, // Correction de l'id pour être unique
+        title: "Orders",
+        url: "/orders",
+        icon: "order.svg",
+      },
+      {
+        id: 8, // Correction de l'id pour être unique
+        title: "Posts",
+        url: "/posts",
+        icon: "order.svg",
+      },
     ],
   },
   {
@@ -69,22 +63,22 @@ export const menu = [
     title: "analytics",
     listItems: [
       {
-      //  id: 1,
-       // title: "Data Stats",
-       // url: "/",
-       // icon: "element.svg",
+        id: 9, // Correction de l'id pour être unique
+        title: "Data Stats",
+        url: "/",
+        icon: "element.svg",
       },
       {
-        //id: 2,
-        //title: "Charts",
-       // url: "/",
-       // icon: "chart.svg",
+        id: 10, // Correction de l'id pour être unique
+        title: "Charts",
+        url: "/",
+        icon: "chart.svg",
       },
       {
-        id: 3,
-      //  title: "Logs",
-       // url: "/",
-       // icon: "log.svg",
+        id: 11, // Correction de l'id pour être unique
+        title: "Logs",
+        url: "/",
+        icon: "log.svg",
       },
     ],
   },
@@ -92,47 +86,44 @@ export const menu = [
     id: 4,
     title: "general",
     listItems: [
-
       {
-      //  id: 2,
-       // title: "Notes",
-       // url: "/",
-       // icon: "note.svg",
+        id: 12, // Correction de l'id pour être unique
+        title: "Notes",
+        url: "/",
+        icon: "note.svg",
       },
       {
-      //  id: 3,
-       // title: "Forms",
-      //  url: "/",
-       // icon: "form.svg",
+        id: 13, // Correction de l'id pour être unique
+        title: "Forms",
+        url: "/",
+        icon: "form.svg",
       },
       {
-       // id: 4,
-      //  title: "Calendar",
-      //  url: "/",
-       // icon: "calendar.svg",
+        id: 14, // Correction de l'id pour être unique
+        title: "Calendar",
+        url: "/",
+        icon: "calendar.svg",
       },
     ],
   },
-
   {
     id: 5,
     title: "Maintenance",
     listItems: [
       {
-        id: 1,
+        id: 15, // Correction de l'id pour être unique
         title: "Settings",
         url: "/",
         icon: "setting.svg",
       },
       {
-        id: 2,
+        id: 16, // Correction de l'id pour être unique
         title: "Backups",
         url: "/",
         icon: "backup.svg",
       },
     ],
   },
-
 ];
 export const topDealUsers = [
   {
