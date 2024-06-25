@@ -1,3 +1,4 @@
+//src\components\barChartBox\BarChartBox.tsx
 import { Bar, BarChart, ResponsiveContainer, Tooltip } from "recharts";
 import "./barChartBox.scss";
 

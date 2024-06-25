@@ -13,8 +13,8 @@ import {
 } from "../../data";
 import "./home.scss";
 
-const chartBoxData = [chartBoxUser, chartBoxProduct, chartBoxConversion, chartBoxRevenue];
-const barChartBoxData = [barChartBoxVisit, barChartBoxRevenue];
+//const chartBoxData = [chartBoxUser, chartBoxProduct, chartBoxConversion, chartBoxRevenue];
+//const barChartBoxData = [barChartBoxVisit, barChartBoxRevenue];
 
 const Home = ({ title }) => {
   return (
@@ -25,19 +25,19 @@ const Home = ({ title }) => {
         <TopBox />
       </div>
       <div className="box box2">
-        <ChartBox {...chartBoxUser} />
+        <ChartBox color={""} icon={""} {...chartBoxUser} />
       </div>
       <div className="box box3">
-        <ChartBox {...chartBoxProduct} />
+        <ChartBox color={""} icon={""} {...chartBoxProduct} />
       </div>
       <div className="box box4">
         <PieChartBox />
       </div>
       <div className="box box5">
-        <ChartBox {...chartBoxConversion} />
+        <ChartBox color={""} icon={""} {...chartBoxConversion} />
       </div>
       <div className="box box6">
-        <ChartBox {...chartBoxRevenue} />
+        <ChartBox color={""} icon={""} {...chartBoxRevenue} />
       </div>
       <div className="box box7">
         <BigChartBox />

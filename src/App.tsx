@@ -50,7 +50,7 @@ const router = createBrowserRouter([
     path: "/",
     element: <Layout />,
     children: [
-      { path: "/", element: <Home title="Homepage : les stats basic et messages internes" /> },
+      { path: "/", element: <Home title="Homepage : les stats basic et messages internes" /> as any },
 
 
       // Menu gauche
@@ -60,7 +60,7 @@ const router = createBrowserRouter([
 
 
       // Users 
-      { path: "/UsersHome", element: <UsersHome title="Gestion - Users" /> },
+      { path: "/UsersHome", element: <UsersHome /> },
       { path: "/UsersTraitements", element: <UsersTraitements title="Gestion Users - États & Traitements" /> },
      
 

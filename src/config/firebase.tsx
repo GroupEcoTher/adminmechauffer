@@ -1,8 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, EmailAuthProvider, reauthenticateWithCredential, updateEmail, updatePassword, sendPasswordResetEmail } from 'firebase/auth';
 import { getFirestore, getDocs, doc, getDoc, collection, query, where, orderBy, setDoc, serverTimestamp, updateDoc, addDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
-import { getStorage ,ref, getDownloadURL} from 'firebase/storage';
-
+import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 
 // CONFIGURATION DE L'APPLICATION FIREBASE
 const firebaseConfig = {
@@ -18,17 +17,30 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const appSecond = initializeApp(firebaseConfig, 'Secondary');
 
-// exportation des constantes globales
+// Exportation des constantes globales
 export const db = getFirestore(app);
 export const auth = getAuth(app);
 export const authSecond = getAuth(appSecond);
 export const storage = getStorage(app);
 export { app, appSecond };
 
+// Fonction pour vérifier l'existence d'un document dans Firebase Storage
+const documentExists = async (userId, fileName) => {
+  const fileRef = ref(storage, `${userId}/${fileName}`);
+  try {
+    await getDownloadURL(fileRef);
+    return true;
+  } catch (error) {
+    if (error.code === 'storage/object-not-found') {
+      return false;
+    } else {
+      console.error('Erreur lors de la vérification du document:', error);
+      return false;
+    }
+  }
+};
 
-
-
-// Chargement de l'état de vérification depuis Firebase
+// Fonction pour charger l'état de vérification depuis Firebase
 const loadVerificationStateFromFirebase = async (userId) => {
   const userDoc = doc(db, 'users', userId);
   try {
@@ -39,11 +51,10 @@ const loadVerificationStateFromFirebase = async (userId) => {
       return {};
     }
   } catch (error) {
-    console.error('Error fetching verification state: ', error);
+    console.error('Erreur lors de la récupération de l\'état de vérification:', error);
     return {};
   }
 };
-
 
 // Fonction pour vérifier et mettre à jour le statut de vérification de l'utilisateur
 export const checkAndUpdateVerificationStatus = async (userId) => {
@@ -54,25 +65,8 @@ export const checkAndUpdateVerificationStatus = async (userId) => {
     const userData = userSnapshot.data();
 
     // Vérification de la présence des documents dans Firebase Storage
-    const identityDocumentRef = ref(storage, `${userId}/ci0.png`);
-    const taxNoticeDocumentRef = ref(storage, `${userId}/impot0.png`);
-
-    let identityDocumentExists = false;
-    let taxNoticeDocumentExists = false;
-
-    try {
-      await getDownloadURL(identityDocumentRef);
-      identityDocumentExists = true;
-    } catch (error) {
-      console.error(`Identity document for user ${userId} does not exist: `, error);
-    }
-
-    try {
-      await getDownloadURL(taxNoticeDocumentRef);
-      taxNoticeDocumentExists = true;
-    } catch (error) {
-      console.error(`Tax notice document for user ${userId} does not exist: `, error);
-    }
+    const identityDocumentExists = await documentExists(userId, 'ci0.png');
+    const taxNoticeDocumentExists = await documentExists(userId, 'impot0.png');
 
     // Mise à jour du statut de vérification
     let verificationStatus = 'Non Vérifiée';
@@ -80,10 +74,15 @@ export const checkAndUpdateVerificationStatus = async (userId) => {
       verificationStatus = 'Vérifiée';
     }
 
-    await updateDoc(userDocRef, { 'status': verificationStatus });
+    try {
+      await updateDoc(userDocRef, { 'status': verificationStatus });
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour du statut de vérification:', error);
+    }
+  } else {
+    console.error(`Utilisateur avec ID ${userId} non trouvé.`);
   }
 };
-
 
 // Fonction pour obtenir les utilisateurs incomplets
 export const getIncompleteUsers = async () => {
@@ -123,7 +122,6 @@ export const getIncompleteUsers = async () => {
   return incompleteUsers;
 };
 
-
 // Fonction pour obtenir les données des utilisateurs
 export const getData = async () => {
   const querySnapshot = await getDocs(collection(db, "users"));
@@ -134,7 +132,6 @@ export const getData = async () => {
   console.log(users);
   return users;
 }
-
 
 // Fonction pour obtenir tous les utilisateurs, y compris les archivés
 export const getAllUsers = async () => {
@@ -163,11 +160,6 @@ export const getAllUsers = async () => {
   return users;
 };
 
-
-
-
-
-
 // Fonction pour obtenir le nombre total d'utilisateurs
 export const getTotalUsers = async () => {
   const querySnapshot = await getDocs(collection(db, 'users'));
@@ -187,8 +179,6 @@ export const getNCUsers = async () => {
   return users;
 };
 
-
-
 // Fonction pour récupérer les utilisateurs archivés
 export const fetchArchivedUsers = async () => {
   const q = query(collection(db, 'users'), where('archived', '==', true));
@@ -196,18 +186,11 @@ export const fetchArchivedUsers = async () => {
   return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };
 
-
-
 // Fonction pour désarchiver un utilisateur
 export const unarchiveUser = async (userId) => {
   // Met à jour le champ 'archived' du document utilisateur spécifié à false
   await db.collection('users').doc(userId).update({ archived: false });
 };
-
-
-
-
-
 
 // Fonction pour récupérer la liste des éléments archivés
 export const fetchArchived = async () => {
@@ -229,9 +212,6 @@ export const fetchArchived = async () => {
   console.log('Archived Items:', archivedItems);
   return archivedItems;
 };
-
-
-
 
 // Fonction pour obtenir un document par ID
 export const getDocumentById = async (id: string) => {
@@ -618,12 +598,9 @@ export const AfficheImg = async (user, path) => {
     return true; // Document exists
   } catch (error) {
     console.error('Pas de documents trouvés:', error);
-
     return false; // Document does not exist
   }
 };
-
-
 
 // Fonction pour télécharger un document depuis Firebase Storage
 export const downloadDocument = async (userId: string, fileName: string) => {
@@ -639,12 +616,9 @@ export const downloadDocument = async (userId: string, fileName: string) => {
     alert('Pas de documents trouvés');
     return null;
   }
-  
 };
 
-
-
-// valeur des demandes XCP
+// Valeur des demandes XCP
 /*const demandesValueXCP = {
   'Isolation des combles': [1, 0.5],
   'Isolation du sol': [0.5, 0.5],
@@ -659,7 +633,7 @@ export const downloadDocument = async (userId: string, fileName: string) => {
   'Fenêtres / Portes-fenêtres': [1, 0.5],
 };*/
 
-// valeur des demandes XCP
+// Valeur des demandes XCP
 /*export const demandesValueXCP = {
   'Pompe à chaleur Air/Eau': [2, 0.5],
   'Chaudière Bois (Granulés ou bûches)': [2, 0.5],
@@ -672,7 +646,5 @@ export const downloadDocument = async (userId: string, fileName: string) => {
   'Isolation du sol': [0.5, 0.5]
 };*/
 
-
 // CONSTANTES GÉNÉRALES
-
 export default firebaseConfig;

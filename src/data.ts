@@ -6,7 +6,7 @@ export const menu = [
     listItems: [
       {
         id: 1,
-        title: "Homepage",
+        title: "Homepage", 
         url: "/",
         icon: "home.svg",
       },
@@ -200,6 +200,7 @@ export const chartBoxUser = { // total Users
     { name: "Thu", users: 400 },
     { name: "Fri", users: 500 },
     { name: "Sat", users: 450 },
+    
   ],
 };
 export const chartBoxProduct = { //CONVERSION Visites > Inscrits

@@ -1,11 +1,10 @@
-// UsersHome.jsx
+// UsersHome.tsx
 import React, { useEffect, useState } from 'react';
 import ChartBox from "../../components/chartBox/ChartBox";
 import BarChartBox from "../../components/barChartBox/BarChartBox";
-// import BigChartBox from "../../components/bigChartBox/BigChartBox";
-// import PieChartBox from "../../components/pieCartBox/PieChartBox";
-// import TopBox from "../../components/topBox/TopBox";
-
+import "../users/Usershome.scss";
+import FullLengthBox from "../../pages/users/FullLengthBox";
+import { getData, getTotalUsers } from "../../config/firebase";
 import {
   barChartBoxRevenue,
   barChartBoxVisit,
@@ -13,23 +12,24 @@ import {
   chartBoxProduct,
   chartBoxRevenue,
   chartBoxUser,
-  // barChartBoxValidated,
 } from "../../data";
-import "../users/Usershome.scss";
-import FullLengthBox from "../../pages/users/FullLengthBox";
-import { getData, getTotalUsers } from "../../config/firebase"; // Assurez-vous d'importer correctement getData et getTotalUsers
+import { ChartBoxProps, BarChartBoxProps, User } from "../../types";
 
-const chartBoxData = [chartBoxUser, chartBoxProduct, chartBoxConversion, chartBoxRevenue];
-const barChartBoxData = [barChartBoxVisit, barChartBoxRevenue];
+const chartBoxData: ChartBoxProps[] = [chartBoxUser, chartBoxProduct, chartBoxConversion, chartBoxRevenue];
+const barChartBoxData: BarChartBoxProps[] = [barChartBoxVisit, barChartBoxRevenue];
 
-const UsersHome = ({ title }) => {
-  const [users, setUsers] = useState([]);
-  const [totalUsers, setTotalUsers] = useState(0);
+interface UsersHomeProps {
+  title: string;
+}
+
+const UsersHome: React.FC<UsersHomeProps> = ({ title }) => {
+  const [users, setUsers] = useState<User[]>([]);
+  const [totalUsers, setTotalUsers] = useState<number>(0);
 
   useEffect(() => {
     const fetchData = async () => {
       const usersData = await getData();
-      const totalUsersCount = await getTotalUsers(); // Corrected here
+      const totalUsersCount = await getTotalUsers();
       setUsers(usersData);
       setTotalUsers(totalUsersCount);
     };
@@ -44,7 +44,7 @@ const UsersHome = ({ title }) => {
         <FullLengthBox totalUsers={totalUsers} /> {/* Passer totalUsers à FullLengthBox */}
 
         {chartBoxData.map((data, index) => (
-          <div className={`box box${index+2}`} key={index}>
+          <div className={`box box${index + 2}`} key={`chartBox-${index}`}>
             <ChartBox {...data} />
           </div>
         ))}
@@ -56,7 +56,7 @@ const UsersHome = ({ title }) => {
         {/* <div className="box box1"><TopBox /></div> Top */}
 
         {barChartBoxData.map((data, index) => (
-          <div className={`box box${index+2}`} key={index}>
+          <div className={`box box${index + 6}`} key={`barChartBox-${index}`}>
             <BarChartBox {...data} />
           </div>
         ))}
