@@ -4,7 +4,7 @@ import Modal from 'react-modal';
 import DataTable from "../../components/dataTable/DataTable";
 import { useEffect, useState } from "react";
 import Add from "../../components/add/Add";
-import { getData, getAllUsers, getIncompleteUsers, getNCUsers, AfficheImg, checkAndUpdateVerificationStatus } from "../../config/firebase";
+import { getData, getAllUsers, getIncompleteUsers, getNCUsers, AfficheImg } from "../../config/firebase";
 import FullLengthBox from "./FullLengthBox";
 import moment from 'moment';
 
@@ -30,32 +30,17 @@ const loadVerificationStateFromLocalStorage = () => {
   return savedState ? JSON.parse(savedState) : {};
 };
 
-// Définir les types pour documentVerification et documentDisplayed
-interface DocumentVerification {
-  [key: string]: {
-    identityDocumentVerified?: boolean;
-    identityDocumentNC?: boolean;
-    taxNoticeVerified?: boolean;
-    taxNoticeNC?: boolean;
-  };
-}
-
-interface DocumentDisplayed {
-  [key: string]: {
-    identityDocumentDisplayed?: boolean;
-    taxNoticeDisplayed?: boolean;
-  };
-}
-
 const UsersTraitements = ({ title }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState<any[]>([]);
+  
   const [totalUsers, setTotalUsers] = useState(0);
-  const [documentVerification, setDocumentVerification] = useState<DocumentVerification>(loadVerificationStateFromLocalStorage());
-  const [documentDisplayed, setDocumentDisplayed] = useState<DocumentDisplayed>({});
+  const [documentVerification, setDocumentVerification] = useState(loadVerificationStateFromLocalStorage());
+  const [documentDisplayed, setDocumentDisplayed] = useState({});
   const [activeUserType, setActiveUserType] = useState('all');
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
 
@@ -84,22 +69,12 @@ const UsersTraitements = ({ title }) => {
     setActiveUserType('all');
   };
 
-  // Vérification et mise à jour du statut de vérification de chaque utilisateur
-  const verifyAllUsers = async (users) => {
-    for (let user of users) {
-      await checkAndUpdateVerificationStatus(user.id);
-    }
-  };
-
   // Chargement des données utilisateur à l'initialisation
   useEffect(() => {
     const userFetchFunction = async () => {
       const userFetch = await getData();
       setUser(userFetch);
       setTotalUsers(userFetch.length);
-
-      // Vérification et mise à jour des statuts de vérification
-      await verifyAllUsers(userFetch);
     };
     userFetchFunction();
   }, []);
@@ -110,7 +85,7 @@ const UsersTraitements = ({ title }) => {
   }, [documentVerification]);
 
   // Fonction pour gérer l'affichage du document et vérifier son existence
-  const handleViewDocument = async (userId: string, path: string, documentType: keyof DocumentDisplayed[typeof userId]) => {
+  const handleViewDocument = async (userId, path, documentType) => {
     const documentExists = await AfficheImg(userId, path);
     if (documentExists) {
       setDocumentDisplayed({
@@ -212,7 +187,7 @@ const UsersTraitements = ({ title }) => {
             <input
               type="checkbox"
               className="checkbox"
-              checked={documentVerification[params.row.id]?.identityDocumentVerified || false}
+              checked={documentVerification[params.row.id]?.identityDocumentVerified}
               disabled={!documentDisplayed[params.row.id]?.identityDocumentDisplayed}
               onChange={(e) => {
                 if (documentDisplayed[params.row.id]?.identityDocumentDisplayed) {
@@ -233,7 +208,7 @@ const UsersTraitements = ({ title }) => {
               type="checkbox"
               className={`checkbox orange`}
               style={{ marginLeft: '1px' }}
-              checked={documentVerification[params.row.id]?.identityDocumentNC || false}
+              checked={documentVerification[params.row.id]?.identityDocumentNC}
               onChange={(e) => {
                 if (documentDisplayed[params.row.id]?.identityDocumentDisplayed) {
                   const updatedVerification = {
@@ -273,7 +248,7 @@ const UsersTraitements = ({ title }) => {
             <input
               type="checkbox"
               className="checkbox"
-              checked={documentVerification[params.row.id]?.taxNoticeVerified || false}
+              checked={documentVerification[params.row.id]?.taxNoticeVerified}
               disabled={!documentDisplayed[params.row.id]?.taxNoticeDisplayed}
               onChange={(e) => {
                 if (documentDisplayed[params.row.id]?.taxNoticeDisplayed) {
@@ -294,7 +269,7 @@ const UsersTraitements = ({ title }) => {
               type="checkbox"
               className={`checkbox orange`}
               style={{ marginLeft: '1px' }}
-              checked={documentVerification[params.row.id]?.taxNoticeNC || false}
+              checked={documentVerification[params.row.id]?.taxNoticeNC}
               onChange={(e) => {
                 if (documentDisplayed[params.row.id]?.taxNoticeDisplayed) {
                   const updatedVerification = {
@@ -362,4 +337,3 @@ const UsersTraitements = ({ title }) => {
 };
 
 export default UsersTraitements;
-

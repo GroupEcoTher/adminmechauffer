@@ -67,7 +67,7 @@
           align-items: left; // Centrage vertical des éléments
           gap: 4px; // Espacement entre les éléments à l'intérieur de chaque ligne
           color: rgb(210, 210, 210); // Couleur de texte
-          padding: 10px; // Espacement interne autour de chaque élément
+          padding: 20px; // Espacement interne autour de chaque élément
           background-color: rgba(0, 0, 0, 0.2); // Couleur de fond légèrement transparente pour chaque élément
           border-radius: 3px; // Coins arrondis pour chaque élément
 
@@ -78,7 +78,7 @@
 
           // Styles pour les paragraphes p à l'intérieur des éléments
           p {
-            margin: 0; // Supprimer les marges pour éviter les espacements supplémentaires
+            margin: 12px; // Supprimer les marges pour éviter les espacements supplémentaires
             font-size: 12px; // Taille de 
             
           }

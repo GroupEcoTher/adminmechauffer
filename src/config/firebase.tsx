@@ -25,6 +25,66 @@ export const authSecond = getAuth(appSecond);
 export const storage = getStorage(app);
 export { app, appSecond };
 
+
+
+
+// Chargement de l'état de vérification depuis Firebase
+const loadVerificationStateFromFirebase = async (userId) => {
+  const userDoc = doc(db, 'users', userId);
+  try {
+    const docSnapshot = await getDoc(userDoc);
+    if (docSnapshot.exists()) {
+      return docSnapshot.data().documentVerification || {};
+    } else {
+      return {};
+    }
+  } catch (error) {
+    console.error('Error fetching verification state: ', error);
+    return {};
+  }
+};
+
+
+// Fonction pour vérifier et mettre à jour le statut de vérification de l'utilisateur
+export const checkAndUpdateVerificationStatus = async (userId) => {
+  const userDocRef = doc(db, 'users', userId);
+  const userSnapshot = await getDoc(userDocRef);
+
+  if (userSnapshot.exists()) {
+    const userData = userSnapshot.data();
+
+    // Vérification de la présence des documents dans Firebase Storage
+    const identityDocumentRef = ref(storage, `${userId}/ci0.png`);
+    const taxNoticeDocumentRef = ref(storage, `${userId}/impot0.png`);
+
+    let identityDocumentExists = false;
+    let taxNoticeDocumentExists = false;
+
+    try {
+      await getDownloadURL(identityDocumentRef);
+      identityDocumentExists = true;
+    } catch (error) {
+      console.error(`Identity document for user ${userId} does not exist: `, error);
+    }
+
+    try {
+      await getDownloadURL(taxNoticeDocumentRef);
+      taxNoticeDocumentExists = true;
+    } catch (error) {
+      console.error(`Tax notice document for user ${userId} does not exist: `, error);
+    }
+
+    // Mise à jour du statut de vérification
+    let verificationStatus = 'Non Vérifiée';
+    if (identityDocumentExists && taxNoticeDocumentExists) {
+      verificationStatus = 'Vérifiée';
+    }
+
+    await updateDoc(userDocRef, { 'status': verificationStatus });
+  }
+};
+
+
 // Fonction pour obtenir les utilisateurs incomplets
 export const getIncompleteUsers = async () => {
   const usersRef = collection(db, 'users');
@@ -43,7 +103,7 @@ export const getIncompleteUsers = async () => {
   // Exécuter la requête et obtenir les documents
   const querySnapshot = await getDocs(q);
 
-  const incompleteUsers: { id: string; [key: string]: any }[] = [];
+  const incompleteUsers = [];
 
   querySnapshot.forEach((doc) => {
     const userData = doc.data();
@@ -63,6 +123,7 @@ export const getIncompleteUsers = async () => {
   return incompleteUsers;
 };
 
+
 // Fonction pour obtenir les données des utilisateurs
 export const getData = async () => {
   const querySnapshot = await getDocs(collection(db, "users"));
@@ -73,6 +134,7 @@ export const getData = async () => {
   console.log(users);
   return users;
 }
+
 
 // Fonction pour obtenir tous les utilisateurs, y compris les archivés
 export const getAllUsers = async () => {
