@@ -1,56 +1,69 @@
 // src/components/single/Single.tsx
 
 import React from 'react';
-import "./single.scss";
 
-// Définir les types pour les props de Single
-interface SingleProps {
+// Définir les types des props pour le composant Single
+interface ChartData {
+  name: string;
+  visits: number;
+  clicks: number;
+}
+
+interface Activity {
+  text: string;
+  time?: string;
+}
+
+export interface SingleProps {
   id: number;
   title: string;
   img: string;
   info: {
-    productId: string;
-    color: string;
-    price: string;
-    producer: string;
-    export: string;
+    username: string;
+    fullname: string;
+    email: string;
+    phone: string;
+    status: string;
   };
   chart: {
-    dataKeys: { name: string; color: string }[];
-    data: { name: string; visits: number; orders: number }[];
+    dataKeys: {
+      name: string;
+      color: string;
+    }[];
+    data: ChartData[];
   };
-  activities: { text: string; time: string }[];
+  activities: Activity[];
 }
 
 const Single: React.FC<SingleProps> = ({ title, img, info, activities }) => {
+  // Composant Single
   return (
     <div className="single">
-      <h1>{title}</h1>
+      <h2>{title}</h2>
       <img src={img} alt={title} />
       <div>
-        <h2>Product Information</h2>
-        <p>Product ID: {info.productId}</p>
-        <p>Color: {info.color}</p>
-        <p>Price: {info.price}</p>
-        <p>Producer: {info.producer}</p>
-        <p>Export: {info.export}</p>
+        <h3>Information</h3>
+        <p>Username: {info.username}</p>
+        <p>Fullname: {info.fullname}</p>
+        <p>Email: {info.email}</p>
+        <p>Phone: {info.phone}</p>
+        <p>Status: {info.status}</p>
       </div>
       <div>
-        <h2>Chart</h2>
-        {/* Render chart here */}
+        <h3>Chart</h3>
+        {/* Rendre le graphique ici */}
       </div>
       <div>
-        <h2>Activities</h2>
-        <ul>
-          {activities.map((activity, index) => (
-            <li key={index}>
-              {activity.text} - {activity.time}
-            </li>
-          ))}
-        </ul>
+        <h3>Activities</h3>
+        {activities.map((activity, index) => (
+          <div key={index}>
+            <p>{activity.text}</p>
+            {activity.time && <p>{activity.time}</p>}
+          </div>
+        ))}
       </div>
     </div>
   );
-};
+}
 
 export default Single;

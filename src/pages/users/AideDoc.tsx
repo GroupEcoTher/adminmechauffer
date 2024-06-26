@@ -1,16 +1,21 @@
 // src/pages/users/AideDoc.tsx
-
-
 import "../home/home.scss";
 import FullLengthBox from "../../pages/users/FullLengthBox";
 
 
-const AideDoc = ({ title }) =>{
+interface AideDocProps {
+  title: string;
+  totalUsers: number; 
+}
+
+
+const AideDoc :   React.FC<AideDocProps> = ({ title, totalUsers }) => {
   return (
     <div className="home">
       <h1 className="page-title">{title}</h1>
-      <FullLengthBox />
 
+        <FullLengthBox totalUsers={totalUsers} />
+        
     </div>
   );
 };

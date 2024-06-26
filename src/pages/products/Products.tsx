@@ -5,6 +5,9 @@ import Add from "../../components/add/Add";
 import { GridColDef } from "@mui/x-data-grid";
 import { products } from "../../data";
 
+
+
+
 const columns: GridColDef[] = [
   { field: "id", headerName: "ID", width: 90 },
   {
@@ -15,6 +18,9 @@ const columns: GridColDef[] = [
       return <img src={params.row.img || "/noavatar.png"} alt="" />;
     },
   },
+
+
+  
   {
     field: "title",
     type: "string",
@@ -50,8 +56,9 @@ const columns: GridColDef[] = [
     headerName: "In Stock",
     width: 150,
     type: "boolean",
+
+
   },
-  // Ajoutez les champs archived et standby pour correspondre aux données
   {
     field: "archived",
     headerName: "Archived",
@@ -66,6 +73,10 @@ const columns: GridColDef[] = [
   },
 ];
 
+
+
+
+
 const Products = () => {
   const [open, setOpen] = useState(false);
 
@@ -75,10 +86,17 @@ const Products = () => {
         <h1>Products</h1>
         <button onClick={() => setOpen(true)}>Add New Products</button>
       </div>
+
+
       <DataTable slug="products" columns={columns} rows={products} />
+
+
       {open && <Add slug="product" columns={columns} setOpen={setOpen} />}
+
     </div>
   );
 };
+
+
 
 export default Products;

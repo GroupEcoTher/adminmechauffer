@@ -1,4 +1,3 @@
-// UsersHome.tsx
 import React, { useEffect, useState } from 'react';
 import ChartBox from "../../components/chartBox/ChartBox";
 import BarChartBox from "../../components/barChartBox/BarChartBox";
@@ -13,7 +12,7 @@ import {
   chartBoxRevenue,
   chartBoxUser,
 } from "../../data";
-import { ChartBoxProps, BarChartBoxProps, User } from "../../types";
+import { ChartBoxProps, BarChartBoxProps, User } from "../../components/types/types";
 
 const chartBoxData: ChartBoxProps[] = [chartBoxUser, chartBoxProduct, chartBoxConversion, chartBoxRevenue];
 const barChartBoxData: BarChartBoxProps[] = [barChartBoxVisit, barChartBoxRevenue];
@@ -23,7 +22,7 @@ interface UsersHomeProps {
 }
 
 const UsersHome: React.FC<UsersHomeProps> = ({ title }) => {
-  const [users, setUsers] = useState<User[]>([]);
+  const [, setUsers] = useState<User[]>([]);
   const [totalUsers, setTotalUsers] = useState<number>(0);
 
   useEffect(() => {
@@ -41,19 +40,13 @@ const UsersHome: React.FC<UsersHomeProps> = ({ title }) => {
     <>
       <div className="home">
         <h1 className="page-title">{title}</h1>
-        <FullLengthBox totalUsers={totalUsers} /> {/* Passer totalUsers à FullLengthBox */}
+        <FullLengthBox totalUsers={totalUsers} />
 
         {chartBoxData.map((data, index) => (
           <div className={`box box${index + 2}`} key={`chartBox-${index}`}>
             <ChartBox {...data} />
           </div>
         ))}
-        
-        {/* <div className="box box4"><PieChartBox /></div> Leadds by Source */}
-        
-        {/* <div className="box box7"><BigChartBox /></div> Analytics Global */}
-
-        {/* <div className="box box1"><TopBox /></div> Top */}
 
         {barChartBoxData.map((data, index) => (
           <div className={`box box${index + 6}`} key={`barChartBox-${index}`}>

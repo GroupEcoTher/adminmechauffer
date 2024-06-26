@@ -2,11 +2,17 @@ import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './FullLengthBox.scss';
 
-const FullLengthBox = ({ totalUsers }) => {
+
+interface FullLengthBoxProps {
+  totalUsers: number;
+}
+
+
+const FullLengthBox: React.FC<FullLengthBoxProps> = ({ totalUsers }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const isActive = (path) => location.pathname === path ? 'active' : '';
+  const isActive = (path: string) => (location.pathname === path ? 'active' : '');
 
   return (
     <div className="fullLengthBox">

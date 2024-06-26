@@ -1,29 +1,23 @@
-// 
-//Importation des dépendances nécessaires
-import { GridColDef } from "@mui/x-data-grid";
-import Modal from 'react-modal';
-import DataTable from "../../components/dataTable/DataTable";
-
-import { useEffect, useState } from "react";
-import Add from "../../components/add/Add";
-import { userRows } from "../../data";
-import DocValidnModal from "../../components/DocValidnModal/DocValidnModal";
-import {getData} from "../../config/firebase";
-import { getIncompleteUsers, getNCUsers, getAllUsers } from "../../config/firebase";
+import React from 'react';
 import FullLengthBox from "../../pages/users/FullLengthBox";
 import "../home/home.scss";
 import "./Users.scss";
 
 
+interface UsersProps {
+  title: string;
+  totalUsers: number; 
+}
 
-const Users = ({ title }) =>{
+const HistAction : React.FC<UsersProps> = ({ title, totalUsers }) => {
   return (
     <div className="home">
       <h1 className="page-title">{title}</h1>
-      <FullLengthBox />
 
+        <FullLengthBox totalUsers={totalUsers} />
+        
     </div>
   );
 };
 
-export default Users;
+export default HistAction;

@@ -1,13 +1,15 @@
 // src/pages/user/User.tsx
 
 import React from 'react';
-import Single from "../../components/single/Single";
+
 import "./user.scss";
+import Single  from "../../components/single/Single";
 
 // Définir les types des props pour le composant User
 interface UserProps {
   title: string;
 }
+
 
 const User: React.FC<UserProps> = ({ title }) => {
   // Définir les éléments de la page user singleUser

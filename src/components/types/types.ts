@@ -1,15 +1,19 @@
-// Interface pour un utilisateur
 export interface User {
-    id: number;
-    img: string;
-    lastName: string;
-    firstName: string;
-    email: string;
-    phone: string;
-    createdAt: string;
-    identityDocumentUrl: string;
-    verified: boolean;
-  }
+  id: number;
+  img: string;
+  lastName: string;
+  firstName: string;
+  email: string;
+  phone: string;
+  identityDocumentUrl: string;
+  verified: boolean;
+  name: string;
+  createdAt: {
+    seconds: number;
+    nanoseconds: number;
+  };
+  [key: string]: any;
+}
   
   // Interface pour les données de graphiques
   export interface ChartData {
@@ -25,13 +29,14 @@ export interface User {
   // Interface pour les props de ChartBox
   export interface ChartBoxProps {
     title: string;
-    number: string;
+    number: number;
     dataKey: string;
     percentage: number;
     chartData: ChartData[];
     color: string;
     icon: string;
   }
+  
   
   // Interface pour les props de BarChartBox
   export interface BarChartBoxProps {
@@ -41,6 +46,9 @@ export interface User {
     chartData: ChartData[];
   }
   
+
+
+
   // Interface pour un élément de menu
   export interface ListItem {
     id: number;
@@ -61,4 +69,3 @@ export interface User {
     rows: User[];
     title: string;
   }
-  

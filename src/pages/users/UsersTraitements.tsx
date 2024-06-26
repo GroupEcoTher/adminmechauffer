@@ -11,16 +11,8 @@ import moment from 'moment';
 // Initialiser react-modal
 Modal.setAppElement('#root');
 
-// Fonction pour formater la date
-const dateCréation = (firebaseTimestamp) => {
-  moment.locale('fr');
-  const milliseconds = firebaseTimestamp.seconds * 1000 + firebaseTimestamp.nanoseconds / 1000000;
-  const date = new Date(milliseconds);
-  return moment(date).format('DD MMMM YYYY');
-};
-
 // Fonction pour sauvegarder l'état de vérification dans le local storage
-const saveVerificationStateToLocalStorage = (state) => {
+const saveVerificationStateToLocalStorage = (state: DocumentVerification) => {
   localStorage.setItem('documentVerification', JSON.stringify(state));
 };
 
@@ -47,7 +39,11 @@ interface DocumentDisplayed {
   };
 }
 
-const UsersTraitements = ({ title }) => {
+interface UsersTraitementsProps {
+  title: string;
+}
+
+const UsersTraitements: React.FC<UsersTraitementsProps> = ({ title }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [open, setOpen] = useState(false);
@@ -56,11 +52,9 @@ const UsersTraitements = ({ title }) => {
   const [documentVerification, setDocumentVerification] = useState<DocumentVerification>(loadVerificationStateFromLocalStorage());
   const [documentDisplayed, setDocumentDisplayed] = useState<DocumentDisplayed>({});
   const [activeUserType, setActiveUserType] = useState('all');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedUserId, setSelectedUserId] = useState(null);
 
   // Détermine si le chemin actuel est actif
-  const isActive = (path) => location.pathname === path ? 'active' : '';
+  const isActive = (path: string) => location.pathname === path;
 
   // Gestion des utilisateurs incomplets
   const handleIncompleteUsersClick = async () => {
@@ -85,7 +79,7 @@ const UsersTraitements = ({ title }) => {
   };
 
   // Vérification et mise à jour du statut de vérification de chaque utilisateur
-  const verifyAllUsers = async (users) => {
+  const verifyAllUsers = async (users: any[]) => {
     for (let user of users) {
       await checkAndUpdateVerificationStatus(user.id);
     }
@@ -110,7 +104,7 @@ const UsersTraitements = ({ title }) => {
   }, [documentVerification]);
 
   // Fonction pour gérer l'affichage du document et vérifier son existence
-  const handleViewDocument = async (userId: string, path: string, documentType: keyof DocumentDisplayed[typeof userId]) => {
+  const handleViewDocument = async (userId: string, path: string, documentType: keyof DocumentDisplayed[string]) => {
     const documentExists = await AfficheImg(userId, path);
     if (documentExists) {
       setDocumentDisplayed({
@@ -138,8 +132,6 @@ const UsersTraitements = ({ title }) => {
       width: 15,
       renderCell: (params) => (
         <div onClick={() => {
-          setSelectedUserId(params.value);
-          setIsModalOpen(true);
           navigate(`/ModalUsers/${params.value}`);
         }}> 
           {params.value}
@@ -339,22 +331,17 @@ const UsersTraitements = ({ title }) => {
   return (
     <div className="home">
       <h1 className="page-title">{title}</h1>
-      <p>Nombre total d'utilisateurs : <span className="total-users">{totalUsers}</span></p>
-
       <FullLengthBox totalUsers={totalUsers} />
-
-      <div className={`info ${isActive ? 'active' : ''}`}>
+      <p>Nombre total d'utilisateurs : <span className="total-users">{totalUsers}</span></p>
+      <div className={`info ${isActive(location.pathname) ? 'active' : ''}`}>
         <button className={activeUserType === 'all' ? 'active' : ''} onClick={handleAllUsersClick}>
           ALL USERS <span className="total-users">{`(${totalUsers})`}</span>
         </button>
         <button className={activeUserType === 'incomplete' ? 'active' : ''} onClick={handleIncompleteUsersClick}>USERS Incomplets</button>
         <button className={activeUserType === 'nc' ? 'active' : ''} onClick={handleNCUsersClick}>USERS NC</button>
         <button className={activeUserType === 'usersarchive' ? 'active' : ''} onClick={handleNCUsersClick}>USERS ARCHIVES</button>
-
         <button onClick={() => setOpen(true)}>Add New User</button>
-        
-        {user && <DataTable slug="users" columns={columns} rows={user} />}
-        
+        {user && <DataTable columns={columns} rows={user} title={''} />}
         {open && <Add slug="user" columns={columns} setOpen={setOpen} />}
       </div>
     </div>
@@ -362,4 +349,3 @@ const UsersTraitements = ({ title }) => {
 };
 
 export default UsersTraitements;
-

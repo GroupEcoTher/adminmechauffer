@@ -1,31 +1,20 @@
 // src/pages/users/RecepMail.tsx
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-
-import BarChartBox from "../../components/barChartBox/BarChartBox";
-import BigChartBox from "../../components/bigChartBox/BigChartBox";
-import ChartBox from "../../components/chartBox/ChartBox";
-import PieChartBox from "../../components/pieCartBox/PieChartBox";
-import TopBox from "../../components/topBox/TopBox";
-import {
-  barChartBoxRevenue,
-  barChartBoxVisit,
-  chartBoxConversion,
-  chartBoxProduct,
-  chartBoxRevenue,
-  chartBoxUser,
-} from "../../data";
 import "../home/home.scss";
 import FullLengthBox from "../../pages/users/FullLengthBox";
 
 
 
 
-const RecepMail = ({ title }) =>{
+interface RecepMailProps {
+  title: string;
+  totalUsers: number; 
+}
+
+const RecepMail : React.FC<RecepMailProps> = ({ title, totalUsers }) => {
   return (
     <div className="home">
       <h1 className="page-title">{title}</h1>
-      <FullLengthBox />
+      <FullLengthBox totalUsers={totalUsers} />
 
     </div>
   );

@@ -11,7 +11,7 @@ import "./dataTable.scss";
 // Définition des props pour le composant DataTable
 type Props = {
   columns: GridColDef[];
-  rows: readonly { id: number; archived: boolean; standby: boolean; verified: boolean; }[];
+  rows:  { id: number; archived: boolean; standby: boolean; verified: boolean; }[];
   title: string;
 };
 

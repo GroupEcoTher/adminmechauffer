@@ -15,7 +15,7 @@
     "jsx": "react-jsx",
     "baseUrl": ".", 
     "paths": { 
-      "*": ["src/*", "types/*"]
+      "*": ["src/*", "src/components/types/*"]
     },
     
     /* Ajout de l'option pour les imports synthétiques par défaut */
@@ -27,6 +27,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "types"],
+  "include": ["src", "src/components/types"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
