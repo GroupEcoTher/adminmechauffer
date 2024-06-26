@@ -1,25 +1,33 @@
+// src/components/dataTable/DataTable.tsx
+
 import React, { useState, useEffect } from "react";
-import { DataGrid, GridColDef, GridToolbar, GridSortModel } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridToolbar, GridSortModel, GridPaginationModel } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
 import { Checkbox, Button } from "@mui/material";
 import { doc, getDoc, setDoc, updateDoc, addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import "./dataTable.scss";
 
+// Définition des props pour le composant DataTable
 type Props = {
   columns: GridColDef[];
   rows: readonly { id: number; archived: boolean; standby: boolean; verified: boolean; }[];
   slug: string;
+  title: string;
 };
 
-const DataTable = (props: Props) => {
-  const [rows, setRows] = useState(props.rows);
-  const [archivedRows, setArchivedRows] = useState([]); // Ajout de l'état pour stocker les utilisateurs archivés
+const DataTable: React.FC<Props> = ({ columns, rows, slug, title }) => {
+  const [tableRows, setTableRows] = useState(rows);
+  const [archivedRows, setArchivedRows] = useState<any[]>([]); // Utilisation d'un type any[] pour stocker les utilisateurs archivés
+  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
+    pageSize: 20,
+    page: 0,
+  });
 
   useEffect(() => {
-    setRows(props.rows);
+    setTableRows(rows);
     fetchArchivedUsers(); // Appel de la fonction pour récupérer les utilisateurs archivés au montage
-  }, [props.rows]);
+  }, [rows]);
 
   // Fonction pour sauvegarder l'historique des mouvements
   const saveHistory = async (userId: number, action: string, details: string) => {
@@ -40,23 +48,19 @@ const DataTable = (props: Props) => {
   // Fonction pour archiver l'utilisateur sans le supprimer
   const handleDelete = async (id: number) => {
     try {
-      // Référence au document de l'utilisateur
       const userDocRef = doc(db, "users", id.toString());
       const userDocSnap = await getDoc(userDocRef);
-  
-      // Vérifie si le document existe
+
       if (userDocSnap.exists()) {
-        // Met à jour le champ 'archived' à true
         await updateDoc(userDocRef, { archived: true });
-  
+
         console.log(`Archived item with id: ${id} successfully.`);
-        setRows((prevRows) =>
+        setTableRows((prevRows) =>
           prevRows.map((row) =>
             row.id === id ? { ...row, archived: true } : row
           )
         );
-  
-        // Enregistre l'historique
+
         await saveHistory(id, "archive", `User with id ${id} archived`);
       } else {
         console.log("No such document!");
@@ -65,28 +69,23 @@ const DataTable = (props: Props) => {
       console.error("Error archiving document: ", error);
     }
   };
-  
 
   // Fonction pour désarchiver l'utilisateur
   const handleUnarchive = async (id: number) => {
     try {
-      // Référence au document de l'utilisateur
       const userDocRef = doc(db, "users", id.toString());
       const userDocSnap = await getDoc(userDocRef);
-  
-      // Vérifie si le document existe
+
       if (userDocSnap.exists()) {
-        // Met à jour le champ 'archived' à false
         await updateDoc(userDocRef, { archived: false });
-  
+
         console.log(`Unarchived item with id: ${id} successfully.`);
-        setRows((prevRows) =>
+        setTableRows((prevRows) =>
           prevRows.map((row) =>
             row.id === id ? { ...row, archived: false } : row
           )
         );
-  
-        // Enregistre l'historique
+
         await saveHistory(id, "unarchive", `User with id ${id} unarchived`);
       } else {
         console.log("No such document!");
@@ -96,20 +95,18 @@ const DataTable = (props: Props) => {
     }
   };
 
-  // FONCTION pour récupérer les utilisateurs archivés
+  // Fonction pour récupérer les utilisateurs archivés
   const fetchArchivedUsers = async () => {
     try {
-      // Requête pour récupérer les utilisateurs archivés
       const querySnapshot = await getDocs(query(collection(db, "users"), where("archived", "==", true)));
-      
-      const archivedUsers = [];
+
+      const archivedUsers: any[] = [];
       querySnapshot.forEach((doc) => {
         archivedUsers.push({ id: doc.id, ...doc.data() });
       });
-  
-      // Met à jour l'état avec les utilisateurs archivés
+
       setArchivedRows(archivedUsers);
-  
+
       console.log("Fetched archived users successfully.");
     } catch (error) {
       console.error("Error fetching archived users: ", error);
@@ -125,7 +122,7 @@ const DataTable = (props: Props) => {
       });
 
       console.log(`User with id: ${id} is now ${standby ? 'in StandBY mode' : 'active'}.`);
-      setRows((prevRows) => prevRows.map((row) => row.id === id ? { ...row, standby } : row));
+      setTableRows((prevRows) => prevRows.map((row) => row.id === id ? { ...row, standby } : row));
       await saveHistory(id, "standby", `User with id ${id} set to ${standby ? 'StandBY' : 'active'}`);
     } catch (error) {
       console.error("Error updating document: ", error);
@@ -208,7 +205,7 @@ const DataTable = (props: Props) => {
     field: "archivedUsers",
     headerName: "Archived Users",
     width: 200,
-    renderCell: (params) => {
+    renderCell: () => {
       return (
         <div>
           {archivedRows.map((user) => (
@@ -239,12 +236,14 @@ const DataTable = (props: Props) => {
 
   return (
     <div className="dataTable">
+      <h1>{title}</h1> {/* Affichage du titre */}
       <DataGrid
         className="dataGrid"
-        rows={rows}
-        columns={[...props.columns, actionColumn, suspendColumn, suprUser, archiveColumn, archivedUserColumn]}
+        rows={tableRows}
+        columns={[...columns, actionColumn, suspendColumn, suprUser, archiveColumn, archivedUserColumn]}
         sortModel={sortModel}
-        pageSize={20}
+        paginationModel={paginationModel}
+        onPaginationModelChange={setPaginationModel}
         slots={{ toolbar: GridToolbar }}
         slotProps={{
           toolbar: {

@@ -1,4 +1,5 @@
-import React from 'react';
+//src\pages\Parains\Parains.tsx
+
 import BarChartBox from "../../components/barChartBox/BarChartBox";
 import BigChartBox from "../../components/bigChartBox/BigChartBox";
 import ChartBox from "../../components/chartBox/ChartBox";
@@ -15,10 +16,18 @@ import {
 import "../home/home.scss";
 import ParainsFullLengthBox from "../../pages/Parains/ParainsFullLengthBox";
 
+
+
 const chartBoxData = [chartBoxUser, chartBoxProduct, chartBoxConversion, chartBoxRevenue];
 const barChartBoxData = [barChartBoxVisit, barChartBoxRevenue];
 
-const Parains = ({ title }) => {
+
+interface ParainsProps {
+  title: string;
+}
+
+
+const Parains: React.FC<ParainsProps> = ({ title }) => {
   return (
     <>
 

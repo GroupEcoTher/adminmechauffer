@@ -7,16 +7,19 @@
     "skipLibCheck": true,
 
     /* Bundler mode */
-    "moduleResolution": "node", // Changé de "bundler" à "node"
+    "moduleResolution": "node",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "baseUrl": ".", // Ajouté pour définir la base des chemins d'importation
-    "paths": { // Ajouté pour définir des alias de chemins
+    "baseUrl": ".", 
+    "paths": { 
       "*": ["src/*", "types/*"]
     },
+    
+    /* Ajout de l'option pour les imports synthétiques par défaut */
+    "allowSyntheticDefaultImports": true,
 
     /* Linting */
     "strict": true,

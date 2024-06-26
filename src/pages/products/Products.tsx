@@ -5,6 +5,9 @@ import Add from "../../components/add/Add";
 import { GridColDef } from "@mui/x-data-grid";
 import { products } from "../../data";
 
+
+
+
 const columns: GridColDef[] = [
   { field: "id", headerName: "ID", width: 90 },
   {
@@ -52,6 +55,8 @@ const columns: GridColDef[] = [
     type: "boolean",
   },
 ];
+
+
 
 const Products = () => {
   const [open, setOpen] = useState(false);

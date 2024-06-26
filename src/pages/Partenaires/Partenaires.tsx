@@ -1,4 +1,3 @@
-import React from 'react';
 import BarChartBox from "../../components/barChartBox/BarChartBox";
 import BigChartBox from "../../components/bigChartBox/BigChartBox";
 import ChartBox from "../../components/chartBox/ChartBox";
@@ -18,13 +17,20 @@ import PartenairesFullLengthBox from "../../pages/Partenaires/PartenairesFullLen
 const chartBoxData = [chartBoxUser, chartBoxProduct, chartBoxConversion, chartBoxRevenue];
 const barChartBoxData = [barChartBoxVisit, barChartBoxRevenue];
 
-const PartenairesHome = ({ title }) => {
+
+// Définir les props pour PartenairesHome
+interface PartenairesHomeProps {
+  title: string;
+}
+
+// Définir le composant PartenairesHome en utilisant les props
+const PartenairesHome: React.FC<PartenairesHomeProps> = ({ title }) => {
   return (
     <>
       <div className="home">
         <h1 className="page-title">{title}</h1>
         <PartenairesFullLengthBox /> {/* Utilisation du composant correctement nommé */}
-              
+        
         <div className="box box1">
           <TopBox />
         </div>
@@ -50,3 +56,10 @@ const PartenairesHome = ({ title }) => {
 };
 
 export default PartenairesHome;
+
+
+
+
+
+
+

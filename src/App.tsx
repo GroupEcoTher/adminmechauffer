@@ -1,6 +1,7 @@
+// src/App.tsx
+
 import './config/firebase.jsx';
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
-
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Navbar from "./components/navbar/Navbar";
 import Footer from "./components/footer/Footer";
@@ -21,8 +22,6 @@ import Product from "./pages/product/Product";
 import "./styles/global.scss";
 import DataTable from './components/dataTable/DataTable';
 import ModalUsers from './components/allModal/ModalUsers';
-
-
 
 const queryClient = new QueryClient();
 
@@ -45,45 +44,51 @@ const Layout = () => {
   );
 };
 
+interface WrapperComponentProps {
+  Component: React.FC<any>;
+  componentProps: any;
+}
+
+
+//WrapperComponent : Ce composant enveloppe un composant de route et injecte les props supplémentaires nécessaires.
+const WrapperComponent: React.FC<WrapperComponentProps> = ({ Component, componentProps }) => { 
+  return <Component {...componentProps} />;
+};
+
+
+
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Layout />,
     children: [
-      { path: "/", element: <Home title="Homepage : les stats basic et messages internes" /> as any },
-
+      { path: "/", element: <WrapperComponent Component={Home} componentProps={{ title: "Homepage : les stats basic et messages internes" }} /> },
 
       // Menu gauche
-      { path: "/Partenaires", element: <Partenaires title="Gestion - Partenaires" /> },
-      { path: "/Parains", element: <Parains title="Gestion - Parrains" /> },
-      { path: "/products", element: <Products title="Gestion Xcp" /> },
-
+      { path: "/Partenaires", element: <WrapperComponent Component={Partenaires} componentProps={{ title: "Gestion - Partenaires" }} /> },
+      { path: "/Parains", element: <WrapperComponent Component={Parains} componentProps={{ title: "Gestion - Parrains" }} /> },
+      { path: "/products", element: <WrapperComponent Component={Products} componentProps={{ title: "Gestion Xcp" }} /> },
 
       // Users 
-      { path: "/UsersHome", element: <UsersHome /> },
-      { path: "/UsersTraitements", element: <UsersTraitements title="Gestion Users - États & Traitements" /> },
+      { path: "/UsersHome", element: <WrapperComponent Component={UsersHome} componentProps={{ title: "Accueil des utilisateurs" }} /> },
+      { path: "/UsersTraitements", element: <WrapperComponent Component={UsersTraitements} componentProps={{ title: "Gestion Users - États & Traitements" }} /> },
      
-
       //Menu FullenghtBox
-      { path: "/HistAction", element: <HistAction title="Historique des actions - Résumé d’utilisation" /> },
-      { path: "/RecepMail", element: <RecepMail title="Réception des mails" /> },
-      { path: "/QuestDem", element: <QuestDem title="Questions - Demandes - Via Le Site" /> },
-      { path: "/AideDoc", element: <AideDoc title="Aide - Documentation" /> },
-
+      { path: "/HistAction", element: <WrapperComponent Component={HistAction} componentProps={{ title: "Historique des actions - Résumé d’utilisation" }} /> },
+      { path: "/RecepMail", element: <WrapperComponent Component={RecepMail} componentProps={{ title: "Réception des mails" }} /> },
+      { path: "/QuestDem", element: <WrapperComponent Component={QuestDem} componentProps={{ title: "Questions - Demandes - Via Le Site" }} /> },
+      { path: "/AideDoc", element: <WrapperComponent Component={AideDoc} componentProps={{ title: "Aide - Documentation" }} /> },
 
       // BY ID
-      { path: "/users/:id", element: <User title="Détails de l'utilisateur" /> },
-      { path: "/ModalUsers/:id", element: <ModalUsers title="Modal Users" /> },
-      { path: "/products/:id", element: <Product title="Détails du produit" /> },
+      { path: "/users/:id", element: <WrapperComponent Component={User} componentProps={{ title: "Détails de l'utilisateur" }} /> },
+      { path: "/ModalUsers/:id", element: <WrapperComponent Component={ModalUsers} componentProps={{ title: "Modal Users" }} /> },
+      { path: "/products/:id", element: <WrapperComponent Component={Product} componentProps={{ title: "Détails du produit" }} /> },
       
       // MODULES
-      { path: "/datatable", element: <DataTable title= "table"/> },
- 
-      
-    
+      { path: "/datatable", element: <WrapperComponent Component={DataTable} componentProps={{ title: "table", slug: "data-slug", rows: [], columns: [] }} /> },
     ],
   },
-  { path: "/login", element: <Login title="Connexion" /> },
+  { path: "/login", element: <WrapperComponent Component={Login} componentProps={{ title: "Connexion" }} /> },
 ]);
 
 const App = () => {

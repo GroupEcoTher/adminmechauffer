@@ -13,8 +13,15 @@ interface Props {
   slug: string;
 }
 
+// Définir une interface pour les props de Section
+interface SectionProps {
+  title: string;
+  count: number;
+  children: React.ReactNode;
+}
+
 // COMPONENT SECTION AVEC FONCTIONNALITÉ D'EXPANSION
-const Section = ({ title, count, children }) => {
+const Section: React.FC<SectionProps> = ({ title, count, children }) => {
   const [open, setOpen] = useState(false);
 
   // fonction pour basculer l'état de l'expansion
@@ -38,6 +45,7 @@ const Section = ({ title, count, children }) => {
     </div>
   );
 };
+
 
 // COMPONENT PRINCIPAL POUR MODAL USERS
 const ModalUsers = (props: Props) => {
@@ -77,6 +85,7 @@ const ModalUsers = (props: Props) => {
     }
   };
 
+  
   // FONCTION POUR RÉCUPÉRER LES DONNÉES LIÉES (ADRESSES ET DEMANDES)
   const fetchLinkedData = async (data: any) => {
     try {
@@ -137,7 +146,7 @@ const ModalUsers = (props: Props) => {
         await deleteDoc(userDocRef); // Supprimer le document utilisateur
 
         console.log(`Deleted item with id: ${id} and archived it successfully.`);
-        setUserData((prevData) => prevData && prevData.id === id ? { ...prevData, archived: true } : prevData); // Mettre à jour les données utilisateur
+        setUserData((prevData: any) => prevData && prevData.id === id ? { ...prevData, archived: true } : prevData); // Mettre à jour les données utilisateur
         await saveHistory(id, "archive", `User with id ${id} archived`); // Enregistrer l'historique
       } else {
         console.log("No such document!");
@@ -168,7 +177,7 @@ const handleUnarchive = async (id: number) => {
 
       console.log(`Unarchived item with id: ${id} successfully.`);
       // Mettre à jour les données utilisateur dans l'état local
-      setUserData((prevData) => prevData && prevData.id === id ? { ...prevData, archived: false } : prevData);
+      setUserData((prevData: any) => prevData && prevData.id === id ? { ...prevData, archived: false } : prevData);
       // Enregistrer l'historique de l'action de désarchivage
       await saveHistory(id, "unarchive", `User with id ${id} unarchived`);
     } else {
@@ -189,7 +198,7 @@ const handleUnarchive = async (id: number) => {
       });
 
       console.log(`User with id: ${id} is now ${standby ? 'in StandBY mode' : 'active'}.`);
-      setUserData((prevData) => prevData && prevData.id === id ? { ...prevData, standby } : prevData); // Mettre à jour les données utilisateur
+      setUserData((prevData: any) => prevData && prevData.id === id ? { ...prevData, standby } : prevData); // Mettre à jour les données utilisateur
       await saveHistory(id, "standby", `User with id ${id} set to ${standby ? 'StandBY' : 'active'}`); // Enregistrer l'historique
     } catch (error) {
       console.error("Error updating document: ", error);
@@ -293,7 +302,7 @@ const handleUnarchive = async (id: number) => {
 
     if (userData && userData.userParrainList) {
       fetchParrainNames(userData.userParrainList).then((parrains) => {
-        setUserData((prevData) => ({ ...prevData, userParrainList: parrains })); // Mettre à jour les noms des parrains
+        setUserData((prevData: any) => ({ ...prevData, userParrainList: parrains })); // Mettre à jour les noms des parrains
       });
     }
   }, []);
@@ -307,9 +316,9 @@ const handleUnarchive = async (id: number) => {
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, files } = e.target as HTMLInputElement;
     if (files && files[0]) {
-      setEditData((prevData) => ({ ...prevData, [name]: files[0] })); // Mettre à jour les données d'édition avec le fichier sélectionné
+      setEditData((prevData: any) => ({ ...prevData, [name]: files[0] })); // Mettre à jour les données d'édition avec le fichier sélectionné
     } else {
-      setEditData((prevData) => ({ ...prevData, [name]: value })); // Mettre à jour les données d'édition avec la nouvelle valeur
+      setEditData((prevData: any) => ({ ...prevData, [name]: value })); // Mettre à jour les données d'édition avec la nouvelle valeur
 
       try {
         const userRef = doc(db, "users", editData.id); // Référence au document utilisateur
@@ -330,27 +339,36 @@ const handleUnarchive = async (id: number) => {
     }
   };
 
-  // FONCTION POUR AFFICHER LE DOCUMENT
-  const handleViewDocument = async (userId, path, documentType) => {
-    const documentExists = await AfficheImg(userId, path); // Vérifier si le document existe
-    if (documentExists) {
-      setDocumentDisplayed({
-        ...documentDisplayed,
-        [userId]: {
-          ...documentDisplayed[userId],
-          [documentType]: true,
-        },
-      });
-    } else {
-      setDocumentDisplayed({
-        ...documentDisplayed,
-        [userId]: {
-          ...documentDisplayed[userId],
-          [documentType]: false,
-        },
-      });
-    }
+  const AfficheImg = async (userId: string, path: string): Promise<boolean> => {
+    // Utilisez les paramètres pour la logique de la fonction
+    // Par exemple, vous pouvez vérifier l'existence du document dans Firebase
+    const docRef = doc(db, "users", userId, "documents", path);
+    const docSnap = await getDoc(docRef);
+    return docSnap.exists();
   };
+  
+
+// FONCTION POUR AFFICHER LE DOCUMENT
+const handleViewDocument = async (userId: string, path: string, documentType: string) => {
+  const documentExists = await AfficheImg(userId, path); // Vérifier si le document existe
+  if (documentExists) {
+    setDocumentDisplayed((prevState: any) => ({
+      ...prevState,
+      [userId]: {
+        ...prevState[userId],
+        [documentType]: true,
+      },
+    }));
+  } else {
+    setDocumentDisplayed((prevState: any) => ({
+      ...prevState,
+      [userId]: {
+        ...prevState[userId],
+        [documentType]: false,
+      },
+    }));
+  }
+};
 
   // FONCTION POUR METTRE À JOUR LES DONNÉES UTILISATEUR
   const handleUpdate = async () => {
@@ -586,7 +604,7 @@ const handleUnarchive = async (id: number) => {
                   </Section>
 
                   <Section title="Parrains" count={userData.userParrainList ? userData.userParrainList.length : 0}>
-                    {userData.userParrainList && userData.userParrainList.map((parrain, index) => (
+                    {userData.userParrainList && userData.userParrainList.map((parrain: any, index: number) => (
                       <p key={index}>{parrain}</p>
                     ))}
                   </Section>

@@ -13,10 +13,11 @@ import {
 } from "../../data";
 import "./home.scss";
 
-//const chartBoxData = [chartBoxUser, chartBoxProduct, chartBoxConversion, chartBoxRevenue];
-//const barChartBoxData = [barChartBoxVisit, barChartBoxRevenue];
+interface HomeProps {
+  title: string;
+}
 
-const Home = ({ title }) => {
+const Home: React.FC<HomeProps> = ({ title }) => {
   return (
     <div className="home">
       <h3 className="page-title">{title}</h3>
