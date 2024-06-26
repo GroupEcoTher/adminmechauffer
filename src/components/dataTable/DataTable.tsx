@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { DataGrid, GridColDef, GridToolbar, GridSortModel, GridPaginationModel } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
 import { Checkbox, Button } from "@mui/material";
-import { doc, getDoc, setDoc, updateDoc, addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import { doc, getDoc, updateDoc, addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import "./dataTable.scss";
 
@@ -12,11 +12,10 @@ import "./dataTable.scss";
 type Props = {
   columns: GridColDef[];
   rows: readonly { id: number; archived: boolean; standby: boolean; verified: boolean; }[];
-  slug: string;
   title: string;
 };
 
-const DataTable: React.FC<Props> = ({ columns, rows, slug, title }) => {
+const DataTable: React.FC<Props> = ({ columns, rows, title }) => {
   const [tableRows, setTableRows] = useState(rows);
   const [archivedRows, setArchivedRows] = useState<any[]>([]); // Utilisation d'un type any[] pour stocker les utilisateurs archivés
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({

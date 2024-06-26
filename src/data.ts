@@ -1,3 +1,6 @@
+//src\data.ts
+
+
 export const menu = [
   {
     id: 1,
@@ -177,10 +180,10 @@ export const topDealUsers = [
   },
 ];
 export const chartBoxUser = { // total Users
-  //color: "#8884d8",
-  //icon: "/userIcon.svg",
+  color: "#8884d8",
+  icon: "/userIcon.svg",
   title: "Total Users",
-  number: "11.238",
+  number: 11.238,
   dataKey: "users",
   percentage: 45,
   chartData: [
@@ -195,10 +198,10 @@ export const chartBoxUser = { // total Users
   ],
 };
 export const chartBoxProduct = { //CONVERSION Visites > Inscrits
-  //color: "skyblue",
-  //icon: "/productIcon.svg",
+  color: "skyblue",
+  icon: "/productIcon.svg",
   title: "CONVERSION  Visites - Inscrits",
-  number: "238",
+  number: 238,
   dataKey: "products",
   percentage: 21,
   chartData: [
@@ -212,10 +215,10 @@ export const chartBoxProduct = { //CONVERSION Visites > Inscrits
   ],
 };
 export const chartBoxRevenue = {
-  //color: "teal",
-  //icon: "/revenueIcon.svg",
+  color: "teal",
+  icon: "/revenueIcon.svg",
   title: "Total Revenue",
-  number: "$56.432",
+  number: 56.432,
   dataKey: "revenue",
   percentage: -12,
   chartData: [
@@ -264,10 +267,10 @@ export const barChartBoxValidated = {// BOX USERS VALIDES à afficher
   ],
 };
 export const chartBoxConversion = {//CONVERSION Inscrits > Validés
-  //color: "gold",
-  //icon: "/conversionIcon.svg",
+  color: "gold",
+  icon: "/conversionIcon.svg",
   title: "CONVERSION Inscrits - Validés",
-  number: "2.6",
+  number: 2.6,
   dataKey: "ratio",
   percentage: 12,
   chartData: [

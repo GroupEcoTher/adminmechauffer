@@ -13,6 +13,9 @@ const firebaseConfig = {
   appId: '1:336346984646:web:00b5f78bbf7aa4225c27c7',
 };
 
+
+
+
 // INITIALISATION DE L'APPLICATION FIREBASE
 const app = initializeApp(firebaseConfig);
 const appSecond = initializeApp(firebaseConfig, 'Secondary');
@@ -25,12 +28,12 @@ export const storage = getStorage(app);
 export { app, appSecond };
 
 // Fonction pour vérifier l'existence d'un document dans Firebase Storage
-const documentExists = async (userId, fileName) => {
+const documentExists = async (userId: string, fileName: string): Promise<boolean> => {
   const fileRef = ref(storage, `${userId}/${fileName}`);
   try {
     await getDownloadURL(fileRef);
     return true;
-  } catch (error) {
+  } catch (error: any) {
     if (error.code === 'storage/object-not-found') {
       return false;
     } else {
@@ -40,30 +43,16 @@ const documentExists = async (userId, fileName) => {
   }
 };
 
-// Fonction pour charger l'état de vérification depuis Firebase
-const loadVerificationStateFromFirebase = async (userId) => {
-  const userDoc = doc(db, 'users', userId);
-  try {
-    const docSnapshot = await getDoc(userDoc);
-    if (docSnapshot.exists()) {
-      return docSnapshot.data().documentVerification || {};
-    } else {
-      return {};
-    }
-  } catch (error) {
-    console.error('Erreur lors de la récupération de l\'état de vérification:', error);
-    return {};
-  }
-};
+
+
+
 
 // Fonction pour vérifier et mettre à jour le statut de vérification de l'utilisateur
-export const checkAndUpdateVerificationStatus = async (userId) => {
+export const checkAndUpdateVerificationStatus = async (userId: string): Promise<void> => {
   const userDocRef = doc(db, 'users', userId);
   const userSnapshot = await getDoc(userDocRef);
 
   if (userSnapshot.exists()) {
-    const userData = userSnapshot.data();
-
     // Vérification de la présence des documents dans Firebase Storage
     const identityDocumentExists = await documentExists(userId, 'ci0.png');
     const taxNoticeDocumentExists = await documentExists(userId, 'impot0.png');
@@ -84,8 +73,13 @@ export const checkAndUpdateVerificationStatus = async (userId) => {
   }
 };
 
+
+
+
+
+
 // Fonction pour obtenir les utilisateurs incomplets
-export const getIncompleteUsers = async () => {
+export const getIncompleteUsers = async (): Promise<any[]> => {
   const usersRef = collection(db, 'users');
 
   // Créer une requête pour obtenir les utilisateurs qui n'ont pas rempli les conditions
@@ -102,7 +96,7 @@ export const getIncompleteUsers = async () => {
   // Exécuter la requête et obtenir les documents
   const querySnapshot = await getDocs(q);
 
-  const incompleteUsers = [];
+  const incompleteUsers: any[] = [];
 
   querySnapshot.forEach((doc) => {
     const userData = doc.data();
@@ -122,8 +116,19 @@ export const getIncompleteUsers = async () => {
   return incompleteUsers;
 };
 
+
+
+export const formatFirebaseTimestamp = (firebaseTimestamp: { seconds: number, nanoseconds: number }): Date | null => {
+  if (firebaseTimestamp && typeof firebaseTimestamp.seconds === 'number' && typeof firebaseTimestamp.nanoseconds === 'number') {
+    return new Date(firebaseTimestamp.seconds * 1000 + firebaseTimestamp.nanoseconds / 1000000);
+  }
+  return null;
+};
+
+
+
 // Fonction pour obtenir les données des utilisateurs
-export const getData = async () => {
+export const getData = async (): Promise<any[]> => {
   const querySnapshot = await getDocs(collection(db, "users"));
   const users: { id: string; [key: string]: any }[] = [];
   querySnapshot.forEach((doc) => {
@@ -134,7 +139,7 @@ export const getData = async () => {
 }
 
 // Fonction pour obtenir tous les utilisateurs, y compris les archivés
-export const getAllUsers = async () => {
+export const getAllUsers = async (): Promise<any[]> => {
   // Créez une requête pour récupérer les utilisateurs où le champ "archived" est soit absent, soit égal à false
   const activeUsersQuery = query(collection(db, "users"), where("archived", "==", false));
   const archivedUsersQuery = query(collection(db, "users"), where("archived", "==", true));
@@ -160,16 +165,21 @@ export const getAllUsers = async () => {
   return users;
 };
 
+
+
 // Fonction pour obtenir le nombre total d'utilisateurs
-export const getTotalUsers = async () => {
+export const getTotalUsers = async (): Promise<number> => {
   const querySnapshot = await getDocs(collection(db, 'users'));
   return querySnapshot.size;
 };
 
+
+
+
 // Fonction pour obtenir les utilisateurs NC
-export const getNCUsers = async () => {
+export const getNCUsers = async (): Promise<any[]> => {
   const querySnapshot = await getDocs(collection(db, 'users'));
-  const users = [];
+  const users: any[] = [];
   querySnapshot.forEach((doc) => {
     const data = doc.data();
     if (data.documents?.identity?.status === 'Non Conforme' || data.documents?.taxNotice?.status === 'Non Conforme') {
@@ -179,21 +189,29 @@ export const getNCUsers = async () => {
   return users;
 };
 
+
+
 // Fonction pour récupérer les utilisateurs archivés
-export const fetchArchivedUsers = async () => {
+export const fetchArchivedUsers = async (): Promise<any[]> => {
   const q = query(collection(db, 'users'), where('archived', '==', true));
   const snapshot = await getDocs(q);
   return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };
 
+
+
+
 // Fonction pour désarchiver un utilisateur
-export const unarchiveUser = async (userId) => {
+export const unarchiveUser = async (userId: string): Promise<void> => {
   // Met à jour le champ 'archived' du document utilisateur spécifié à false
-  await db.collection('users').doc(userId).update({ archived: false });
+  await updateDoc(doc(db, 'users', userId), { archived: false });
 };
 
+
+
+
 // Fonction pour récupérer la liste des éléments archivés
-export const fetchArchived = async () => {
+export const fetchArchived = async (): Promise<any[]> => {
   const archivedRef = collection(db, 'archived'); // Remplacez 'archived' par le nom de votre collection d'éléments archivés
   const q = query(archivedRef);
 
@@ -213,8 +231,12 @@ export const fetchArchived = async () => {
   return archivedItems;
 };
 
+
+
+
+
 // Fonction pour obtenir un document par ID
-export const getDocumentById = async (id: string) => {
+export const getDocumentById = async (id: string): Promise<any | null> => {
   const docRef = doc(db, "users", id);
   const docSnap = await getDoc(docRef);
 
@@ -227,8 +249,12 @@ export const getDocumentById = async (id: string) => {
   }
 };
 
+
+
+
+
 // Fonction pour obtenir les données d'adresse par user ID
-export const getDataAdressebyUserID = async (userID: string) => {
+export const getDataAdressebyUserID = async (userID: string): Promise<any | null> => {
   const docRef = doc(db, "users", userID);
   const docSnap = await getDoc(docRef);
 
@@ -246,8 +272,12 @@ export const getDataAdressebyUserID = async (userID: string) => {
   }
 };
 
+
+
+
+
 // Fonction pour obtenir les demandes par user ID
-export const getDataDemandesbyUserID = async (user: string) => {
+export const getDataDemandesbyUserID = async (user: string): Promise<any[]> => {
   const dateInst = new Date();
   const usersRef = collection(db, 'demandes');
   const q = query(usersRef, where('user', '==', user), where('dateCreation', '<=', dateInst), orderBy('dateCreation', "desc"));
@@ -259,62 +289,72 @@ export const getDataDemandesbyUserID = async (user: string) => {
   return res;
 }
 
+
+
+
 // Fonction pour obtenir le temp XCP par token ID
-export const getTempXcpByTokenID = async (Token) => {
+export const getTempXcpByTokenID = async (Token: string): Promise<any[]> => {
   const usersRef = collection(db, 'demandes');
   const q = query(usersRef, where('tokenParrain', '==', Token), where('demandestatus', '==', 'En cours de traitement'), orderBy('XCPgain'));
   const querySnapshot = await getDocs(q);
-  const snapshot = await getAggregateFromServer(q, {
-    totalTempXcp: sum('XCPgain')
-  });
-  let res = [snapshot.data().totalTempXcp];
+  const res: any[] = [];
   querySnapshot.forEach((doc) => {
     res.push({ id: doc.id, data: doc.data() });
   });
   return res;
 }
 
+
+
+
 // Fonction pour obtenir le temp XCP par token partenaire
-export const getTempXcpByTokenPartenaire = async (user) => {
+export const getTempXcpByTokenPartenaire = async (user: any): Promise<any[]> => {
   const usersRef = collection(db, 'demandes');
   const q = query(usersRef, where('tokenParrain', '==', user.uid), where('demandestatus', '==', 'En cours de traitement'), orderBy('XCPgain'));
-  const snapshot = await getAggregateFromServer(q, {
-    totalTempXcp: sum('XCPgain')
+  const querySnapshot = await getDocs(q);
+  const res: any[] = [];
+  querySnapshot.forEach((doc) => {
+    res.push({ id: doc.id, data: doc.data() });
   });
-  const q2 = query(usersRef, where('tokenPartenaire', '==', user.mytoken), where('demandestatus', '==', 'En cours de traitement'), orderBy('XCPgainParte'));
-  const snapshot2 = await getAggregateFromServer(q2, {
-    totalTempXcp: sum('XCPgainParte')
-  });
-  const res = snapshot.data().totalTempXcp + snapshot2.data().totalTempXcp;
   return res;
 }
 
+
+
+
 // Fonction pour obtenir les utilisateurs parrain par token ID
-export const getUserParrainbyTokenID = async (Token) => {
+export const getUserParrainbyTokenID = async (Token: string): Promise<any[]> => {
   const usersRef = collection(db, 'users');
   const q = query(usersRef, where('tokenParrain', '==', Token));
   const querySnapshot = await getDocs(q);
-  let res = [];
+  const res: any[] = [];
   querySnapshot.forEach((doc) => {
     res.push({ id: doc.id, data: doc.data() });
   });
   return res;
 }
 
+
+
+
+
 // Fonction pour obtenir les parrains par token ID
-export const getParrainbyTokenID = async (Token) => {
+export const getParrainbyTokenID = async (Token: string): Promise<any[]> => {
   const usersRef = collection(db, 'users');
   const q = query(usersRef, where('tokenPartenaire', '==', Token));
   const querySnapshot = await getDocs(q);
-  let res = [];
+  const res: any[] = [];
   querySnapshot.forEach((doc) => {
     res.push({ id: doc.id, data: doc.data() });
   });
   return res;
 }
 
+
+
+
 // Fonction pour créer un document utilisateur
-export const createUserDocument = async (user, additionalData) => {
+export const createUserDocument = async (user: any, additionalData: any): Promise<void> => {
   if (!user) return;
   const { email } = user;
   try {
@@ -324,25 +364,33 @@ export const createUserDocument = async (user, additionalData) => {
       email,
     });
     return docRef;
-  } catch (e) {
+  } catch (e: any) {
     console.log('error : ', e);
   }
 };
 
+
+
+
+
 // Fonction pour ajouter un utilisateur à la liste de parrainage
-export const adduserlisttoparrain = async (user, userparrain) => {
+export const adduserlisttoparrain = async (user: any, userparrain: any): Promise<void> => {
   if (!user) return;
   try {
     await updateDoc(doc(db, 'users', user.uid), {
       userParrainList: arrayUnion(userparrain.uid)
     });
-  } catch (e) {
+  } catch (e: any) {
     console.log('error : ', e);
   }
 };
 
+
+
+
+
 // Fonction pour créer un document d'adresse
-export const createAdresseDoc = async (user, additionalData) => {
+export const createAdresseDoc = async (user: any, additionalData: any): Promise<string | void> => {
   if (!user) return;
   try {
     const adresse = additionalData[4];
@@ -351,19 +399,23 @@ export const createAdresseDoc = async (user, additionalData) => {
       dateCreation: serverTimestamp(),
       ...adresse,
       user: user.uid,
-      value: { ...additionalData.filter(item => item !== 4) },
+      value: { ...additionalData.filter((item: any) => item !== 4) },
     });
     await updateDoc(doc(db, 'users', user.uid), {
       adresse: arrayUnion(AddrRef.id)
     });
     return AddrRef.id;
-  } catch (e) {
+  } catch (e: any) {
     console.log('Erreur :', e);
   }
 };
 
+
+
+
+
 // Fonction pour supprimer un document d'adresse
-export const DeleteAdresseDoc = async (user, index, type) => {
+export const DeleteAdresseDoc = async (user: any, index: string, type: string): Promise<void> => {
   if (!user) return;
   console.log(index);
   try {
@@ -371,43 +423,50 @@ export const DeleteAdresseDoc = async (user, index, type) => {
       adresse: { [type]: arrayRemove(index) }
     });
     return docRef;
-  } catch (e) {
+  } catch (e: any) {
     console.log('error : ', e);
   }
 };
 
+
+
+
+
 // Fonction pour mettre à jour l'email
-export const EmailUpdate = async (user, value) => {
+export const EmailUpdate = async (user: any, value: any): Promise<{ msg: string, type: string }> => {
   const credential = EmailAuthProvider.credential(
     user.email,
     value.oldpass
   );
-  const result = reauthenticateWithCredential(auth.currentUser, credential)
+  const result = reauthenticateWithCredential(auth.currentUser!, credential)
     .then(() => {
-      return updateEmail(auth.currentUser, value.email).then(async () => {
+      return updateEmail(auth.currentUser!, value.email).then(async () => {
         await updateDoc(doc(db, 'users', user.uid), {
           'email': value.email,
         });
-        return { msg: "Votre email est bien changer", type: "msg" };
+        return { msg: "Votre email est bien changé", type: "msg" };
       }).catch(() => {
-        return { msg: "Ce email est déjà faites", type: "error" };
+        return { msg: "Cet email est déjà utilisé", type: "error" };
       });
     })
-    .catch((error) => {
+    .catch(() => {
       return { msg: "Mot de passe non valide", type: "error" };
     });
   return result;
 };
 
+
+
+
 // Fonction pour mettre à jour le mot de passe
-export const PassUpdate = async (user, value) => {
+export const PassUpdate = async (user: any, value: any): Promise<{ msg: string, type: string }> => {
   const credential = EmailAuthProvider.credential(
     user.email,
     value.oldpass
   );
-  const result = reauthenticateWithCredential(auth.currentUser, credential)
+  const result = reauthenticateWithCredential(auth.currentUser!, credential)
     .then(() => {
-      return updatePassword(auth.currentUser, value.newpass).then(async () => {
+      return updatePassword(auth.currentUser!, value.newpass).then(async () => {
         await updateDoc(doc(db, 'users', user.uid), {
           'lastpassupdate': serverTimestamp()
         });
@@ -416,19 +475,23 @@ export const PassUpdate = async (user, value) => {
         return { msg: "Veuillez réessayer plus tard", type: "error" };
       });
     })
-    .catch((error) => {
+    .catch(() => {
       return { msg: "L'ancien Mot de passe non valide", type: "error" };
     });
   return result;
 };
 
+
+
+
+
 // Fonction pour mettre à jour le numéro de téléphone
-export const PhoneUpdate = async (user, value) => {
+export const PhoneUpdate = async (user: any, value: any): Promise<{ msg: string, type: string }> => {
   const credential = EmailAuthProvider.credential(
     user.email,
     value.oldpass
   );
-  const result = reauthenticateWithCredential(auth.currentUser, credential)
+  const result = reauthenticateWithCredential(auth.currentUser!, credential)
     .then(async () => {
       return await updateDoc(doc(db, 'users', user.uid), {
         'phone': value.phone,
@@ -443,32 +506,42 @@ export const PhoneUpdate = async (user, value) => {
   return result;
 };
 
+
+
+
+
 // Fonction pour mettre à jour le document utilisateur
-export const updateUserDocument = async (user, additionalData) => {
+export const updateUserDocument = async (user: any, additionalData: any): Promise<void> => {
   if (!user) return;
   try {
     await updateDoc(doc(db, 'users', user.uid), {
       'additionalData.devis': { ...additionalData },
     });
-  } catch (e) {
+  } catch (e: any) {
     console.log(e);
   }
 };
 
+
+
+
 // Fonction pour supprimer le premier utilisateur parrain
-export const removeParrainFirstUser = async (user) => {
+export const removeParrainFirstUser = async (user: any): Promise<void> => {
   if (!user) return;
   try {
     await updateDoc(doc(db, 'users', user.uid), {
       'additionalData.user': null,
     });
-  } catch (e) {
+  } catch (e: any) {
     console.log(e);
   }
 };
 
+
+
+
 // Fonction pour mettre à jour le document des coordonnées de l'utilisateur
-export const updateUserCoordoneeDocument = async (user, additionalData) => {
+export const updateUserCoordoneeDocument = async (user: any, additionalData: any): Promise<void> => {
   if (!user) return;
   try {
     await updateDoc(doc(db, 'users', user.uid), {
@@ -482,26 +555,31 @@ export const updateUserCoordoneeDocument = async (user, additionalData) => {
       'iban': additionalData.iban,
       'nomCompte': additionalData.nomCompte,
     });
-  } catch (e) {
+  } catch (e: any) {
     console.log(e);
   }
 };
 
+
+
 // Fonction pour mettre à jour le statut de l'utilisateur
-export const updateUserStatusDocument = async (user, status) => {
+export const updateUserStatusDocument = async (user: any, status: string): Promise<void> => {
   if (!user) return;
   try {
     await updateDoc(doc(db, 'users', user), {
       'status': status,
     });
-  } catch (e) {
+  } catch (e: any) {
     console.log(e);
   }
 };
 
+
+
+
 // Fonction pour obtenir un utilisateur par ID
-export const getUserById = async (userId) => {
-  if (!userId) return;
+export const getUserById = async (userId: string): Promise<any | null> => {
+  if (!userId) return null;
   try {
     const docRef = doc(db, 'users', userId);
     const docSnap = await getDoc(docRef);
@@ -510,36 +588,56 @@ export const getUserById = async (userId) => {
     } else {
       throw new Error('No such document!');
     }
-  } catch (e) {
-    throw new Error(e);
+  } catch (e: any) {
+    throw new Error(e.message);
   }
 };
 
+
+
+
 // Fonction pour obtenir les devis par ID utilisateur
-export const getDevisByUserId = async (userId) => {
-  if (!userId) return;
+export const getDevisByUserId = async (userId: string): Promise<any[]> => {
+  if (!userId) return [];
   try {
     const usersRef = collection(db, 'users');
     const q = query(usersRef, where('tokenParrain', '==', userId));
     const querySnapshot = await getDocs(q);
-    let res = [];
+    let res: any[] = [];
     querySnapshot.forEach((doc) => {
       res.push({ uid: doc.id, data: doc.data() });
     });
     return res;
-  } catch (e) {
-    throw new Error(e);
+  } catch (e: any) {
+    throw new Error(e.message);
   }
 };
 
-// Fonction pour créer un document de demande
-export const createDemandeDoc = async (user, adresseId, additionalData) => {
+
+
+
+export const createDemandeDoc = async (user: any, adresseId: string, additionalData: any): Promise<void> => {
   if (!user) return;
   const userid = user.uid;
   const vilregadrr = await getDoc(doc(db, 'adresse', adresseId));
-  let tokenParrain = {};
-  let tokenPartenaire = {};
-  let XCPgain = {};
+  let tokenParrain: { [key: string]: any } = {};
+  let tokenPartenaire: { [key: string]: any } = {};
+  let XCPgain: { [key: string]: any } = {};
+
+  // Vous devez définir la variable demandesValueXCP avant d'utiliser cette fonction
+  const demandesValueXCP: { [key: string]: [number, number] } = {
+    'Isolation des combles': [1, 0.5],
+    'Isolation du sol': [0.5, 0.5],
+    'Chauffe-eau thermodynamique': [1, 0.5],
+    'Chauffe-eau solaire individuel': [0.5, 0.5],
+    'Pompe à chaleur Air/Eau': [2, 0.5],
+    'climatisation réversible (pompe à chaleur Air/Air)': [2, 0.5],
+    'Pompe à chaleur géothermique': [2, 0.5],
+    'Chaudière Bois (Granulés ou bûches)': [2, 0.5],
+    'Poêle à bois (Granulés ou bûches)': [1, 0.5],
+    'VMC Double Flux': [1, 0.5],
+    'Fenêtres / Portes-fenêtres': [1, 0.5],
+  };
 
   Object.keys(demandesValueXCP).map((item) => {
     if (additionalData.value[0].value === item) {
@@ -557,8 +655,8 @@ export const createDemandeDoc = async (user, adresseId, additionalData) => {
       adresse: adresseId,
       dateCreation: serverTimestamp(),
       demandestatus: 'En cours de traitement',
-      region: vilregadrr.data().region,
-      ville: vilregadrr.data().ville,
+      region: vilregadrr.data()?.region,
+      ville: vilregadrr.data()?.ville,
       ...additionalData,
       ...tokenParrain,
       ...tokenPartenaire,
@@ -570,27 +668,33 @@ export const createDemandeDoc = async (user, adresseId, additionalData) => {
     await updateDoc(doc(db, 'users', userid), {
       demandes: arrayUnion(docRef.id)
     });
-    return docRef;
-  } catch (e) {
+  } catch (e: any) {
     console.log('error : ', e);
   }
 };
 
+
+
+
+
+
+
 // Fonction pour réinitialiser l'email
-export const resetEmail = async (email) => {
+export const resetEmail = async (email: string): Promise<void> => {
   try {
     const auth = getAuth();
-    sendPasswordResetEmail(auth, email)
-      .then(() => {
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-      });
-  } catch (e) { }
+    await sendPasswordResetEmail(auth, email);
+  } catch (error: any) {
+    console.error('Erreur lors de la réinitialisation de l\'email:', error);
+  }
 };
 
-export const AfficheImg = async (user, path) => {
+
+
+
+
+// Fonction pour afficher une image
+export const AfficheImg = async (user: string, path: string): Promise<boolean> => {
   const storage = getStorage();
   try {
     const url = await getDownloadURL(ref(storage, `${user}/${path}`));
@@ -602,8 +706,11 @@ export const AfficheImg = async (user, path) => {
   }
 };
 
+
+
+
 // Fonction pour télécharger un document depuis Firebase Storage
-export const downloadDocument = async (userId: string, fileName: string) => {
+export const downloadDocument = async (userId: string, fileName: string): Promise<File | null> => {
   const storage = getStorage();
   try {
     const url = await getDownloadURL(ref(storage, `${userId}/${fileName}`));
@@ -618,33 +725,4 @@ export const downloadDocument = async (userId: string, fileName: string) => {
   }
 };
 
-// Valeur des demandes XCP
-/*const demandesValueXCP = {
-  'Isolation des combles': [1, 0.5],
-  'Isolation du sol': [0.5, 0.5],
-  'Chauffe-eau thermodynamique': [1, 0.5],
-  'Chauffe-eau solaire individuel': [0.5, 0.5],
-  'Pompe à chaleur Air/Eau': [2, 0.5],
-  'climatisation réversible (pompe à chaleur Air/Air)': [2, 0.5],
-  'Pompe à chaleur géothermique': [2, 0.5],
-  'Chaudière Bois (Granulés ou bûches)': [2, 0.5],
-  'Poêle à bois (Granulés ou bûches)': [1, 0.5],
-  'VMC Double Flux': [1, 0.5],
-  'Fenêtres / Portes-fenêtres': [1, 0.5],
-};*/
-
-// Valeur des demandes XCP
-/*export const demandesValueXCP = {
-  'Pompe à chaleur Air/Eau': [2, 0.5],
-  'Chaudière Bois (Granulés ou bûches)': [2, 0.5],
-  'Poêle à bois (Granulés ou bûches)': [1, 0.5],
-  'VMC Double Flux': [1, 0.5],
-  'Chauffe-eau thermodynamique': [1, 0.5],
-  'Isolation des combles': [1, 0.5],
-  'Fenêtres / Portes-fenêtres': [1, 0.5],
-  'Chauffe-eau solaire individuel': [0.5, 0.5],
-  'Isolation du sol': [0.5, 0.5]
-};*/
-
-// CONSTANTES GÉNÉRALES
 export default firebaseConfig;

@@ -1,14 +1,27 @@
-// src/components/single/UserDetails.tsx
+import { formatFirebaseTimestamp } from '../../utils';
 
-import React from 'react';
-import formatFirebaseTimestamp from '../../components/single/Single';
+interface UserDetailsProps {
+  user: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    dateCreation: {
+      seconds: number;
+      nanoseconds: number;
+    };
+  };
+  closeModal: () => void;
+}
 
-
-function UserDetails({ user, closeModal }) {
+const UserDetails: React.FC<UserDetailsProps> = ({ user, closeModal }) => {
   if (!user) {
     return <div>Loading...</div>;
   }
 
+  const formattedDate = formatFirebaseTimestamp(user.dateCreation);
+  
   return (
     <div>
       <h2>User Details</h2>
@@ -17,7 +30,7 @@ function UserDetails({ user, closeModal }) {
       <p>Last Name: {user.lastName}</p>
       <p>Email: {user.email}</p>
       <p>Phone: {user.phone}</p>
-      <p>Created At: {formatFirebaseTimestamp(user.dateCreation)}</p>
+      <p>Created At: {formattedDate ? formattedDate.toLocaleString() : 'N/A'}</p>
       <button onClick={closeModal}>Close</button>
     </div>
   );

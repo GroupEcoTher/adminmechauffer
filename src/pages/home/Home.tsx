@@ -26,19 +26,19 @@ const Home: React.FC<HomeProps> = ({ title }) => {
         <TopBox />
       </div>
       <div className="box box2">
-        <ChartBox color={""} icon={""} {...chartBoxUser} />
+        <ChartBox {...chartBoxUser} />
       </div>
       <div className="box box3">
-        <ChartBox color={""} icon={""} {...chartBoxProduct} />
+        <ChartBox {...chartBoxProduct} />
       </div>
       <div className="box box4">
         <PieChartBox />
       </div>
       <div className="box box5">
-        <ChartBox color={""} icon={""} {...chartBoxConversion} />
+        <ChartBox {...chartBoxConversion} />
       </div>
       <div className="box box6">
-        <ChartBox color={""} icon={""} {...chartBoxRevenue} />
+        <ChartBox {...chartBoxRevenue} />
       </div>
       <div className="box box7">
         <BigChartBox />

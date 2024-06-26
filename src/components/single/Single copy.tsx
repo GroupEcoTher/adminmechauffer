@@ -10,23 +10,24 @@ import {
   YAxis,
 } from "recharts";
 import { getUserById } from '../../config/firebase';
-import moment from 'moment'; // Ajoutez moment.js pour formater les dates
 import "./single.scss";
 
-const formatFirebaseTimestamp = (firebaseTimestamp) => {
+// Fonction pour formater un timestamp Firebase
+export const formatFirebaseTimestamp = (firebaseTimestamp: { seconds: number, nanoseconds: number }): Date | null => {
   if (firebaseTimestamp && firebaseTimestamp.seconds && firebaseTimestamp.nanoseconds) {
-    const milliseconds = firebaseTimestamp.seconds * 1000 + firebaseTimestamp.nanoseconds / 1000000;
-    const date = new Date(milliseconds);
-    return moment(date).format('DD MMMM YYYY HH:mm:ss');
+    return new Date(firebaseTimestamp.seconds * 1000 + firebaseTimestamp.nanoseconds / 1000000);
   }
-  return '';
+  return null;
 };
 
 type Props = {
   userId: string;
   img?: string;
   title: string;
-  info?: object;
+  info?: {
+    dateCreation?: { seconds: number, nanoseconds: number } | Date;
+    [key: string]: any;
+  };
   chart?: {
     dataKeys: { name: string; color: string }[];
     data: object[];
@@ -44,11 +45,8 @@ const Single = ({ userId, img, title, info = {}, chart, activities }: Props) => 
     const fetchUser = async () => {
       try {
         const userData = await getUserById(userId);
-        const openModal = () => {
-          setModalIsOpen(true);
-        };
         setUser(userData);
-      } catch (err) {
+      } catch (err: any) {
         setError(err.message);
       } finally {
         setLoading(false);
@@ -60,15 +58,20 @@ const Single = ({ userId, img, title, info = {}, chart, activities }: Props) => 
     }
   }, [userId]);
 
-
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
 
   const closeModal = () => {
     setModalIsOpen(false);
   };
 
   const formattedInfo = { ...info };
-  if (formattedInfo.dateCreation) {
-    formattedInfo.dateCreation = formatFirebaseTimestamp(formattedInfo.dateCreation);
+  if (formattedInfo.dateCreation && typeof formattedInfo.dateCreation !== 'string') {
+    const formattedDate = formatFirebaseTimestamp(formattedInfo.dateCreation as { seconds: number, nanoseconds: number });
+    if (formattedDate) {
+      formattedInfo.dateCreation = formattedDate;
+    }
   }
 
   return (
@@ -151,7 +154,7 @@ const Single = ({ userId, img, title, info = {}, chart, activities }: Props) => 
             <p>Last Name: {user.lastName}</p>
             <p>Email: {user.email}</p>
             <p>Phone: {user.phone}</p>
-            <p>Created At: {formatFirebaseTimestamp(user.dateCreation)}</p>
+            <p>Created At: {user.dateCreation && formatFirebaseTimestamp(user.dateCreation as { seconds: number, nanoseconds: number })?.toLocaleDateString()}</p>
             <button onClick={closeModal}>Close</button>
           </div>
         )}
