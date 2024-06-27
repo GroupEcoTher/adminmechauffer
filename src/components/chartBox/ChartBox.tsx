@@ -5,7 +5,7 @@ import { Line, LineChart, ResponsiveContainer, Tooltip } from "recharts";
 export interface ChartBoxProps {
   icon: string;
   title: string;
-  number: number;
+  number: string;
   color: string;
   chartData: any[];
   dataKey: string;

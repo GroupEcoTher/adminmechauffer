@@ -1,5 +1,3 @@
-// src/components/dataTable/DataTable.tsx
-
 import React, { useState, useEffect } from "react";
 import { DataGrid, GridColDef, GridToolbar, GridSortModel, GridPaginationModel } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
@@ -11,8 +9,9 @@ import "./dataTable.scss";
 // Définition des props pour le composant DataTable
 type Props = {
   columns: GridColDef[];
-  rows:  { id: number; archived: boolean; standby: boolean; verified: boolean; }[];
+  rows: { id: number; archived: boolean; standby: boolean; verified: boolean; }[];
   title: string;
+  slug?: string; // Ajouter slug comme propriété optionnelle
 };
 
 const DataTable: React.FC<Props> = ({ columns, rows, title }) => {

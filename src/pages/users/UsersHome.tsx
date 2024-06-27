@@ -14,7 +14,11 @@ import {
 } from "../../data";
 import { ChartBoxProps, BarChartBoxProps, User } from "../../components/types/types";
 
-const chartBoxData: ChartBoxProps[] = [chartBoxUser, chartBoxProduct, chartBoxConversion, chartBoxRevenue];
+interface ChartBoxPropsWithNumber extends ChartBoxProps {
+  number: string;
+}
+
+const chartBoxData: ChartBoxPropsWithNumber[] = [chartBoxUser, chartBoxProduct, chartBoxConversion, chartBoxRevenue];
 const barChartBoxData: BarChartBoxProps[] = [barChartBoxVisit, barChartBoxRevenue];
 
 interface UsersHomeProps {
@@ -44,7 +48,7 @@ const UsersHome: React.FC<UsersHomeProps> = ({ title }) => {
 
         {chartBoxData.map((data, index) => (
           <div className={`box box${index + 2}`} key={`chartBox-${index}`}>
-            <ChartBox {...data} />
+            <ChartBox {...data} number={data.number.toString()} />
           </div>
         ))}
 

@@ -1,33 +1,45 @@
-//src\pages\product\Product.tsx
 
-import Single from "../../components/single/Single"
-import { singleProduct } from "../../data"
-import "./product.scss"
+import Single from "../../components/single/Single";
+import { singleProduct } from "../../data";
+import "./product.scss";
 
 function Product() {
   const adaptedSingleProduct = {
-    username: singleProduct.info.productId,
-    fullname: `${singleProduct.title} - ${singleProduct.info.producer}`,
-    email: "", // Vous devrez déterminer comment obtenir ou générer cette information
-    phone: "", // Idem pour le téléphone
-    status: singleProduct.info.export,
-    // Assurez-vous d'inclure toutes les autres propriétés attendues par SingleProps
+    id: singleProduct.id,
+    title: singleProduct.title,
+    img: singleProduct.img,
+    info: {
+      username: singleProduct.info.productId,
+      fullname: `${singleProduct.title} - ${singleProduct.info.producer}`,
+      email: "", // Déterminer comment obtenir ou générer cette information
+      phone: "", // Idem pour le téléphone
+      status: singleProduct.info.export,
+    },
+    chart: {
+      dataKeys: singleProduct.chart.dataKeys,
+      data: singleProduct.chart.data.map(item => ({
+        ...item,
+        clicks: 0, // Add the 'clicks' property with a default value
+      })),
+    },
+    activities: singleProduct.activities.map(activity => ({
+      text: activity.text,
+      time: activity.time || "",
+    })),
   };
 
   return (
     <div className="product">
-       <Single id={0} title={""} img={""} info={{
-        username: "",
-        fullname: "",
-        email: "",
-        phone: "",
-        status: ""
-      }} chart={{
-        dataKeys: [],
-        data: []
-      }} activities={[]} {...adaptedSingleProduct}/>
+      <Single
+        id={adaptedSingleProduct.id}
+        title={adaptedSingleProduct.title}
+        img={adaptedSingleProduct.img}
+        info={adaptedSingleProduct.info}
+        chart={adaptedSingleProduct.chart}
+        activities={adaptedSingleProduct.activities}
+      />
     </div>
   );
 }
 
-export default Product
+export default Product;

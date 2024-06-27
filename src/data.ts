@@ -1,5 +1,4 @@
-//src\data.ts
-
+// src/data.ts
 
 export const menu = [
   {
@@ -19,42 +18,42 @@ export const menu = [
     title: "lists",
     listItems: [
       {
-        id: 2, // Correction de l'id pour être unique
+        id: 2,
         title: "Users",
         url: "/UsersHome",
         icon: "user.svg",
       },
       {
-        id: 3, // Correction de l'id pour être unique
+        id: 3,
         title: "Parains",
         url: "/Parains",
         icon: "user.svg",
       },
       {
-        id: 4, // Correction de l'id pour être unique
+        id: 4,
         title: "Partenaires",
         url: "/Partenaires",
         icon: "user.svg",
       },
       {
-        id: 5, // Correction de l'id pour être unique
+        id: 5,
         title: "Profile...TEST",
         icon: "user.svg",
       },
       {
-        id: 6, // Correction de l'id pour être unique
+        id: 6,
         title: "Products",
         url: "/products",
         icon: "product.svg",
       },
       {
-        id: 7, // Correction de l'id pour être unique
+        id: 7,
         title: "Orders",
         url: "/orders",
         icon: "order.svg",
       },
       {
-        id: 8, // Correction de l'id pour être unique
+        id: 8,
         title: "Posts",
         url: "/posts",
         icon: "order.svg",
@@ -66,19 +65,19 @@ export const menu = [
     title: "analytics",
     listItems: [
       {
-        id: 9, // Correction de l'id pour être unique
+        id: 9,
         title: "Data Stats",
         url: "/",
         icon: "element.svg",
       },
       {
-        id: 10, // Correction de l'id pour être unique
+        id: 10,
         title: "Charts",
         url: "/",
         icon: "chart.svg",
       },
       {
-        id: 11, // Correction de l'id pour être unique
+        id: 11,
         title: "Logs",
         url: "/",
         icon: "log.svg",
@@ -90,19 +89,19 @@ export const menu = [
     title: "general",
     listItems: [
       {
-        id: 12, // Correction de l'id pour être unique
+        id: 12,
         title: "Notes",
         url: "/",
         icon: "note.svg",
       },
       {
-        id: 13, // Correction de l'id pour être unique
+        id: 13,
         title: "Forms",
         url: "/",
         icon: "form.svg",
       },
       {
-        id: 14, // Correction de l'id pour être unique
+        id: 14,
         title: "Calendar",
         url: "/",
         icon: "calendar.svg",
@@ -114,13 +113,13 @@ export const menu = [
     title: "Maintenance",
     listItems: [
       {
-        id: 15, // Correction de l'id pour être unique
+        id: 15,
         title: "Settings",
         url: "/",
         icon: "setting.svg",
       },
       {
-        id: 16, // Correction de l'id pour être unique
+        id: 16,
         title: "Backups",
         url: "/",
         icon: "backup.svg",
@@ -128,6 +127,7 @@ export const menu = [
     ],
   },
 ];
+
 export const topDealUsers = [
   {
     id: 1,
@@ -179,11 +179,12 @@ export const topDealUsers = [
     amount: "1.560",
   },
 ];
+
 export const chartBoxUser = { // total Users
   color: "#8884d8",
   icon: "/userIcon.svg",
   title: "Total Users",
-  number: 11.238,
+  number: "11.238",
   dataKey: "users",
   percentage: 45,
   chartData: [
@@ -194,14 +195,14 @@ export const chartBoxUser = { // total Users
     { name: "Thu", users: 400 },
     { name: "Fri", users: 500 },
     { name: "Sat", users: 450 },
-    
   ],
 };
+
 export const chartBoxProduct = { //CONVERSION Visites > Inscrits
   color: "skyblue",
   icon: "/productIcon.svg",
   title: "CONVERSION  Visites - Inscrits",
-  number: 238,
+  number: "238",
   dataKey: "products",
   percentage: 21,
   chartData: [
@@ -214,11 +215,12 @@ export const chartBoxProduct = { //CONVERSION Visites > Inscrits
     { name: "Sat", products: 450 },
   ],
 };
+
 export const chartBoxRevenue = {
   color: "teal",
   icon: "/revenueIcon.svg",
   title: "Total Revenue",
-  number: 56.432,
+  number: "56.432",
   dataKey: "revenue",
   percentage: -12,
   chartData: [
@@ -231,46 +233,27 @@ export const chartBoxRevenue = {
     { name: "Sat", revenue: 450 },
   ],
 };
+
 export const barChartBoxValidated = {// BOX USERS VALIDES à afficher
   title: "Users Valides",
   color: "Grey",
   dataKey: "profit",
   chartData: [
-    {
-      name: "Sun",
-      profit: 4000,
-    },
-    {
-      name: "Mon",
-      profit: 3000,
-    },
-    {
-      name: "Tue",
-      profit: 2000,
-    },
-    {
-      name: "Wed",
-      profit: 2780,
-    },
-    {
-      name: "Thu",
-      profit: 1890,
-    },
-    {
-      name: "Fri",
-      profit: 2390,
-    },
-    {
-      name: "Sat",
-      profit: 3490,
-    },
+    { name: "Sun", profit: 4000 },
+    { name: "Mon", profit: 3000 },
+    { name: "Tue", profit: 2000 },
+    { name: "Wed", profit: 2780 },
+    { name: "Thu", profit: 1890 },
+    { name: "Fri", profit: 2390 },
+    { name: "Sat", profit: 3490 },
   ],
 };
+
 export const chartBoxConversion = {//CONVERSION Inscrits > Validés
   color: "gold",
   icon: "/conversionIcon.svg",
   title: "CONVERSION Inscrits - Validés",
-  number: 2.6,
+  number: "2.6",
   dataKey: "ratio",
   percentage: 12,
   chartData: [
@@ -283,76 +266,37 @@ export const chartBoxConversion = {//CONVERSION Inscrits > Validés
     { name: "Sat", ratio: 450 },
   ],
 };
+
 export const barChartBoxRevenue = {//Traveaux Users End
   title: "Traveaux Users End",
   color: "Grey",
   dataKey: "profit",
   chartData: [
-    {
-      name: "Sun",
-      profit: 4000,
-    },
-    {
-      name: "Mon",
-      profit: 3000,
-    },
-    {
-      name: "Tue",
-      profit: 2000,
-    },
-    {
-      name: "Wed",
-      profit: 2780,
-    },
-    {
-      name: "Thu",
-      profit: 1890,
-    },
-    {
-      name: "Fri",
-      profit: 2390,
-    },
-    {
-      name: "Sat",
-      profit: 3490,
-    },
+    { name: "Sun", profit: 4000 },
+    { name: "Mon", profit: 3000 },
+    { name: "Tue", profit: 2000 },
+    { name: "Wed", profit: 2780 },
+    { name: "Thu", profit: 1890 },
+    { name: "Fri", profit: 2390 },
+    { name: "Sat", profit: 3490 },
   ],
 };
+
 export const barChartBoxVisit = { // Total Visit Green
   title: "Total Visit",
   color: "Grey",
   dataKey: "visit",
   chartData: [
-    {
-      name: "Sun",
-      visit: 1000,
-    },
-    {
-      name: "Mon",
-      visit: 6000,
-    },
-    {
-      name: "Tue",
-      visit: 4000,
-    },
-    {
-      name: "Wed",
-      visit: 8780,
-    },
-    {
-      name: "Thu",
-      visit: 1890,
-    },
-    {
-      name: "Fri",
-      visit: 4390,
-    },
-    {
-      name: "Sat",
-      visit: 7490,
-    },
+    { name: "Sun", visit: 1000 },
+    { name: "Mon", visit: 6000 },
+    { name: "Tue", visit: 4000 },
+    { name: "Wed", visit: 8780 },
+    { name: "Thu", visit: 1890 },
+    { name: "Fri", visit: 4390 },
+    { name: "Sat", visit: 7490 },
   ],
 };
+
 ////////////////////////////////////////////////////////////
 
 export const userRows = [
@@ -381,7 +325,6 @@ export const userRows = [
     'Avis D\'impôts': 'https://images.pexels.com/photos/1181519/pexels-photo-1181519.jpeg?auto=compress&cs=tinysrgb&w=1600',
     identityDocumentUrl: 'https://images.pexels.com/photos/1181519/pexels-photo-1181519.jpeg?auto=compress&cs=tinysrgb&w=1600',
     verified: true,
-
   },
   {
     id: 3,
@@ -553,6 +496,7 @@ export const userRows = [
     verified: true,
   },
 ];
+
 export const products = [
   {
     id: 1,
@@ -562,6 +506,8 @@ export const products = [
     producer: "Sony",
     price: "$250.99",
     createdAt: "01.02.2023",
+    archived: false,
+    standby: false,
     verified: true,
   },
   {
@@ -573,6 +519,9 @@ export const products = [
     price: "$499.99",
     createdAt: "01.02.2023",
     inStock: true,
+    archived: false,
+    standby: false,
+    verified: false,
   },
   {
     id: 3,
@@ -583,6 +532,9 @@ export const products = [
     price: "$999.49",
     createdAt: "01.02.2023",
     inStock: true,
+    archived: false,
+    standby: false,
+    verified: false,
   },
   {
     id: 4,
@@ -593,6 +545,9 @@ export const products = [
     price: "$799.49",
     createdAt: "01.02.2023",
     inStock: true,
+    archived: false,
+    standby: false,
+    verified: false,
   },
   {
     id: 5,
@@ -602,6 +557,9 @@ export const products = [
     producer: "Philips",
     price: "$39.99",
     createdAt: "01.02.2023",
+    archived: false,
+    standby: false,
+    verified: false,
   },
   {
     id: 6,
@@ -612,6 +570,9 @@ export const products = [
     price: "$59.49",
     createdAt: "01.02.2023",
     inStock: true,
+    archived: false,
+    standby: false,
+    verified: false,
   },
   {
     id: 7,
@@ -621,6 +582,9 @@ export const products = [
     producer: "Rode",
     price: "$119.49",
     createdAt: "01.02.2023",
+    archived: false,
+    standby: false,
+    verified: false,
   },
   {
     id: 8,
@@ -631,6 +595,9 @@ export const products = [
     price: "$899.99",
     createdAt: "01.02.2023",
     inStock: true,
+    archived: false,
+    standby: false,
+    verified: false,
   },
   {
     id: 9,
@@ -640,6 +607,9 @@ export const products = [
     producer: "Sony",
     price: "$970.49",
     createdAt: "01.02.2023",
+    archived: false,
+    standby: false,
+    verified: false,
   },
   {
     id: 10,
@@ -650,8 +620,12 @@ export const products = [
     price: "$599.99",
     createdAt: "01.02.2023",
     inStock: true,
+    archived: false,
+    standby: false,
+    verified: false,
   },
 ];
+
 export const singleProduct = {
   id: 1,
   title: "Playstation 5 Digital Edition",
@@ -669,67 +643,21 @@ export const singleProduct = {
       { name: "orders", color: "#8884d8" },
     ],
     data: [
-      {
-        name: "Sun",
-        visits: 4000,
-        orders: 2400,
-      },
-      {
-        name: "Mon",
-        visits: 3000,
-        orders: 1398,
-      },
-      {
-        name: "Tue",
-        visits: 2000,
-        orders: 3800,
-      },
-      {
-        name: "Wed",
-        visits: 2780,
-        orders: 3908,
-      },
-      {
-        name: "Thu",
-        visits: 1890,
-        orders: 4800,
-      },
-      {
-        name: "Fri",
-        visits: 2390,
-        orders: 3800,
-      },
-      {
-        name: "Sat",
-        visits: 3490,
-        orders: 4300,
-      },
+      { name: "Sun", visits: 4000, orders: 2400 },
+      { name: "Mon", visits: 3000, orders: 1398 },
+      { name: "Tue", visits: 2000, orders: 3800 },
+      { name: "Wed", visits: 2780, orders: 3908 },
+      { name: "Thu", visits: 1890, orders: 4800 },
+      { name: "Fri", visits: 2390, orders: 3800 },
+      { name: "Sat", visits: 3490, orders: 4300 },
     ],
   },
   activities: [
-    {
-      text: "John Doe purchased Playstation 5 Digital Edition",
-      time: "3 day ago",
-    },
-    {
-      text: "Jane Doe added Playstation 5 Digital Edition into their wishlist",
-      time: "1 week ago",
-    },
-    {
-      text: "Mike Doe purchased Playstation 5 Digital Edition",
-      time: "2 weeks ago",
-    },
-    {
-      text: "Anna Doe reviewed the product",
-      time: "1 month ago",
-    },
-    {
-      text: "Michael Doe added Playstation 5 Digital Edition into their wishlist",
-      time: "1 month ago",
-    },
-    {
-      text: "Helen Doe reviewed the product",
-      time: "2 months ago",
-    },
+    { text: "John Doe purchased Playstation 5 Digital Edition", time: "3 days ago" },
+    { text: "Jane Doe added Playstation 5 Digital Edition into their wishlist", time: "1 week ago" },
+    { text: "Mike Doe purchased Playstation 5 Digital Edition", time: "2 weeks ago" },
+    { text: "Anna Doe reviewed the product", time: "1 month ago" },
+    { text: "Michael Doe added Playstation 5 Digital Edition into their wishlist", time: "1 month ago" },
+    { text: "Helen Doe reviewed the product", time: "2 months ago" },
   ],
 };

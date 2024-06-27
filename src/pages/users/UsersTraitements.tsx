@@ -341,7 +341,7 @@ const UsersTraitements: React.FC<UsersTraitementsProps> = ({ title }) => {
         <button className={activeUserType === 'nc' ? 'active' : ''} onClick={handleNCUsersClick}>USERS NC</button>
         <button className={activeUserType === 'usersarchive' ? 'active' : ''} onClick={handleNCUsersClick}>USERS ARCHIVES</button>
         <button onClick={() => setOpen(true)}>Add New User</button>
-        {user && <DataTable columns={columns} rows={user} title={''} />}
+        {user && <DataTable columns={columns} rows={user} title={''} slug={''} />}
         {open && <Add slug="user" columns={columns} setOpen={setOpen} />}
       </div>
     </div>

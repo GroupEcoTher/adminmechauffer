@@ -29,7 +29,6 @@ export interface User {
   // Interface pour les props de ChartBox
   export interface ChartBoxProps {
     title: string;
-    number: number;
     dataKey: string;
     percentage: number;
     chartData: ChartData[];
@@ -44,6 +43,7 @@ export interface User {
     color: string;
     dataKey: string;
     chartData: ChartData[];
+    
   }
   
 
