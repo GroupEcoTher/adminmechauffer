@@ -1,3 +1,4 @@
+import React from 'react';
 import { useEffect, useState } from 'react';
 import '../../components/allModal/allmodal.scss';
 import { db, getDocumentById, getTempXcpByTokenID, getTempXcpByTokenPartenaire, getUserParrainbyTokenID, getParrainbyTokenID, fetchArchived } from "../../config/firebase";

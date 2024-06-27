@@ -25,8 +25,7 @@
     "src",
     "src/components/types",
     "src/components/allModal",
-    "src/types",
-
+    "src/types"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
