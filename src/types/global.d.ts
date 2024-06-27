@@ -6,4 +6,3 @@ declare module 'components/allModal/ModalUsers' {
     const ModalUsers: FC;
     export default ModalUsers;
   }
-  

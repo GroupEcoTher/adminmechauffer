@@ -13,7 +13,7 @@
     "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
-      "*": ["src/*", "src/components/types/*"]
+      "*": ["src/*", "src/components/types/*", "src/components/allModal/*", "src/types/*", "src/components/*"]
     },
     "allowSyntheticDefaultImports": true,
     "strict": true,
