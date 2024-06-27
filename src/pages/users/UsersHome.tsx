@@ -51,7 +51,7 @@ const UsersHome: React.FC<UsersHomeProps> = ({ title }) => {
             <ChartBox {...data} number={data.number.toString()} />
           </div>
         ))}
-
+  
         {barChartBoxData.map((data, index) => (
           <div className={`box box${index + 6}`} key={`barChartBox-${index}`}>
             <BarChartBox {...data} />
