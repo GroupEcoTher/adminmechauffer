@@ -23,6 +23,8 @@ import "./styles/global.scss";
 import DataTable from './components/dataTable/DataTable';
 import ModalUsers from './components/allModal/ModalUsers.tsx';
 
+
+
 const queryClient = new QueryClient();
 
 const Layout = () => {
