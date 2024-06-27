@@ -21,7 +21,7 @@ import Parains from "./pages/Parains/Parains";
 import Product from "./pages/product/Product";
 import "./styles/global.scss";
 import DataTable from './components/dataTable/DataTable';
-import ModalUsers from './components/allModal/ModalUsers.tsx';
+import ModalUsers from './components/allModal/ModalUsers';
 
 
 

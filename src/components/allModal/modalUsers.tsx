@@ -48,7 +48,7 @@ const Section: React.FC<SectionProps> = ({ title, count, children }) => {
 
 
 // COMPONENT PRINCIPAL POUR MODAL USERS
-const ModalUsers = (props: Props) => {
+const ModalUsers: React.FC<Props> = (props: Props) => {
   // ÉTAT LOCAL POUR STOCKER LES DONNÉES UTILISATEURS ET AUTRES
   const [userData, setUserData] = useState<any | null>(null);
   const [editData, setEditData] = useState<any>({});

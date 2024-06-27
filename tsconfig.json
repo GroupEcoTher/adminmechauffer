@@ -24,7 +24,7 @@
   "include": [
     "src",
     "src/components/types",
-    "src/components/allModal/ModalUsers.tsx"
+    "src/components/allModal"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
