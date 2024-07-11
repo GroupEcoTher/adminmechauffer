@@ -1,35 +1,33 @@
-// Importation des variables SCSS depuis un fichier externe
 @import "../../styles/variables.scss";
 
 // Styles pour le conteneur principal .add
 .add {
   width: 100vw; // Largeur de 100% de la fenêtre
   height: 100vh; // Hauteur de 100% de la fenêtre
-  position: absolute; // Positionnement absolu
+  position: fixed; // Positionnement fixe
   top: 0;
   left: 0;
   background-color: rgba(0, 0, 0, 0.724); // Couleur de fond semi-transparente
-  display: left; // Utilisation de flexbox pour aligner les éléments
-  align-items: normal; // Alignement vertical normal des éléments flex
+  display: flex; // Utilisation de flexbox pour aligner les éléments
+  align-items: center; // Alignement vertical centré des éléments flex
   justify-content: center; // Centrage horizontal des éléments flex
-  overflow: auto; // Activer le défilement si le contenu dépasse la hauteur de la fenêtre
+  overflow: hidden; // Désactiver le défilement si le contenu dépasse la hauteur de la fenêtre
 
   // Styles pour la classe interne .modal
   .modal {
-    width: 95%; // Largeur de 95% du conteneur parent
-    max-height: none; // Pas de limitation spécifique de la hauteur
-    padding: 15px; // Espacement interne
+    width: 90%; // Largeur de 90% du conteneur parent pour plus d'espace
+    max-height: 90%; // Hauteur maximale de 90% du conteneur parent
+    padding: 20px; // Espacement interne
     border-radius: 10px; // Coins arrondis
     background-color: $main-bg; // Couleur de fond depuis les variables SCSS
     overflow: auto; // Activer le défilement si le contenu du modal dépasse sa hauteur
 
     // Styles pour les titres h1 à l'intérieur du modal
     h1 {
-      margin-bottom: 5px; // Marge inférieure
-      font-size: 15px; // Taille de police
+      margin-bottom: 10px; // Marge inférieure
+      font-size: 18px; // Taille de police
       color: white; // Couleur de police
-      display: left; // Utilisation de flexbox pour aligner les éléments
-      ;
+      display: flex; // Utilisation de flexbox pour aligner les éléments
     }
 
     // Styles pour le bouton de fermeture (la croix)
@@ -44,30 +42,31 @@
 
     // Styles pour la section de contenu .content
     .content {
-      display: grid; // Utilisation de la grille CSS pour organiser les éléments en lignes et colonnes
-      //grid-template-columns: repeat(2, 1fr); // Trois colonnes égales
-      grid-gap: 40px; // Espacement entre les éléments de la grille
-      padding: 40px; // Espacement interne autour de la grille
-      justify-items: left; // Étend les éléments pour remplir les cellules de la grille
-      align-items: start; // Aligne les éléments en haut de chaque cellule de la grille
+      display: flex; // Utilisation de flexbox pour les colonnes
+      gap: 20px; // Espacement entre les colonnes
+      padding: 20px; // Espacement interne autour des colonnes
+      justify-content: center; // Centrer les colonnes dans le conteneur
+      align-items: flex-start; // Alignement en haut de chaque colonne
 
       // Styles pour chaque colonne de contenu
       .column {
-        display: left; // Utilisation de flexbox pour les éléments internes
+        display: flex; // Utilisation de flexbox pour les éléments internes
         flex-direction: column; // Disposition des éléments en colonne
-        gap: 10px; // Espacement entre les éléments à l'intérieur de chaque colonne
-        padding: 10px; // Espacement interne autour de chaque colonne
+        gap: 15px; // Espacement entre les éléments à l'intérieur de chaque colonne
+        padding: 15px; // Espacement interne autour de chaque colonne
         background-color: rgba(255, 255, 255, 0.1); // Couleur de fond légèrement transparente pour chaque colonne
         border-radius: 5px; // Coins arrondis pour chaque colonne
+        flex: 1; // Permet aux colonnes de s'étendre également pour remplir l'espace disponible
+        min-width: 45%; // Largeur minimale de chaque colonne pour garantir qu'elles ne deviennent pas trop étroites
 
         // Styles pour chaque élément .item à l'intérieur des colonnes
         .item {
           width: 100%; // Largeur de 100% du conteneur parent
           display: flex; // Utilisation de flexbox
-          align-items: left; // Centrage vertical des éléments
-          gap: 4px; // Espacement entre les éléments à l'intérieur de chaque ligne
+          align-items: flex-start; // Alignement en haut des éléments
+          gap: 10px; // Espacement entre les éléments à l'intérieur de chaque ligne
           color: rgb(210, 210, 210); // Couleur de texte
-          padding: 20px; // Espacement interne autour de chaque élément
+          padding: 10px; // Espacement interne autour de chaque élément
           background-color: rgba(0, 0, 0, 0.2); // Couleur de fond légèrement transparente pour chaque élément
           border-radius: 3px; // Coins arrondis pour chaque élément
 
@@ -78,9 +77,8 @@
 
           // Styles pour les paragraphes p à l'intérieur des éléments
           p {
-            margin: 12px; // Supprimer les marges pour éviter les espacements supplémentaires
-            font-size: 12px; // Taille de 
-            
+            margin: 0; // Suppression des marges autour des paragraphes
+            font-size: 14px; // Taille de police
           }
 
           // Styles pour les champs de saisie input à l'intérieur des éléments
@@ -100,15 +98,60 @@
     // Styles pour les boutons à l'intérieur du modal
     button {
       background-color: hwb(104 61% 0%); // Couleur de fond (utilise le modèle de couleur HWB)
-      color: rgb(14, 13, 13); // Couleur de texte
+      color: rgb(5, 108, 0); // Couleur de texte
       border: none; // Suppression des bordures
-      border-radius: 4px; // Coins arrondis
-      cursor: pointer; // Curseur pointeur (main)
-      margin-top: 5px; // Espacement par rapport au contenu précédent
-      width: 75px; // Largeur du bouton
-      height: 20px; // Hauteur du bouton
-      padding: 5px; // Espacement interne (padding)
-      font-size: 10px; // Taille de la police du texte du bouton
+      border-radius: 5px; // Coins arrondis
+      cursor: auto; // Curseur pointeur (main)
+      margin-top: 20px; // Espacement par rapport au contenu précédent
+      width: 100px; // Largeur du bouton
+      height: 30px; // Hauteur du bouton
+      padding: 10px; // Espacement interne (padding)
+      font-size: 14px; // Taille de la police du texte du bouton
     }
   }
 }
+
+.section {
+  margin-bottom: 5px; // Marge inférieure
+
+  .section-header {
+    display: flex; // Utilisation de flexbox pour aligner les éléments
+    justify-content: space-between; // Espacement entre les éléments pour remplir l'espace disponible
+    align-items: center; // Alignement vertical centré des éléments
+    cursor: pointer; // Curseur pointeur (main)
+    background-color: #00000055; // Couleur de fond semi-transparente
+    padding: 10px; // Augmentation de l'espacement interne
+    border-radius: 5px; // Coins arrondis
+  }
+
+  .section-content {
+    padding: 10px; // Augmentation de l'espacement interne
+    background-color: #20202049; // Couleur de fond semi-transparente
+    border: 1px solid #000000; // Bordure noire
+    border-top: none; // Pas de bordure en haut
+    border-radius: 0 0 5px 5px; // Coins arrondis en bas
+  }
+}
+
+  .object-entry-vertical {
+    display: flex;
+    flex-direction: column; // Affiche les éléments verticalement
+    margin: 10px; // Ajoute un espacement vertical entre les entrées
+    padding: 10px; // Ajoute un espacement interne
+    background-color: rgba(31, 31, 31, 0.2); // Couleur de fond légèrement transparente pour chaque élément
+    border-radius: 5px; // Coins arrondis
+    color: rgb(211, 211, 211); // Couleur de texte par défaut
+
+    .key {
+      font-size: 14px; // Taille de police
+      color: rgb(255, 255, 255); // Couleur de texte pour les clés
+      font-weight: bold; // Texte en gras pour les clés
+      margin-bottom: 5px; // Ajoute un espacement sous la clé
+    }
+
+    .value {
+      margin-left: 10px; // Ajoute un décalage pour la valeur
+      font-size: 14px; // Taille de police pour les valeurs
+      color: rgb(255, 255, 255); // Couleur de texte pour les valeurs
+    }
+  }

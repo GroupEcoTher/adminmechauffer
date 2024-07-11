@@ -70,6 +70,8 @@ const UsersTraitements: React.FC<UsersTraitementsProps> = ({ title }) => {
     setActiveUserType('nc');
   };
 
+
+  
   // Gestion de tous les utilisateurs
   const handleAllUsersClick = async () => {
     const allUsers = await getAllUsers();
@@ -77,6 +79,8 @@ const UsersTraitements: React.FC<UsersTraitementsProps> = ({ title }) => {
     setTotalUsers(allUsers.length);
     setActiveUserType('all');
   };
+
+
 
   // Vérification et mise à jour du statut de vérification de chaque utilisateur
   const verifyAllUsers = async (users: any[]) => {

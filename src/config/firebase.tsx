@@ -27,6 +27,9 @@ export const authSecond = getAuth(appSecond);
 export const storage = getStorage(app);
 export { app, appSecond };
 
+
+
+
 // Fonction pour vérifier l'existence d'un document dans Firebase Storage
 const documentExists = async (userId: string, fileName: string): Promise<boolean> => {
   const fileRef = ref(storage, `${userId}/${fileName}`);
@@ -144,6 +147,8 @@ export const getAllUsers = async (): Promise<any[]> => {
   const activeUsersQuery = query(collection(db, "users"), where("archived", "==", false));
   const archivedUsersQuery = query(collection(db, "users"), where("archived", "==", true));
 
+
+  
   // Exécutez les requêtes
   const [activeUsersSnapshot, archivedUsersSnapshot] = await Promise.all([
     getDocs(activeUsersQuery),

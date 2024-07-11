@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { DataGrid, GridColDef, GridToolbar, GridSortModel, GridPaginationModel } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
 import { Checkbox, Button } from "@mui/material";
-import { doc, getDoc, updateDoc, addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import { doc, getDoc, updateDoc, addDoc, collection, getDocs } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import "./dataTable.scss";
 
@@ -16,18 +16,28 @@ type Props = {
 
 const DataTable: React.FC<Props> = ({ columns, rows, title }) => {
   const [tableRows, setTableRows] = useState(rows);
-  const [archivedRows, setArchivedRows] = useState<any[]>([]); // Utilisation d'un type any[] pour stocker les utilisateurs archivés
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     pageSize: 20,
     page: 0,
   });
 
   useEffect(() => {
-    setTableRows(rows);
-    fetchArchivedUsers(); // Appel de la fonction pour récupérer les utilisateurs archivés au montage
-  }, [rows]);
+    fetchAndSetUsers();
+  }, []);
 
-  // Fonction pour sauvegarder l'historique des mouvements
+  const fetchAndSetUsers = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, "users"));
+      const users: { id: number, archived: boolean, standby: boolean, verified: boolean }[] = [];
+      querySnapshot.forEach((doc) => {
+        users.push({ id: Number(doc.id), ...doc.data() } as { id: number, archived: boolean, standby: boolean, verified: boolean });
+      });
+      setTableRows(users);
+    } catch (error) {
+      console.error("Error fetching users: ", error);
+    }
+  };
+
   const saveHistory = async (userId: number, action: string, details: string) => {
     try {
       const historyRef = collection(db, "history");
@@ -43,7 +53,6 @@ const DataTable: React.FC<Props> = ({ columns, rows, title }) => {
     }
   };
 
-  // Fonction pour archiver l'utilisateur sans le supprimer
   const handleDelete = async (id: number) => {
     try {
       const userDocRef = doc(db, "users", id.toString());
@@ -68,7 +77,6 @@ const DataTable: React.FC<Props> = ({ columns, rows, title }) => {
     }
   };
 
-  // Fonction pour désarchiver l'utilisateur
   const handleUnarchive = async (id: number) => {
     try {
       const userDocRef = doc(db, "users", id.toString());
@@ -93,25 +101,6 @@ const DataTable: React.FC<Props> = ({ columns, rows, title }) => {
     }
   };
 
-  // Fonction pour récupérer les utilisateurs archivés
-  const fetchArchivedUsers = async () => {
-    try {
-      const querySnapshot = await getDocs(query(collection(db, "users"), where("archived", "==", true)));
-
-      const archivedUsers: any[] = [];
-      querySnapshot.forEach((doc) => {
-        archivedUsers.push({ id: doc.id, ...doc.data() });
-      });
-
-      setArchivedRows(archivedUsers);
-
-      console.log("Fetched archived users successfully.");
-    } catch (error) {
-      console.error("Error fetching archived users: ", error);
-    }
-  };
-
-  // Fonction pour marquer un utilisateur comme en attente (StandBY)
   const handleStandBY = async (id: number, standby: boolean) => {
     try {
       const userDocRef = doc(db, "users", id.toString());
@@ -127,7 +116,6 @@ const DataTable: React.FC<Props> = ({ columns, rows, title }) => {
     }
   };
 
-  // Ajouter une colonne action avec des liens
   const actionColumn: GridColDef = {
     field: "action",
     headerName: "Action",
@@ -143,7 +131,6 @@ const DataTable: React.FC<Props> = ({ columns, rows, title }) => {
     },
   };
 
-  // Ajouter une colonne suspend pour StandBY avec une case à cocher
   const suspendColumn: GridColDef = {
     field: "StandBY",
     headerName: "StandBY",
@@ -163,7 +150,6 @@ const DataTable: React.FC<Props> = ({ columns, rows, title }) => {
     },
   };
 
-  // Ajouter une colonne suprUser pour l'archivage
   const suprUser: GridColDef = {
     field: "suprUser",
     headerName: "Suppr",
@@ -179,44 +165,31 @@ const DataTable: React.FC<Props> = ({ columns, rows, title }) => {
     },
   };
 
-  // Ajouter une colonne archivée pour indiquer l'archivage et inclure un bouton "Unarchive"
   const archiveColumn: GridColDef = {
     field: "archived",
     headerName: "Archivée",
-    width: 120,
+    width: 130,
     renderCell: (params) => {
       return (
         <div className="archived" key={`archived-${params.row.id}`}>
           {params.row.archived ? (
             <>
-              <div style={{ width: 10, height: 10, backgroundColor: 'red', borderRadius: '50%', marginRight: 2 }}></div>
-              <Button style={{ width: 100, height: 30, backgroundColor: 'orange', color: 'black' }} onClick={() => handleUnarchive(params.row.id)}>Unarchive</Button>  
+              
+              <Button style={{ width: 100, height: 20, backgroundColor: 'orange', color: 'black' }} onClick={() => handleUnarchive(params.row.id)}>Désarchiver</Button>  
             </>
-          ) : null}
+          ) : (
+            <>
+              
+              <Button style={{ width: 100, height: 20, backgroundColor: 'grey', color: 'white' }} onClick={() => handleUnarchive(params.row.id)}>Archiver</Button>
+            </>
+          )}
         </div>
       );
     },
   };
 
-  // Ajouter une colonne pour les utilisateurs archivés
-  const archivedUserColumn: GridColDef = {
-    field: "archivedUsers",
-    headerName: "Archived Users",
-    width: 200,
-    renderCell: () => {
-      return (
-        <div>
-          {archivedRows.map((user) => (
-            <div key={user.id}>
-              <p>{user.name}</p>
-            </div>
-          ))}
-        </div>
-      );
-    },
-  };
+  
 
-  // Définir un modèle de tri par défaut
   const sortModel: GridSortModel = [
     {
       field: 'dateCreation',
@@ -224,8 +197,7 @@ const DataTable: React.FC<Props> = ({ columns, rows, title }) => {
     },
   ];
 
-  // Définir une fonction de rendu de ligne pour colorer les lignes archivées, standby et vérifiées
-  const getRowClassName = (params: { row: { archived: boolean; standby: boolean; verified: boolean; }; }) => {
+  const getRowClassName = (params: { row: { archived: any; standby: any; verified: any; }; }) => {
     if (params.row.archived) return 'archivedRow';
     if (params.row.standby) return 'standbyRow';
     if (params.row.verified) return 'verifiedRow';
@@ -234,11 +206,11 @@ const DataTable: React.FC<Props> = ({ columns, rows, title }) => {
 
   return (
     <div className="dataTable">
-      <h1>{title}</h1> {/* Affichage du titre */}
+      <h1>{title}</h1>
       <DataGrid
         className="dataGrid"
         rows={tableRows}
-        columns={[...columns, actionColumn, suspendColumn, suprUser, archiveColumn, archivedUserColumn]}
+        columns={[...columns, actionColumn, suspendColumn, suprUser, archiveColumn]}
         sortModel={sortModel}
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
