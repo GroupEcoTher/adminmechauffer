@@ -1,0 +1,85 @@
+@import "../../styles/variables.scss"; // Import des variables SCSS globales
+@import "../../styles/responsive.scss"; // Import des mixins pour les médias queries
+
+// Importer une police stricte (par exemple, Roboto)
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap');
+
+body {
+  font-family: 'Roboto', sans-serif; // Appliquer la nouvelle police stricte à tout le site
+}
+
+.login-page {
+  display: flex; // Utiliser flexbox pour centrer le contenu
+  flex-direction: column; // Disposer les éléments en colonne
+  align-items: center; // Centrer horizontalement
+  justify-content: center; // Centrer verticalement
+  min-height: 100vh; // Prendre toute la hauteur de la fenêtre
+  background-color: $main-bg; // Couleur de fond définie dans les variables SCSS
+  padding: 10px; // Espacement autour du contenu
+
+  h1 {
+    color: $main-color; // Couleur du texte définie dans les variables SCSS
+    margin-bottom: 20px; // Espacement en bas du titre
+    font-size: 2rem; // Taille de la police du titre
+    font-weight: bold; // Poids de la police du titre
+  }
+
+  .login-form {
+    background-color: $soft-bg; // Couleur de fond du formulaire définie dans les variables SCSS
+    padding: 20px; // Espacement interne du formulaire
+    border-radius: 5px; // Bordures arrondies du formulaire
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); // Ombre portée pour un effet de profondeur
+    width: 100%; // Largeur du formulaire à 100% de son conteneur
+    max-width: 400px; // Largeur maximale du formulaire
+    display: flex; // Utiliser flexbox pour le contenu interne
+    flex-direction: column; // Disposer les éléments en colonne
+    align-items: center; // Centrer les éléments horizontalement
+
+    input {
+      width: 100%; // Largeur des champs de saisie à 100%
+      padding: 10px; // Espacement interne des champs de saisie
+      margin-bottom: 10px; // Espacement en bas des champs de saisie
+      border: 1px solid $border-color; // Bordure des champs de saisie définie dans les variables SCSS
+      border-radius: 3px; // Bordures arrondies des champs de saisie
+      box-sizing: border-box; // Inclure le padding et la bordure dans la largeur totale
+    }
+
+    button {
+      width: 100%; // Largeur du bouton à 100%
+      padding: 10px; // Espacement interne du bouton
+      background-color: $button-background-color; // Couleur de fond du bouton définie dans les variables SCSS
+      color: $button-text-color; // Couleur du texte du bouton définie dans les variables SCSS
+      border: none; // Pas de bordure autour du bouton
+      border-radius: 3px; // Bordures arrondies du bouton
+      cursor: pointer; // Curseur en forme de main pour le bouton
+      margin-top: 10px; // Espacement en haut du bouton
+
+      &:hover {
+        background-color: $button-hover-background-color; // Changer la couleur de fond au survol définie dans les variables SCSS
+      }
+    }
+  }
+
+  .legal-section {
+    margin-top: 20px; // Espacement en haut de la section légale
+    text-align: left; // Alignement du texte à gauche
+    width: 100%; // Largeur de la section légale à 100%
+    max-width: 1600px; // Largeur maximale de la section légale
+    color: $soft-color; // Couleur du texte définie dans les variables SCSS
+
+    h2 {
+      margin-bottom: 10px; // Espacement en bas des titres
+      color: orange; // Couleur des titres en orange
+      font-size: 1.5rem; // Taille de la police des titres
+      font-weight: bold; // Poids de la police des titres
+    }
+
+    p {
+      margin-bottom: 10px; // Espacement en bas des paragraphes
+    }
+
+    a {
+      color: $link-color; // Couleur des liens définie dans les variables SCSS
+    }
+  }
+}

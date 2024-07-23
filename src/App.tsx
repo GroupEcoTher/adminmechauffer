@@ -56,6 +56,9 @@ const router = createBrowserRouter([
     path: "/login",
     element: <WrapperComponent Component={Login} componentProps={{ title: "Connexion" }} />,
   },
+  
+
+
   {
     path: "*",
     element: <PrivateRoute><Layout /></PrivateRoute>,
