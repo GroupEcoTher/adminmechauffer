@@ -1,4 +1,4 @@
-import ModalUsers from './components/allModal/ModalUsers';
+import ModalUsers from './components/allModal/modalUsers';
 import React from 'react';
 import './config/firebase.jsx';
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
