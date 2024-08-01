@@ -23,17 +23,18 @@ import "./styles/global.scss"; // Importation des styles globaux de l'applicatio
 import DataTable from './components/dataTable/DataTable'; // Composant de tableau de données
 import PrivateRoute from './components/PrivateRoute'; // Composant pour protéger les routes privées
 import { UserAdminProvider } from './components/UserAdminContext'; // Contexte pour gérer l'état d'authentification de l'utilisateur
-import ErrorBoundary from './components/ErrorBoundary'; // Importer le composant de gestion des erreurs
 
-const queryClient = new QueryClient(); // Configure et gère les requêtes réseau et le cache de données de l'application
+
+const queryClient = new QueryClient(); //configure et gére les requêtes réseau et le cache données application
 
 // Composant Layout pour encapsuler la structure principale de l'application
+// Il inclut la barre de navigation, le menu, le contenu principal et le pied de page
 const Layout = () => (
   <div className="main">
     <Navbar /> {/* La barre de navigation en haut de la page */}
     <div className="container">
       <div className="menuContainer">
-        <Menu /> {/* Le menu latéral pour la navigation */}
+        <Menu /> {/* Le menu latéral */}
       </div>
       <div className="contentContainer">
         {/* Provider pour React Query, permettant de gérer les requêtes et le cache */}
@@ -90,12 +91,9 @@ const router = createBrowserRouter([
 
 // Composant principal de l'application
 // Il est enveloppé avec UserAdminProvider pour fournir le contexte utilisateur à toute l'application
-// Et avec ErrorBoundary pour gérer les erreurs de manière conviviale
 const App = () => (
   <UserAdminProvider>
-    <ErrorBoundary>
-      <RouterProvider router={router} />
-    </ErrorBoundary>
+    <RouterProvider router={router} />
   </UserAdminProvider>
 );
 

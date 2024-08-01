@@ -1,0 +1,31 @@
+Explications détaillées :
+Initialisation de Firebase :
+
+import './config/firebase'; : Ce fichier initialise Firebase pour gérer l'authentification et les interactions avec la base de données.
+Création du client de requêtes :
+
+const queryClient = new QueryClient(); : Instancie un client de requêtes pour React Query, permettant de gérer les requêtes réseau et le cache de données.
+Composant Layout :
+
+const Layout = () => (...); : Ce composant encapsule la structure principale de l'application avec la barre de navigation, le menu latéral, le contenu principal et le pied de page.
+Navbar, Menu et Footer :
+
+Ces composants sont utilisés pour la navigation (Navbar), le menu latéral (Menu), et le pied de page (Footer).
+Outlet :
+
+Outlet est un composant de React Router utilisé pour rendre les composants enfants définis dans les routes.
+WrapperComponent :
+
+const WrapperComponent = ({ Component, componentProps }) => <Component {...componentProps} />; : Un composant utilitaire pour passer des props spécifiques aux composants de route.
+Définition des routes :
+
+Utilisation de createBrowserRouter pour configurer les routes de l'application, y compris les routes protégées nécessitant une authentification (PrivateRoute).
+Routes enfants :
+
+Les routes enfants sont définies pour être rendues dans l'Outlet du Layout. Chaque route enfant utilise WrapperComponent pour passer des props spécifiques aux composants.
+UserAdminProvider :
+
+UserAdminProvider est utilisé pour envelopper l'application entière, fournissant le contexte utilisateur et permettant de gérer l'état de connexion de l'utilisateur dans toute l'application.
+RouterProvider :
+
+RouterProvider utilise la configuration de createBrowserRouter pour gérer la navigation de l'application.
