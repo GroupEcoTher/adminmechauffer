@@ -16,6 +16,7 @@
     "@mui/material": "^5.15.19",
     "@mui/x-data-grid": "^6.19.11",
     "@tanstack/react-query": "^4.29.19",
+    "axios": "^1.7.3",
     "firebase": "^10.12.3",
     "firebase-admin": "^12.1.1",
     "lru-cache": "^10.2.2",

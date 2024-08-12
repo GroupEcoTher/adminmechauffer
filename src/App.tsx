@@ -1,3 +1,4 @@
+import { Navigate } from 'react-router-dom';
 import ModalUsers from './components/allModal/modalUsers';
 import React from 'react';
 import './config/firebase'; // Initialisation de Firebase pour la gestion de l'authentification et des données
@@ -6,9 +7,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Navbar from "./components/navbar/Navbar"; // Composant pour la barre de navigation
 import Footer from "./components/footer/Footer"; // Composant pour le pied de page
 import Menu from "./components/menu/Menu"; // Composant pour le menu latéral
-import Home from "./pages/home/Home"; // Page d'accueil
-import Products from "./pages/products/Products"; // Page des produits
-import Login from "./pages/login/Login"; // Page de connexion
+import Home from "./pages/home/Home";
+import Products from "./pages/products/Products";
+import Login from "./pages/login/Login";
 import User from "./pages/user/User"; // Page de détails de l'utilisateur
 import AideDoc from "./pages/users/AideDoc"; // Page d'aide et documentation
 import HistAction from "./pages/users/HistAction"; // Page d'historique des actions
@@ -61,6 +62,7 @@ const WrapperComponent: React.FC<WrapperComponentProps> = ({ Component, componen
 const router = createBrowserRouter([
   {
     path: "/login",
+
     // Route pour la page de connexion
     element: <WrapperComponent Component={Login} componentProps={{ title: "Connexion" }} />,
   },
@@ -82,8 +84,10 @@ const router = createBrowserRouter([
       { path: "AideDoc", element: <WrapperComponent Component={AideDoc} componentProps={{ title: "Aide - Documentation" }} /> },
       { path: "users/:id", element: <WrapperComponent Component={User} componentProps={{ title: "Détails de l'utilisateur" }} /> },
       { path: "ModalUsers/:id", element: <WrapperComponent Component={ModalUsers} componentProps={{ title: "Modal Users" }} /> },
+      { path: "ModalUsers/", element: <WrapperComponent Component={ModalUsers} componentProps={{ title: "Modal Users" }} /> },
       { path: "products/:id", element: <WrapperComponent Component={Product} componentProps={{ title: "Détails du produit" }} /> },
       { path: "datatable", element: <WrapperComponent Component={DataTable} componentProps={{ title: "table", slug: "data-slug", rows: [], columns: [] }} /> },
+      { path: "*", element: <Navigate to="/login" /> },
     ],
   },
 ]);
@@ -94,7 +98,7 @@ const router = createBrowserRouter([
 const App = () => (
   <UserAdminProvider>
     <ErrorBoundary>
-      <RouterProvider router={router} />
+    <RouterProvider router={router} />
     </ErrorBoundary>
   </UserAdminProvider>
 );
