@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import "../../components/menu/menu.scss";
-import "./menu.scss";
+import "../../components/menu/xmenu.scss";
+//import "./xmenu.scss";
 import { menu} from "../../data";
 
 
