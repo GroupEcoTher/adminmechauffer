@@ -1,7 +1,7 @@
 
 import Single from "../../components/single/Single";
 import { singleProduct } from "../../data";
-import "./product.scss";
+import "./xproduct.scss";
 
 function Product() {
   const adaptedSingleProduct = {

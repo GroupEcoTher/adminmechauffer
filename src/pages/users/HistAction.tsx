@@ -1,7 +1,7 @@
 import React from 'react';
 import FullLengthBox from "../../pages/users/FullLengthBox";
 import "../home/home.scss";
-import "./Users.scss";
+import "./users.scss";
 
 
 interface UsersProps {

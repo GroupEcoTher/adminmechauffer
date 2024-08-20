@@ -3,6 +3,7 @@
 import React from 'react';
 
 import "./user.scss";
+//import "../../components/user/user.scss";
 import Single  from "../../components/single/Single";
 
 // Définir les types des props pour le composant User

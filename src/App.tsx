@@ -19,7 +19,7 @@ import UsersTraitements from "./pages/users/UsersTraitements"; // Page de traite
 import UsersHome from "./pages/users/UsersHome"; // Page d'accueil des utilisateurs
 import Partenaires from "./pages/Partenaires/Partenaires"; // Page de gestion des partenaires
 import Parains from "./pages/Parains/Parains"; // Page de gestion des parrains
-import Product from "./pages/product/Product"; // Page de détails d'un produit
+import Product from "./pages/product/xProduct"; // Page de détails d'un produit
 import "./styles/global.scss"; // Importation des styles globaux de l'application
 import DataTable from './components/dataTable/DataTable'; // Composant de tableau de données
 import PrivateRoute from './components/PrivateRoute'; // Composant pour protéger les routes privées
