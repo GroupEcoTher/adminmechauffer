@@ -9,6 +9,7 @@ import Footer from "./components/footer/Footer"; // Composant pour le pied de pa
 import Menu from "./components/menu/Menu"; // Composant pour le menu latéral
 import Home from "./pages/home/Home";
 import products from "./pages/products/products";
+
 import Login from "./pages/login/Login";
 import User from "./pages/user/User"; // Page de détails de l'utilisateur
 import AideDoc from "./pages/users/AideDoc"; // Page d'aide et documentation
@@ -19,7 +20,7 @@ import UsersTraitements from "./pages/users/UsersTraitements"; // Page de traite
 import UsersHome from "./pages/users/UsersHome"; // Page d'accueil des utilisateurs
 import Partenaires from "./pages/Partenaires/Partenaires"; // Page de gestion des partenaires
 import Parains from "./pages/Parains/Parains"; // Page de gestion des parrains
-import product from "./pages/product/xProduct"; // Page de détails d'un produit
+import product from "./pages/product/productsimple"; // Page de détails d'un produit
 import "./styles/global.scss"; // Importation des styles globaux de l'application
 import DataTable from './components/dataTable/DataTable'; // Composant de tableau de données
 import PrivateRoute from './components/PrivateRoute'; // Composant pour protéger les routes privées
