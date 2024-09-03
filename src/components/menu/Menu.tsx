@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
-import "../../components/menu/xmenu.scss";
-//import "./xmenu.scss";
+import "../../components/menu/Menu.scss";
+import "@/components/menu/Menu.scss"; // Utilisation de l'alias '@'
+
+
 import { menu} from "../../data";
 
 
