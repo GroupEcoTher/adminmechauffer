@@ -1,9 +1,14 @@
 import { useState } from "react";
-import "./Products.scss";
+
+
+import "@/pages/products/products.scss"; // Utilisation de l'alias '@'
+import "./products.scss"; // Si vous avez besoin de ce fichier aussi
+
 import DataTable from "../../components/dataTable/DataTable";
 import Add from "../../components/add/Add";
 import { GridColDef } from "@mui/x-data-grid";
 import { products } from "../../data";
+
 
 
 // Définition des colonnes pour le tableau

@@ -7,7 +7,7 @@ import Navbar from "./components/navbar/Navbar"; // Composant pour la barre de n
 import Footer from "./components/footer/Footer"; // Composant pour le pied de page
 import Menu from "./components/menu/Menu"; // Composant pour le menu latéral
 import Home from "./pages/home/Home"; // Page d'accueil
-import Products from "./pages/products/Products"; // Page des produits
+import Products from "./pages/products/products"; // Page des produits
 import Login from "./pages/login/Login"; // Page de connexion
 import User from "./pages/user/User"; // Page de détails de l'utilisateur
 import AideDoc from "./pages/users/AideDoc"; // Page d'aide et documentation

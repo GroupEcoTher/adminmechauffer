@@ -8,7 +8,7 @@ import Navbar from "./components/navbar/Navbar"; // Composant pour la barre de n
 import Footer from "./components/footer/Footer"; // Composant pour le pied de page
 import Menu from "./components/menu/Menu"; // Composant pour le menu latéral
 import Home from "./pages/home/Home";
-import Products from "./pages/products/Products";
+import products from "./pages/products/products";
 import Login from "./pages/login/Login";
 import User from "./pages/user/User"; // Page de détails de l'utilisateur
 import AideDoc from "./pages/users/AideDoc"; // Page d'aide et documentation
@@ -19,7 +19,7 @@ import UsersTraitements from "./pages/users/UsersTraitements"; // Page de traite
 import UsersHome from "./pages/users/UsersHome"; // Page d'accueil des utilisateurs
 import Partenaires from "./pages/Partenaires/Partenaires"; // Page de gestion des partenaires
 import Parains from "./pages/Parains/Parains"; // Page de gestion des parrains
-import Product from "./pages/product/xProduct"; // Page de détails d'un produit
+import product from "./pages/product/xProduct"; // Page de détails d'un produit
 import "./styles/global.scss"; // Importation des styles globaux de l'application
 import DataTable from './components/dataTable/DataTable'; // Composant de tableau de données
 import PrivateRoute from './components/PrivateRoute'; // Composant pour protéger les routes privées
@@ -75,7 +75,7 @@ const router = createBrowserRouter([
       { path: "", element: <WrapperComponent Component={Home} componentProps={{ title: "Homepage : les stats basic et messages internes" }} /> },
       { path: "Partenaires", element: <WrapperComponent Component={Partenaires} componentProps={{ title: "Gestion - Partenaires" }} /> },
       { path: "Parains", element: <WrapperComponent Component={Parains} componentProps={{ title: "Gestion - Parrains" }} /> },
-      { path: "products", element: <WrapperComponent Component={Products} componentProps={{ title: "Gestion Xcp" }} /> },
+      { path: "products", element: <WrapperComponent Component={products} componentProps={{ title: "Gestion Xcp" }} /> },
       { path: "UsersHome", element: <WrapperComponent Component={UsersHome} componentProps={{ title: "Accueil des utilisateurs" }} /> },
       { path: "UsersTraitements", element: <WrapperComponent Component={UsersTraitements} componentProps={{ title: "Gestion Users - États & Traitements" }} /> },
       { path: "HistAction", element: <WrapperComponent Component={HistAction} componentProps={{ title: "Historique des actions - Résumé d’utilisation" }} /> },
@@ -85,7 +85,7 @@ const router = createBrowserRouter([
       { path: "users/:id", element: <WrapperComponent Component={User} componentProps={{ title: "Détails de l'utilisateur" }} /> },
       { path: "ModalUsers/:id", element: <WrapperComponent Component={ModalUsers} componentProps={{ title: "Modal Users" }} /> },
       { path: "ModalUsers/", element: <WrapperComponent Component={ModalUsers} componentProps={{ title: "Modal Users" }} /> },
-      { path: "products/:id", element: <WrapperComponent Component={Product} componentProps={{ title: "Détails du produit" }} /> },
+      { path: "products/:id", element: <WrapperComponent Component={product} componentProps={{ title: "Détails du produit" }} /> },
       { path: "datatable", element: <WrapperComponent Component={DataTable} componentProps={{ title: "table", slug: "data-slug", rows: [], columns: [] }} /> },
       { path: "*", element: <Navigate to="/login" /> },
     ],
