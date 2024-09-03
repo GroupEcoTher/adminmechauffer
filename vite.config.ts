@@ -8,6 +8,8 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      '@products': path.resolve(__dirname, './src/pages/products'), // Alias pour le répertoire ./pages/products/
     },
   },
 })
+

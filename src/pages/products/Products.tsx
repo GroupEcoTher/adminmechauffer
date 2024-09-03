@@ -6,7 +6,7 @@ import "./products.scss"; // Si vous avez besoin de ce fichier aussi
 import DataTable from "../../components/dataTable/DataTable";
 import Add from "../../components/add/Add";
 import { GridColDef } from "@mui/x-data-grid";
-import { products } from "../../data";
+import { Products } from "../../data";
 
 
 
@@ -71,7 +71,7 @@ const columns: GridColDef[] = [
   },
 ];
 
-const Products = () => {
+const products = () => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -80,10 +80,10 @@ const Products = () => {
         <h1>Products</h1>
         <button onClick={() => setOpen(true)}>Add New Products</button>
       </div>
-      <DataTable slug="products" columns={columns} rows={products} title="Products" />
+      <DataTable slug="products" columns={columns} rows={Products} title="Products" />
       {open && <Add slug="product" columns={columns} setOpen={setOpen} />}
     </div>
   );
 };
 
-export default Products;
+export default products;
