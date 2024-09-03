@@ -9,7 +9,7 @@ import Footer from "./components/footer/Footer"; // Composant pour le pied de pa
 import Menu from "./components/menu/Menu"; // Composant pour le menu latéral
 import Home from "./pages/home/Home";
 
-import products from './pages/products/products';
+import products from './pages/products/allproducts';
 
 import Login from "./pages/login/Login";
 import User from "./pages/user/User"; // Page de détails de l'utilisateur

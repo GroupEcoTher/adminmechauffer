@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-import "@/pages/products/products.scss"; // Utilisation de l'alias '@'
-import "./products.scss"; // Si vous avez besoin de ce fichier aussi
+import '@/pages/products/allproducts.scss'; // Utilisation de l'alias '@'
+import './allproducts.scss'; // Si vous avez besoin de ce fichier aussi
 
 import DataTable from "../../components/dataTable/DataTable";
 import Add from "../../components/add/Add";
