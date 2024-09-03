@@ -5,6 +5,7 @@ import Add from "../../components/add/Add";
 import { GridColDef } from "@mui/x-data-grid";
 import { products } from "../../data";
 
+
 // Définition des colonnes pour le tableau
 const columns: GridColDef[] = [
   { field: "id", headerName: "ID", width: 90 },
