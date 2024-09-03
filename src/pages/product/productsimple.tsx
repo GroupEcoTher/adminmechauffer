@@ -3,7 +3,7 @@ import Single from "../../components/single/Single";
 import { singleProduct } from "../../data";
 import "./productsimple.scss";
 
-function Product() {
+function product() {
   const adaptedSingleProduct = {
     id: singleProduct.id,
     title: singleProduct.title,
@@ -42,4 +42,4 @@ function Product() {
   );
 }
 
-export default Product;
+export default product;

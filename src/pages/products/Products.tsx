@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-
 import "@/pages/products/products.scss"; // Utilisation de l'alias '@'
 import "./products.scss"; // Si vous avez besoin de ce fichier aussi
 
