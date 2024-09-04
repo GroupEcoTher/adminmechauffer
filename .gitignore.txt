@@ -1,3 +1,4 @@
+vérifie si il y a pas une ignorance dans le fichier gitignore : 
 # Logs
 logs
 *.log
@@ -17,13 +18,9 @@ dist-ssr
 !.vscode/extensions.json
 .idea
 .DS_Store
-
-# Versionner ESLint si nécessaire
-!.eslintrc.cjs
-
-# Ne plus ignorer yarn.lock pour garantir la cohérence des versions
-# yarn.lock
-
+.eslintrc.cjs
+.env
+yarn.lock
 *.suo
 *.ntvs*
 *.njsproj

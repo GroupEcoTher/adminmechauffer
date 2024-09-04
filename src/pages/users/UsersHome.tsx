@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
+//import './Styleusersohme.scss';
 import ChartBox from "../../components/chartBox/ChartBox";
 import BarChartBox from "../../components/barChartBox/BarChartBox";
-import "./usershome.scss"; // Chemin corrigé'
-import '@./usershome.scss'; // Chemin corrigé'  
 import FullLengthBox from "./FullLengthBox";
 import { getData, getTotalUsers } from "../../config/firebase";
 import {

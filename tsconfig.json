@@ -13,7 +13,9 @@
     "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
-      "*": ["src/*", "src/components/types/*", "src/components/allModal/*", "src/types/*", "src/components/*"]
+      "*": ["src/*", "src/components/types/*", "src/components/allModal/*", "src/types/*", "src/components/*"],
+      "@components/*": ["src/components/*"],  // Ajout d'un alias @components
+      "@users/*": ["src/pages/users/*"]       // Alias pour les fichiers users
     },
     "allowSyntheticDefaultImports": true,
     "strict": true,
