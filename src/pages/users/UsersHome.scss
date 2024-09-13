@@ -1,0 +1,80 @@
+.user-item {
+    margin-bottom: 20px;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+
+
+  .user-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+  }
+  
+  .user-email {
+    margin-left: 10px; /* Pour séparer l'email de l'image */
+    font-weight: bold;
+    text-decoration: none; /* Pour enlever le soulignement par défaut */
+    color: inherit; /* Pour hériter la couleur du texte */
+  }
+
+  .user-email:hover {
+    text-decoration: underline; /* Soulignement au survol pour indiquer que c'est un lien */
+  }
+  
+  .action {
+    cursor: pointer;
+  }
+  
+  .action img {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .user-details {
+    margin-top: 10px;
+    padding-left: 20px;
+    list-style-type: none;
+    color: lightgray; /* Change la couleur des détails à gris clair */
+  }
+  
+  .user-details.expanded {
+    color: #d3d3d3; /* Texte gris clair pour les détails dépliés */
+  }
+  
+  .pagination {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+  }
+  
+  .pagination button {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .pagination button:disabled {
+    background-color: #ccc;
+  }
+
+  .loader {
+    font-size: 18px;
+    color: #333;
+    margin: 10px 0;
+    text-align: center;
+  }
+  
+  .success-message {
+    color: green;
+    font-size: 16px;
+    margin: 10px 0;
+    text-align: center;
+  }
+
+  
+  
+  

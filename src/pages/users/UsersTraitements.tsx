@@ -4,7 +4,7 @@ import Modal from 'react-modal';
 import DataTable from "../../components/dataTable/DataTable";
 import { useEffect, useState } from "react";
 import Add from "../../components/add/Add";
-import { getData, getAllUsers, getIncompleteUsers, getNCUsers, AfficheImg, checkAndUpdateVerificationStatus } from "../../config/firebase";
+import { getData, getAllUsers, AfficheImg, checkAndUpdateVerificationStatus } from "../../config/firebase";
 import FullLengthBox from "./FullLengthBox";
 import moment from 'moment';
 
@@ -56,20 +56,6 @@ const UsersTraitements: React.FC<UsersTraitementsProps> = ({ title }) => {
   // Détermine si le chemin actuel est actif
   const isActive = (path: string) => location.pathname === path;
 
-  // Gestion des utilisateurs incomplets
-  const handleIncompleteUsersClick = async () => {
-    const incompleteUsers = await getIncompleteUsers();
-    setUser(incompleteUsers);
-    setActiveUserType('incomplete');
-  };
-
-  // Gestion des utilisateurs NC
-  const handleNCUsersClick = async () => {
-    const ncUsers = await getNCUsers();
-    setUser(ncUsers);
-    setActiveUserType('nc');
-  };
-
 
   
   // Gestion de tous les utilisateurs
@@ -79,7 +65,6 @@ const UsersTraitements: React.FC<UsersTraitementsProps> = ({ title }) => {
     setTotalUsers(allUsers.length);
     setActiveUserType('all');
   };
-
 
 
   // Vérification et mise à jour du statut de vérification de chaque utilisateur
@@ -102,11 +87,15 @@ const UsersTraitements: React.FC<UsersTraitementsProps> = ({ title }) => {
     userFetchFunction();
   }, []);
 
+
+
   // Sauvegarde de l'état de vérification dans le local storage à chaque modification
   useEffect(() => {
     saveVerificationStateToLocalStorage(documentVerification);
   }, [documentVerification]);
 
+
+  
   // Fonction pour gérer l'affichage du document et vérifier son existence
   const handleViewDocument = async (userId: string, path: string, documentType: keyof DocumentDisplayed[string]) => {
     const documentExists = await AfficheImg(userId, path);
@@ -336,17 +325,21 @@ const UsersTraitements: React.FC<UsersTraitementsProps> = ({ title }) => {
     <div className="home">
       <h1 className="page-title">{title}</h1>
       <FullLengthBox totalUsers={totalUsers} />
+
       <p>Nombre total d'utilisateurs : <span className="total-users">{totalUsers}</span></p>
       <div className={`info ${isActive(location.pathname) ? 'active' : ''}`}>
+
+
         <button className={activeUserType === 'all' ? 'active' : ''} onClick={handleAllUsersClick}>
-          ALL USERS <span className="total-users">{`(${totalUsers})`}</span>
-        </button>
-        <button className={activeUserType === 'incomplete' ? 'active' : ''} onClick={handleIncompleteUsersClick}>USERS Incomplets</button>
-        <button className={activeUserType === 'nc' ? 'active' : ''} onClick={handleNCUsersClick}>USERS NC</button>
-        <button className={activeUserType === 'usersarchive' ? 'active' : ''} onClick={handleNCUsersClick}>USERS ARCHIVES</button>
-        <button onClick={() => setOpen(true)}>Add New User</button>
+          Users Tratements <span className="total-users">{`(${totalUsers})`}</span></button>
+        {/*<button className={activeUserType === 'incomplete' ? 'active' : ''} onClick={handleIncompleteUsersClick}>USERS Incomplets</button>*/}
+        {/*<button className={activeUserType === 'nc' ? 'active' : ''} onClick={handleNCUsersClick}>USERS NC</button>*/}
+        {/*<button className={activeUserType === 'usersarchive' ? 'active' : ''} onClick={handleNCUsersClick}>USERS ARCHIVES</button>*/}
+        {/* <button onClick={() => setOpen(true)}>Add New User</button>*/}
         {user && <DataTable columns={columns} rows={user} title={''} slug={''} />}
         {open && <Add slug="user" columns={columns} setOpen={setOpen} />}
+
+
       </div>
     </div>
   );

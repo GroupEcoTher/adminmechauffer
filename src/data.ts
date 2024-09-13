@@ -1,5 +1,7 @@
 // src/data.ts
 
+
+
 export const menu = [
   {
     id: 1,
@@ -121,7 +123,7 @@ export const menu = [
       {
         id: 16,
         title: "Backups",
-        url: "/",
+        url: "/Backups",
         icon: "backup.svg",
       },
     ],
@@ -661,3 +663,13 @@ export const singleProduct = {
     { text: "Helen Doe reviewed the product", time: "2 months ago" },
   ],
 };
+
+// Ajouter un élément de menu pour la page "Backups"
+export const menuItems = [
+  // ... autres éléments de menu
+  {
+    title: 'Backups',
+    icon: 'backup.svg"', // Assurez-vous que l'icône existe
+    path: '/backups', // Chemin de la route
+  },
+];

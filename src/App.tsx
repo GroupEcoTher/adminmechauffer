@@ -8,9 +8,9 @@ import Navbar from "./components/navbar/Navbar"; // Composant pour la barre de n
 import Footer from "./components/footer/Footer"; // Composant pour le pied de page
 import Menu from "./components/menu/Menu"; // Composant pour le menu latéral
 import Home from "./pages/home/Home";
-
+import { UserActionProvider } from './context/UserActionContext';
 import products from './pages/products/allproducts';
-
+ 
 import Login from "./pages/login/Login";
 import User from "./pages/user/User"; // Page de détails de l'utilisateur
 import AideDoc from "./pages/users/AideDoc"; // Page d'aide et documentation
@@ -27,6 +27,9 @@ import DataTable from './components/dataTable/DataTable'; // Composant de tablea
 import PrivateRoute from './components/PrivateRoute'; // Composant pour protéger les routes privées
 import { UserAdminProvider } from './components/UserAdminContext'; // Contexte pour gérer l'état d'authentification de l'utilisateur
 import ErrorBoundary from './components/ErrorBoundary'; // Importer le composant de gestion des erreurs
+import Backups from './pages/Backups'; // Importer la page Backups
+
+
 
 const queryClient = new QueryClient(); // Configure et gère les requêtes réseau et le cache de données de l'application
 
@@ -90,6 +93,7 @@ const router = createBrowserRouter([
       { path: "products/:id", element: <WrapperComponent Component={product} componentProps={{ title: "Détails du produit" }} /> },
       { path: "datatable", element: <WrapperComponent Component={DataTable} componentProps={{ title: "table", slug: "data-slug", rows: [], columns: [] }} /> },
       { path: "*", element: <Navigate to="/login" /> },
+      { path: "Backups", element: <WrapperComponent Component={Backups} componentProps={{ title: "Backups" }} /> },
     ],
   },
 ]);
@@ -98,9 +102,12 @@ const router = createBrowserRouter([
 // Il est enveloppé avec UserAdminProvider pour fournir le contexte utilisateur à toute l'application
 // Et avec ErrorBoundary pour gérer les erreurs de manière conviviale
 const App = () => (
-  <UserAdminProvider>
+  // fourniseur de contexte pour que les états et fonction soient dispo dans toute l'aplication
+  <UserAdminProvider> 
     <ErrorBoundary>
-    <RouterProvider router={router} />
+      <UserActionProvider>
+        <RouterProvider router={router} />
+      </UserActionProvider>
     </ErrorBoundary>
   </UserAdminProvider>
 );

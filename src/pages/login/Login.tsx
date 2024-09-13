@@ -8,6 +8,8 @@ interface LoginProps {
   title: string;
 }
 
+
+
 const Login: React.FC<LoginProps> = ({ title }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -15,6 +17,8 @@ const Login: React.FC<LoginProps> = ({ title }) => {
   const [error, setError] = useState('');
   const [user, setUser] = useState<any>(null);
   const navigate = useNavigate();
+
+
 
   // Vérifiez l'utilisateur connecté au chargement du composant
   useEffect(() => {
@@ -24,6 +28,8 @@ const Login: React.FC<LoginProps> = ({ title }) => {
     }
   }, []);
 
+  
+
   // Gérer la déconnexion
   const handleLogout = async () => {
     await signOut(auth);
@@ -31,6 +37,8 @@ const Login: React.FC<LoginProps> = ({ title }) => {
     localStorage.removeItem('user');
     navigate('/login');
   };
+
+
 
   // Gérer la connexion
   const handleLogin = async (e: React.FormEvent) => {
@@ -57,6 +65,8 @@ const Login: React.FC<LoginProps> = ({ title }) => {
       setError(err.message);
     }
   };
+
+
 
   return (
     <div className="login-page">

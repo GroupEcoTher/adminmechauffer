@@ -539,7 +539,20 @@ const ModalUsers: React.FC<Props> = (props: Props) => {
                           {Object.entries(adresse).map(([key, value]) => (
                             <div key={key} className="object-entry-vertical">
                               <strong>{key}:</strong>
-                              <span className="value">{JSON.stringify(value)}</span>
+                              <span className="value">
+                                {typeof value === 'object' && value !== null ? (
+                                  // Si 'value' est un objet, on l'affiche récursivement
+                                  Object.entries(value).map(([subKey, subValue]) => (
+                                    <div key={subKey} className="sub-entry">
+                                      <strong>{subValue.key}: </strong> {/* Ajout d'un espace après le subKey */}
+                                      <strong>{subValue.key}:</strong> {Array.isArray(subValue.value) ? subValue.value.join(', ') : subValue.value}
+                                    </div>
+                                  ))
+                                ) : (
+                                  // Sinon on affiche la valeur directement
+                                  JSON.stringify(value)
+                                )}
+                              </span>
                             </div>
                           ))}
                         </div>
@@ -548,6 +561,7 @@ const ModalUsers: React.FC<Props> = (props: Props) => {
                       <p>Aucune adresse trouvée</p>
                     )}
                   </Section>
+
 
 
 

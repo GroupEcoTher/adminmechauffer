@@ -7,7 +7,6 @@ interface FullLengthBoxProps {
   totalUsers: number;
 }
 
-
 const FullLengthBox: React.FC<FullLengthBoxProps> = ({ totalUsers }) => {
   const navigate = useNavigate();
   const location = useLocation();

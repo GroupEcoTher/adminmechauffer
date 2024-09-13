@@ -1,3 +1,13 @@
+// src/components/types/types.ts
+
+// Interface pour les actions des utilisateurs
+export interface UserAction {
+  actionType: string; // Type de l'action (ex: 'login', 'logout')
+  timestamp: Date; // Date et heure de l'action
+  userId: string; // ID de l'utilisateur qui a effectué l'action
+  details?: string; // Détails supplémentaires sur l'action (optionnel)
+}
+
 export interface User {
   id: number;
   img: string;

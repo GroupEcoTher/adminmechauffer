@@ -2,6 +2,7 @@ import { initializeApp } from 'firebase/app';
 import { getAuth, EmailAuthProvider, reauthenticateWithCredential, updateEmail, updatePassword, sendPasswordResetEmail } from 'firebase/auth';
 import { getFirestore, getDocs, doc, getDoc, collection, query, where, orderBy, setDoc, serverTimestamp, updateDoc, addDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 import { getStorage, ref, getDownloadURL } from 'firebase/storage';
+import { User } from '../components/types/types';
 
 // CONFIGURATION DE L'APPLICATION FIREBASE
 const firebaseConfig = {
@@ -26,6 +27,7 @@ export const auth = getAuth(app);
 export const authSecond = getAuth(appSecond);
 export const storage = getStorage(app);
 export { app, appSecond };
+
 
 
 
@@ -96,6 +98,7 @@ export const getIncompleteUsers = async (): Promise<any[]> => {
     where('adresse', '==', '')
   );
 
+
   // Exécuter la requête et obtenir les documents
   const querySnapshot = await getDocs(q);
 
@@ -105,8 +108,9 @@ export const getIncompleteUsers = async (): Promise<any[]> => {
     const userData = doc.data();
 
     // Vérifier si les documents sont présents et validés
-    const isIdentityValid = userData.documents?.identity?.status === 'Validé';
-    const isTaxNoticeValid = userData.documents?.taxNotice?.status === 'Validé';
+    const isIdentityValid = userData.documents?.identityDocument?.status?.toLowerCase() === 'validé';
+    const isTaxNoticeValid = userData.documents?.taxNotice?.status?.toLowerCase() === 'validé';
+    
 
     if (!isIdentityValid || !isTaxNoticeValid) {
       incompleteUsers.push({
@@ -140,6 +144,7 @@ export const getData = async (): Promise<any[]> => {
   console.log(users);
   return users;
 }
+
 
 // Fonction pour obtenir tous les utilisateurs, y compris les archivés
 export const getAllUsers = async (): Promise<any[]> => {
@@ -729,5 +734,16 @@ export const downloadDocument = async (userId: string, fileName: string): Promis
     return null;
   }
 };
+
+
+
+
+// Fonction pour récupérer la liste des utilisateurs administrateurs
+export const getAdminUsers = async (): Promise<User[]> => {
+  const q = query(collection(db, 'users'), where('role', '==', 'admin'));
+  const querySnapshot = await getDocs(q);
+  return querySnapshot.docs.map(doc => doc.data() as User);
+};
+
 
 export default firebaseConfig;
