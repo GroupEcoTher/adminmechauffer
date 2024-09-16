@@ -1,80 +1,173 @@
+/* Styles pour chaque élément utilisateur */
 .user-item {
-    margin-bottom: 20px;
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-  }
+  margin-bottom: 20px; /* Ajoute une marge en bas de chaque élément utilisateur */
+  padding: 10px; /* Ajoute un padding autour de chaque élément utilisateur */
+  border-bottom: 1px solid #ddd; /* Ajoute une bordure en bas de chaque élément utilisateur */
+}
+
+/* Styles pour l'en-tête de chaque utilisateur */
+.user-header {
+  display: flex; /* Utilise Flexbox pour aligner les éléments enfants */
+  justify-content: space-between; /* Espace les éléments enfants de manière égale */
+  align-items: center; /* Aligne les éléments enfants au centre verticalement */
+  font-size: 16px; /* Définit la taille de la police à 16px */
+}
+
+/* Styles pour l'email de l'utilisateur */
+.user-email {
+  margin-left: 10px; /* Ajoute une marge à gauche pour séparer l'email de l'image */
+  font-weight: bold; /* Met le texte en gras */
+  text-decoration: none; /* Enlève le soulignement par défaut des liens */
+  color: inherit; /* Hérite la couleur du texte du parent */
+  margin-bottom: 10px; /* Ajoute une marge en bas de l'email */
+ 
+}
 
 
-  .user-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 16px;
-  }
-  
-  .user-email {
-    margin-left: 10px; /* Pour séparer l'email de l'image */
-    font-weight: bold;
-    text-decoration: none; /* Pour enlever le soulignement par défaut */
-    color: inherit; /* Pour hériter la couleur du texte */
-  }
+.user-email:hover {
+  text-decoration: underline; /* Ajoute un soulignement au survol pour indiquer que c'est un lien */
+}
 
-  .user-email:hover {
-    text-decoration: underline; /* Soulignement au survol pour indiquer que c'est un lien */
-  }
-  
-  .action {
-    cursor: pointer;
-  }
-  
-  .action img {
-    width: 20px;
-    height: 20px;
-  }
-  
-  .user-details {
-    margin-top: 10px;
-    padding-left: 20px;
-    list-style-type: none;
-    color: lightgray; /* Change la couleur des détails à gris clair */
-  }
-  
-  .user-details.expanded {
-    color: #d3d3d3; /* Texte gris clair pour les détails dépliés */
-  }
-  
-  .pagination {
-    display: flex;
-    justify-content: space-between;
-    margin: 20px 0;
-  }
-  
-  .pagination button {
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .pagination button:disabled {
-    background-color: #ccc;
-  }
+/* Styles pour l'action (icône) */
+.action {
+  cursor: pointer; /* Change le curseur en pointeur pour indiquer que c'est cliquable */
+}
 
-  .loader {
-    font-size: 18px;
-    color: #333;
-    margin: 10px 0;
-    text-align: center;
-  }
-  
-  .success-message {
-    color: green;
-    font-size: 16px;
-    margin: 10px 0;
-    text-align: center;
-  }
+.action img {
+  width: 20px; /* Définit la largeur de l'image à 20px */
+  height: 20px; /* Définit la hauteur de l'image à 20px */
+}
 
-  
-  
-  
+/* Styles pour les détails de l'utilisateur */
+.user-details {
+  margin-top: 10px; /* Ajoute une marge en haut des détails de l'utilisateur */
+  padding-left: 50px; /* Ajoute un padding à gauche des détails de l'utilisateur */
+  list-style-type: none; /* Enlève les puces de la liste */
+  color: rgb(198, 198, 198); /* Change la couleur des détails à gris clair */
+  font-size: 14px; /* Définit la taille de la police à 14px */
+}
+
+/* Styles pour les détails de l'utilisateur lorsqu'ils sont étendus */
+.user-details.expanded {
+  margin-top: 10px; /* Ajoute une marge en haut des détails de l'utilisateur */
+  padding-left: 50px; /* Ajoute un padding à gauche des détails de l'utilisateur */
+  list-style-type: none; /* Enlève les puces de la liste */
+  color: rgb(255, 255, 255); /* Change la couleur des détails à blanc */
+  font-size: 14px; /* Définit la taille de la police à 14px */
+}
+
+/* Styles pour la pagination */
+.pagination {
+  display: flex; /* Utilise Flexbox pour aligner les éléments enfants */
+  justify-content: space-between; /* Espace les éléments enfants de manière égale */
+  margin: 20px 0; /* Ajoute une marge en haut et en bas de la pagination */
+}
+
+.pagination button {
+  padding: 10px; /* Ajoute un padding autour des boutons */
+  background-color: #007bff; /* Définit la couleur de fond des boutons */
+  color: white; /* Définit la couleur du texte des boutons */
+  border: none; /* Enlève la bordure des boutons */
+  cursor: pointer; /* Change le curseur en pointeur pour indiquer que c'est cliquable */
+}
+
+.pagination button:disabled {
+  background-color: #ccc; /* Change la couleur de fond des boutons désactivés */
+}
+
+/* Styles pour le loader */
+.loader {
+  font-size: 18px; /* Définit la taille de la police à 18px */
+  color: #00cb1b; /* Définit la couleur du texte à vert */
+  margin: 10px 0; /* Ajoute une marge en haut et en bas du loader */
+  text-align: center; /* Centre le texte */
+}
+
+/* Styles pour le message de succès */
+.success-message {
+  color: rgb(3, 231, 3); /* Définit la couleur du texte à vert */
+  font-size: 20px; /* Définit la taille de la police à 20px */
+  margin: 5px 0; /* Ajoute une marge en haut et en bas du message de succès */
+  text-align: center; /* Centre le texte */
+}
+
+/* Styles pour les conteneurs de sélection */
+.select-container {
+  margin: 2px 0; /* Ajoute une marge en haut et en bas des conteneurs de sélection */
+}
+
+.select-container label {
+  margin-right: 10px; /* Ajoute une marge à droite des labels */
+  font-weight: bold; /* Met le texte des labels en gras */
+}
+
+.select-container select {
+  padding: 3px; /* Ajoute un padding autour des sélections */
+  border: 1px solid #ccc; /* Ajoute une bordure grise autour des sélections */
+  border-radius: 4px; /* Arrondit les coins des sélections */
+  background-color: #f9f9f9; /* Définit la couleur de fond des sélections */
+  font-size: 11px; /* Définit la taille de la police à 11px */
+  color: #333; /* Définit la couleur du texte à #333 */
+  outline: none; /* Enlève le contour par défaut des sélections */
+  transition: border-color 0.3s; /* Ajoute une transition pour la couleur de la bordure */
+}
+
+.select-container select:focus {
+  border-color: #007bff; /* Change la couleur de la bordure au focus */
+}
+
+.select-container option {
+  padding: 5px; /* Ajoute un padding autour des options */
+}
+
+/* Styles pour le titre en orange */
+.orangeTitle {
+  color: orange;
+}
+
+/* Styles pour les statuts vérifiés et non vérifiés */
+.status-verifiee {
+  color: green;
+}
+
+.status-non-verifiee {
+  color: orange;
+}
+
+/* Styles pour la validation des documents */
+.validationdocument-true {
+  color: green;
+}
+
+.validationdocument-false {
+  color: rgb(255, 111, 0);
+}
+
+/* Styles pour le message d'erreur */
+.error-message {
+  color: red; /* Définit la couleur du texte à rouge */
+  font-size: 14px; /* Définit la taille de la police à 20px */
+  margin: none; /* Ajoute une marge en haut et en bas du message d'erreur */
+  text-align: center; /* Centre le texte */
+
+}
+
+
+.success-message{
+  color: rgb(0, 248, 12);
+  font-size: 14px; /* Définit la taille de la police à 20px */
+  margin: none; /* Ajoute une marge en haut et en bas du message d'erreur */
+  text-align: center; /* Centre le texte */  
+ 
+}
+
+.collectionTitle {
+  /* Exemple de styles pour la partie "Collection Sélectionnée" */
+  font-size: 16px; /* Modifier la taille du texte */
+  color: #cccccc; /* Couleur par défaut du texte */
+}
+
+.collectionTitleOrange {
+  color: orange; /* Couleur du texte lorsque selectedTitle est "Status Non Vérifiée" */
+  font-size: 16px; /* Taille du texte pour cette condition */
+}
