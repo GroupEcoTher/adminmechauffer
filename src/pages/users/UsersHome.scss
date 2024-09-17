@@ -171,3 +171,32 @@
   color: orange; /* Couleur du texte lorsque selectedTitle est "Status Non Vérifiée" */
   font-size: 16px; /* Taille du texte pour cette condition */
 }
+
+
+
+
+.devis-section {
+  margin-top: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+
+.devis-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.devis-item {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.devis-item:last-child {
+  border-bottom: none;
+}
+
